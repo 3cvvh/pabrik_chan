@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_pabrik');
             $table->foreign('id_pabrik')->references('id')->on('pabriks');
+            $table->unsignedBigInteger('id_produk');
+            $table->foreign('id_produk')->references('id')->on('produks');
             $table->string('nama');
             $table->text('alamat');
             $table->string('no_telepon');
