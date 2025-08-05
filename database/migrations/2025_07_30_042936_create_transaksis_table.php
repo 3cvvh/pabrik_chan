@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreign('id_pabrik')->references('id')->on('pabriks');
             $table->unsignedBigInteger('id_pembeli');
             $table->foreign('id_pembeli')->references('id')->on('pembelis');
-            $table->unsignedBigInteger('id_produk');
-            $table->foreign('id_produk')->references('id')->on('produks');
             $table->integer('jumlah');
             $table->integer('total_harga');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');

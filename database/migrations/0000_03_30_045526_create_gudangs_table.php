@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_produks', function (Blueprint $table) {
+        Schema::create('gudangs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_produk');
-            $table->foreign('id_produk')->references('id')->on('produks');
-            $table->integer('jumlah');
-            $table->date('tanggal_masuk');
-            $table->date('tanggal_keluar')->nullable();
+            $table->unsignedBigInteger('id_pabrik');
+            $table->foreign('id_pabrik')->references('id')->on('pabriks');
+            $table->string('nama');
+            $table->text('alamat');
+            $table->string('no_telepon');
             $table->string('keterangan')->nullable();
-            $table->enum('status', ['tersedia', 'habis'])->default('tersedia');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_produks');
+        Schema::dropIfExists('gudangs');
     }
 };
