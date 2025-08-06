@@ -24,9 +24,9 @@
             <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
             gudang
         </a>
-        <a href="/logout" class="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M17 16v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v1"/><path d="M7 10h6m0 0l-2-2m2 2l-2 2"/></svg>
-            Logout
-        </a>
+        <form action="{{ route('logout') }}" method="post">
+            @csrf
+            <button class="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded transition" type="submit">logout</button>
+        </form>
     </div>
 </nav>

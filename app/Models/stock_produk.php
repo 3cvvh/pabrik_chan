@@ -9,4 +9,5 @@ class stock_produk extends Model
 {
     /** @use HasFactory<\Database\Factories\StockProdukFactory> */
     use HasFactory;
+    protected $guarded = ['id'];
 }

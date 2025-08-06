@@ -9,4 +9,5 @@ class pembeli extends Model
 {
     /** @use HasFactory<\Database\Factories\PembeliFactory> */
     use HasFactory;
+    protected $guarded = ['id'];
 }

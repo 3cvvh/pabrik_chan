@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\role;
 use App\Models\User;
+use App\Models\pabrik;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,9 +18,44 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        pabrik::create([
+            'name' => 'jelekong corp',
+            'alamat' => 'kacamatan ciparay',
+            'no_telepon' => '01293103910'
+        ]);
+
+        role::create([
+            'name' => 'admin'
+        ]);
+        role::create([
+            'name' => 'orang gudang'
+        ]);
+        role::create([
+            'name' => 'owner'
+        ]);
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'aqil',
+            'pabrik_id' => 1,
+            'role_id' => 3,
+            'password' => Hash::make('password'),
+            'email' => 'ayane9012@gmail.com',
+            'alamat' => 'jelekong chan'
+        ]);
+        User::factory()->create([
+            'name' => 'rasya',
+            'pabrik_id' => 1,
+            'role_id' => 2,
+            'password' => Hash::make('password'),
+            'email' => 'rasya@gmail.com',
+            'alamat' => 'jelekong chan'
+        ]);
+        User::factory()->create([
+            'name' => 'tasnim',
+            'pabrik_id' => 1,
+            'role_id' => 1,
+            'password' => Hash::make('password'),
+            'email' => 'tasnim@gmail.com',
+            'alamat' => 'jelekong chan'
         ]);
     }
 }

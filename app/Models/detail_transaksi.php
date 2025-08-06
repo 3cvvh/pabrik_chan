@@ -9,4 +9,5 @@ class detail_transaksi extends Model
 {
     /** @use HasFactory<\Database\Factories\DetailTransaksiFactory> */
     use HasFactory;
+    protected $guarded = ['id'];
 }

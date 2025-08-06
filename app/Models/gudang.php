@@ -9,4 +9,5 @@ class gudang extends Model
 {
     /** @use HasFactory<\Database\Factories\GudangFactory> */
     use HasFactory;
+    protected $guarded = ['id'];
 }
