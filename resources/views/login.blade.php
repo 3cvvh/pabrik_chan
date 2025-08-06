@@ -12,26 +12,60 @@
         </div>
 
         <div class="bg-blue-50 rounded-xl p-6 mb-6">
-            @error('email')
-                <h1>{{ $message }}</h1>
-            @enderror
-            @error('password')
-                <h1>{{ $message }}</h1>
-            @enderror
+            @if(session('gagal'))
+            <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+             <div class="flex items-center space-x-2 text-sm text-red-600 mb-1">
+                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>{{ session('gagal') }}</span>
+                        </div>
+            </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                    @foreach($errors->all() as $error)
+                        <div class="flex items-center space-x-2 text-sm text-red-600 mb-1">
+                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>{{ $error }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
            <center><h3 class="text-lg font-semibold text-blue-900 mb-4">USER LOGIN</h3></center>
             <form action="{{ route('login.store') }}" method="post">
                 @csrf
                 <div class="space-y-4">
                     <div class="relative">
                         <input type="email" name="email" id="email" required
-                            class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
-                            placeholder="Username">
+                            class="peer w-full px-4 py-2.5 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 placeholder-transparent"
+                            placeholder=" ">
+                        <label for="email"
+                            class="absolute left-2 -top-2.5 bg-white px-2 text-sm text-gray-600
+                                   transition-all duration-200
+                                   peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400
+                                   peer-placeholder-shown:top-2.5 peer-focus:-top-2.5
+                                   peer-focus:text-sm peer-focus:text-blue-500">
+                            Email
+                        </label>
                     </div>
 
                     <div class="relative">
                         <input type="password" name="password" id="password" required
-                            class="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
-                            placeholder="Password">
+                            class="peer w-full px-4 py-2.5 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 placeholder-transparent"
+                            placeholder=" ">
+                        <label for="password"
+                            class="absolute left-2 -top-2.5 bg-white px-2 text-sm text-gray-600
+                                   transition-all duration-200
+                                   peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400
+                                   peer-placeholder-shown:top-2.5 peer-focus:-top-2.5
+                                   peer-focus:text-sm peer-focus:text-blue-500">
+                            Password
+                        </label>
                         <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
                             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" id="eye-icon">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -60,7 +94,7 @@
 function togglePassword() {
     const password = document.getElementById("password");
     const eyeIcon = document.getElementById("eye-icon");
-    
+
     if (password.type === "password") {
         password.type = "text";
         eyeIcon.innerHTML = `
@@ -82,7 +116,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     const submitBtn = document.getElementById('submitBtn');
     const loadingSpinner = submitBtn.querySelector('.loading');
     const btnText = submitBtn.querySelector('.btn-text');
-    
+
     if (!email || !password) {
         e.preventDefault();
         alert('Please fill in all fields');
