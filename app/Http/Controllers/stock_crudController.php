@@ -12,9 +12,7 @@ class stock_crudController extends Controller
      */
     public function index()
     {
-        return view('orang_gudang.produk',[
-            'judul' => 'Produk|stock',
-        ]);
+        //
     }
 
     /**
