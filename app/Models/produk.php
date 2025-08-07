@@ -20,5 +20,9 @@ class produk extends Model
     {
         return $this->hasMany(detail_transaksi::class,'id_produk');
     }
+    public function pabrik():BelongsTo
+    {
+       return $this->belongsTo(pabrik::class,'id_pabrik');
+    }
 
 }

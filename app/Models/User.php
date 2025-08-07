@@ -23,6 +23,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(role::class,'role_id');
     }
+    public function pabrik():BelongsTo
+    {
+        return $this->belongsTo(pabrik::class,'pabrik_id');
+    }
    protected $guarded = ['id'];
 
     /**
