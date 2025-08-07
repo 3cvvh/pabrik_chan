@@ -3,16 +3,7 @@
 {{-- <x-navbar></x-navbar> --}}
 <div class="bg-blue-100 min-h-screen py-0">
     <!-- Header -->
-    <div class="bg-blue-500 py-5 px-8 flex items-center justify-between">
-        <h1 class="text-3xl font-bold text-white">Factory Owner</h1>
-        <div class="flex gap-4">
-            <a href="#" class="bg-white text-blue-600 font-semibold px-6 py-2 rounded-lg shadow hover:bg-blue-50 transition">Dashboard</a>
-            <a href="#" class="bg-red-500 text-white font-semibold px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-red-600 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" /></svg>
-                Logout
-            </a>
-        </div>
-    </div>
+    <x-navbar></x-navbar>
     <!-- Welcome Card -->
     <div class="flex justify-center mt-8">
         <div class="bg-white rounded-xl shadow-md p-8 w-full max-w-md text-center">
