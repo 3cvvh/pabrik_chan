@@ -1,6 +1,12 @@
 <nav class="bg-blue-500 border-t-2 border-black px-8 py-3 flex items-center justify-between">
     <div class="text-white font-bold text-xl">
-        Welcome {{ auth()->user()->name }}
+        Welcome @if (Auth::user()->role_id === 1)
+            admin
+        @elseif (Auth::user()->role_id === 2)
+            orang gudang
+        @elseif (Auth::user()->role_id === 3)
+            owner
+        @endif
     </div>
     <div class="flex items-center space-x-4">
         @if(Auth::user()->role_id === 2)
