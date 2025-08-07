@@ -12,7 +12,11 @@ class crud_pabrikController extends Controller
      */
     public function index()
     {
-        //
+        $pabrik = pabrik::all();
+        return view('admin.pabrik', [
+            'judul' => 'Pabrik',
+            'pabrik' => $pabrik
+        ]);
     }
 
     /**
@@ -20,7 +24,9 @@ class crud_pabrikController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.form_pabrik',[
+            'judul' => 'Tambah Pabrik',
+        ]);
     }
 
     /**
@@ -28,7 +34,13 @@ class crud_pabrikController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datavalid = $request->validate([
+            'name' => ['required','max:80'],
+            'alamat' => ['required'],
+            'no_telepon' => ['required','min:9']
+        ]);
+        pabrik::create($datavalid);
+        return redirect('/dashboard/admin/crud_pabrik')->with('tambah','berhasil menambahkan data');
     }
 
     /**
