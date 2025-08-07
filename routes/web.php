@@ -19,6 +19,7 @@ Route::middleware(['guest'])->group(function(){
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
+    Route::get('/dashboard/admin/crud_pabrik',[crud_pabrikController::class,'index'])->name('crud_pabrik.index');
     Route::resource('/dashboard/admin/crud_pabrik',crud_pabrikController::class);
 });
 

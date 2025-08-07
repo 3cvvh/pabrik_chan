@@ -56,7 +56,10 @@ class crud_pabrikController extends Controller
      */
     public function edit(pabrik $pabrik)
     {
-        //
+        return view('admin.form_pabrik_edit', [
+            'judul' => 'Edit Pabrik',
+            'pabrik' => $pabrik
+        ]);
     }
 
     /**
@@ -64,7 +67,13 @@ class crud_pabrikController extends Controller
      */
     public function update(Request $request, pabrik $pabrik)
     {
-        //
+        $dataedit = $request->validate([
+            'name' => ['required','max:80'],
+            'alamat' => ['required'],
+            'no_telepon' => ['required','min:9']
+        ]);
+        $pabrik->update($dataedit);
+        return redirect('/dashboard/admin/crud_pabrik')->with('tambah','berhasil mengedit data');
     }
 
     /**
@@ -72,6 +81,7 @@ class crud_pabrikController extends Controller
      */
     public function destroy(pabrik $pabrik)
     {
-        //
-    }
+       pabrik::destroy($pabrik->id);
+        return redirect('/dashboard/admin/crud_pabrik')->with('hapus', 'Data berhasil dihapus');
+}
 }
