@@ -20,4 +20,9 @@ class transaksi extends Model
     {
         return $this->belongsTo(pembeli::class,'id_pembeli');
     }
+    public function pabrik():BelongsTo
+    {
+        return $this->belongsTo(pabrik::class,'id_pabrik');
+    }
+
 }
