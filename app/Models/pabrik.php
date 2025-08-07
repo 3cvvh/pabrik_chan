@@ -10,4 +10,6 @@ class pabrik extends Model
     /** @use HasFactory<\Database\Factories\PabrikFactory> */
     use HasFactory;
     protected $guarded = ['id'];
+    protected $table = 'pabrik';
+    protected $fillable = ['nama', 'alamat', 'no_telepon'];
 }
