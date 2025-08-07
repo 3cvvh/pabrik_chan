@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_pabrik');
-            $table->foreign('id_pabrik')->references('id')->on('pabriks');
+            $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->unsignedBigInteger('id_pembeli');
-            $table->foreign('id_pembeli')->references('id')->on('pembelis');
+            $table->foreign('id_pembeli')->references('id')->on('pembelis')->onDelete('cascade');
             $table->integer('jumlah');
             $table->integer('total_harga');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');

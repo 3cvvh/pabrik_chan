@@ -67,13 +67,16 @@ class crud_pabrikController extends Controller
      */
     public function update(Request $request, pabrik $pabrik)
     {
-        $dataedit = $request->validate([
+   $dataedit = $request->validate([
             'name' => ['required','max:80'],
             'alamat' => ['required'],
             'no_telepon' => ['required','min:9']
         ]);
-        $pabrik->update($dataedit);
-        return redirect('/dashboard/admin/crud_pabrik')->with('tambah','berhasil mengedit data');
+        
+        // Panggil metode update() pada instance model $pabrik yang sudah disediakan
+        pabrik::where('id', $pabrik->id)->update($dataedit);
+        
+        return redirect('/dashboard/admin/crud_pabrik')->with('edit','berhasil mengedit data');
     }
 
     /**

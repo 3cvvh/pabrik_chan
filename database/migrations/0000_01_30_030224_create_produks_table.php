@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->text('deskripsi')->nullable();
             $table->unsignedBigInteger('id_pabrik');
-            $table->foreign('id_pabrik')->references('id')->on('pabriks');
+            $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->integer('harga');
             $table->string('gambar')->nullable();
             $table->enum('jenis',['woll','sutra','kartun']);

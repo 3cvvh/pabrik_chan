@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->integer('jumlah');
             $table->unsignedBigInteger('id_produk');
-            $table->foreign('id_produk')->references('id')->on('produks');
+            $table->foreign('id_produk')->references('id')->on('produks')->onDelete('cascade');
             $table->unsignedBigInteger('id_gudang');
-            $table->foreign('id_gudang')->references('id')->on('gudangs');
+            $table->foreign('id_gudang')->references('id')->on('gudangs')->onDelete('cascade');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar')->nullable();
             $table->string('keterangan')->nullable();
