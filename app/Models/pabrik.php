@@ -10,4 +10,8 @@ class pabrik extends Model
     /** @use HasFactory<\Database\Factories\PabrikFactory> */
     use HasFactory;
     protected $guarded = ['id'];
+    public function users()
+    {
+        return $this->hasMany(User::class, 'pabrik_id');
+    }
 }
