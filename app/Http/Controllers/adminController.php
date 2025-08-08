@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pabrik;
 use Illuminate\Http\Request;
 
 class adminController extends Controller
@@ -10,6 +11,12 @@ class adminController extends Controller
     {
         return view('admin.dashboard',[
             'judul' => 'Dashboard|admin',
+        ]);
+    }
+    public function edit(pabrik $pabrik){
+        return view('admin.form_pabrik_edit',[
+            'judul' => 'edit',
+            'pabrik' => $pabrik
         ]);
     }
 }

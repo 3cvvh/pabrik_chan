@@ -25,7 +25,7 @@
                     <td class="py-2 px-4 border-b">{{ $pabrik->name }}</td>
                     <td class="py-2 px-4 border-b">{{ $pabrik->alamat }}</td>
                     <td class="py-2 px-4 border-b">
-                        <a href="/dashboard/admin/crud_pabrik/{{ $pabrik->id }}/edit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 transition">Edit</a>
+                        <a href="/edit/{{ $pabrik->id }}" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 transition">Edit</a>
                         <form action="/dashboard/admin/crud_pabrik/{{ $pabrik->id }}" method="POST" class="inline" style="display:inline;">
                             @csrf
                             @method('DELETE')

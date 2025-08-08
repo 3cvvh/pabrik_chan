@@ -14,8 +14,10 @@
                 <div class="bg-white rounded-lg shadow-md p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Data Pabrik</h2>
 
-            <form action="/dashboard/admin/crud_pabrik/{{ $pabrik->id }}/edit" method="post" class="space-y-6">
+            <form action="/dashboard/admin/crud_pabrik/{{ $pabrik->id }}" method="post" class="space-y-6">
                 @csrf
+                @method('put')
+                <input type="hidden" name="id" value="{{ $pabrik->id }}">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Pabrik</label>
                     <input type="text" name="name" id="name"

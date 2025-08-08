@@ -56,6 +56,7 @@ class crud_pabrikController extends Controller
      */
     public function edit(pabrik $pabrik)
     {
+        return $pabrik;
         return view('admin.form_pabrik_edit', [
             'judul' => 'Edit Pabrik',
             'pabrik' => $pabrik
@@ -72,10 +73,10 @@ class crud_pabrikController extends Controller
             'alamat' => ['required'],
             'no_telepon' => ['required','min:9']
         ]);
-        
+
         // Panggil metode update() pada instance model $pabrik yang sudah disediakan
-        pabrik::where('id', $pabrik->id)->update($dataedit);
-        
+        pabrik::where('id', $request->id)->update($dataedit);
+
         return redirect('/dashboard/admin/crud_pabrik')->with('edit','berhasil mengedit data');
     }
 
