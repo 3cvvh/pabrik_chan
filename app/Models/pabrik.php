@@ -11,11 +11,6 @@ class pabrik extends Model
     /** @use HasFactory<\Database\Factories\PabrikFactory> */
     use HasFactory;
     protected $guarded = ['id'];
-<<<<<<< HEAD
-    public function users()
-    {
-        return $this->hasMany(User::class, 'pabrik_id');
-=======
 
     public function produk():HasMany
     {
@@ -32,6 +27,5 @@ class pabrik extends Model
     public function user():HasMany
     {
         return $this->hasMany(User::class,'pabrik_id');
->>>>>>> 7796c11bdc1a6b76fd4b1075e2231cfe440b90ee
     }
 }

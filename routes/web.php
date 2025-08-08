@@ -3,11 +3,8 @@
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\PabrikController;
 use App\Http\Controllers\authController;
-<<<<<<< HEAD
 use App\Http\Controllers\crud_userContoller;
-=======
 use App\Http\Controllers\crud_pabrikController;
->>>>>>> 7796c11bdc1a6b76fd4b1075e2231cfe440b90ee
 use App\Http\Controllers\orang_gudangController;
 use App\Http\Controllers\ownerController;
 use App\Http\Controllers\user_crudController;
@@ -21,11 +18,8 @@ Route::middleware(['guest'])->group(function(){
 //daftar route jika user sudah login sebagai admin
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
-<<<<<<< HEAD
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
-=======
     Route::resource('/dashboard/admin/crud_pabrik',crud_pabrikController::class);
->>>>>>> 7796c11bdc1a6b76fd4b1075e2231cfe440b90ee
 });
 
 //daftar route jika user sudah login sebagai orang gudang
