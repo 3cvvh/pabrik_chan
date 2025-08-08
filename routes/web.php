@@ -22,7 +22,6 @@ Route::middleware(['beatrice','admin'])->group(function () {
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
     Route::get('/dashboard/admin/crud_pabrik',[crud_pabrikController::class,'index'])->name('crud_pabrik.index');
     Route::resource('/dashboard/admin/crud_pabrik',crud_pabrikController::class);
-    Route::get('/edit/{pabrik:id}',[adminController::class, 'edit']);
 });
 
 //daftar route jika user sudah login sebagai orang gudang
