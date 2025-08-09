@@ -23,7 +23,9 @@ class user_crudController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.form_user',[
+            'judul' => 'form tambah user'
+        ]);
     }
 
     /**
@@ -31,7 +33,16 @@ class user_crudController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'alamat' => 'required',
+            'pabrik' => 'required',
+            'role' => 'required',
+        ]);
+        User::create($request -> all());
+
+        return redirect()->route('crud_user.index')->with('success', 'user berhasil di tamabahkan');
     }
 
     /**
@@ -39,7 +50,7 @@ class user_crudController extends Controller
      */
     public function show(User $user)
     {
-        //
+        
     }
 
     /**
@@ -47,7 +58,9 @@ class user_crudController extends Controller
      */
     public function edit(User $user)
     {
-        //
+         return view('admin.form_user',[
+            'judul' => 'form edit user'
+        ]);
     }
 
     /**
@@ -55,7 +68,15 @@ class user_crudController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+         $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'alamat' => 'required',
+            'pabrik' => 'required',
+            'role' => 'required',
+        ]);
+        User::update($request -> all());
+        return redirect()->route('crud_user.index')->with('success', 'user berhasil di perbarui');
     }
 
     /**

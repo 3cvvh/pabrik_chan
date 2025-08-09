@@ -7,7 +7,7 @@
         <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-r hover:bg-blue-700">Cari</button>
     </form>
     <div class="flex justify-end mb-4">
-        <a href="{{ route('crud_user.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <a href="{{ route('crud_user.index') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             Tambah User
         </a>
     </div>
@@ -35,12 +35,12 @@
                     <td>{{ $user->pabrik->name ?? '-' }}</td>
                     <td>{{ $user->role->name ?? '-' }}</td>
                     <td class="space-x-2">
-                        <a href="{{ route('crud_user.update', $user->id) }}" class="text-blue-500 hover:underline">Update</a>
-                        <form action="{{ route('crud_user.destroy', $user->id) }}" method="POST" class="inline">
+                         <a href="/dashboard/admin/crud_edit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 transition">Edit</a>
+                        <form action="" method="POST" class="inline" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Yakin hapus user ini?')">
-                                Hapus
+                            <button class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded transition" onclick="return confirm('Yakin hapus?')">Hapus</button>
+                        </form>
                             </button>
                         </form>
                     </td>
