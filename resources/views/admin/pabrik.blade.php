@@ -19,6 +19,7 @@
                     <th class="py-3 px-4 border-b text-left">No</th>
                     <th class="py-3 px-4 border-b text-left">Nama Pabrik</th>
                     <th class="py-3 px-4 border-b text-left">Alamat</th>
+                    <th class="py-3 px-4 border-b text-left">Logo</th>
                     <th class="py-3 px-4 border-b text-left">Aksi</th>
                 </tr>
             </thead>
@@ -28,6 +29,13 @@
                     <td class="py-2 px-4 border-b">{{ $loop->iteration }}</td>
                     <td class="py-2 px-4 border-b">{{ $pabrik->name }}</td>
                     <td class="py-2 px-4 border-b">{{ $pabrik->alamat }}</td>
+                    <td class="py-2 px-4 border-b">
+                        @if ($pabrik->gambar)
+                            <img src="{{ asset('storage/' . $pabrik->gambar) }}" alt="Gambar Pabrik" class="w-16 h-16 object-cover rounded-md">
+                        @else
+                            <span class="text-gray-500">Tidak ada gambar</span>
+                        @endif
+                    </td> 
                     <td class="py-2 px-4 border-b">
                         
                         <a href="/edit/{{ $pabrik->id }}" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 transition">Edit</a>

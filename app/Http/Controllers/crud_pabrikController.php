@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\pabrik;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class crud_pabrikController extends Controller
 {
@@ -37,8 +39,12 @@ class crud_pabrikController extends Controller
         $datavalid = $request->validate([
             'name' => ['required','max:80'],
             'alamat' => ['required'],
-            'no_telepon' => ['required','min:9']
+            'no_telepon' => ['required','min:9'] ,
+            'gambar' =>['image']
         ]);
+        if($request->file('gambar')){
+            $datavalid['gambar'] = $request->file('gambar')->store('pabriks-img');
+        }
         pabrik::create($datavalid);
         return redirect('/dashboard/admin/crud_pabrik')->with('tambah','berhasil menambahkan data');
     }
@@ -71,9 +77,15 @@ class crud_pabrikController extends Controller
    $dataedit = $request->validate([
             'name' => ['required','max:80'],
             'alamat' => ['required'],
-            'no_telepon' => ['required','min:9']
+            'no_telepon' => ['required','min:9'],
+            'gambar' => ['image']
         ]);
-
+        if($request->gambar){
+            if($pabrik->gambar == true){
+                Storage::delete($pabrik->gambar);
+            }
+            $dataedit['gambar'] = $request->file('gambar')->store('pabriks-img');
+        }
         // Panggil metode update() pada instance model $pabrik yang sudah disediakan
         pabrik::where('id', $request->id)->update($dataedit);
 
@@ -85,6 +97,9 @@ class crud_pabrikController extends Controller
      */
     public function destroy(pabrik $pabrik,Request $request)
     {
+        if($pabrik->gambar == true){
+            Storage::delete($request->gambar);
+        }
        pabrik::destroy($request->id);
         return redirect('/dashboard/admin/crud_pabrik')->with('hapus', 'Data berhasil dihapus');
 }

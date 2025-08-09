@@ -13,10 +13,4 @@ class adminController extends Controller
             'judul' => 'Dashboard|admin',
         ]);
     }
-    public function edit(pabrik $pabrik){
-        return view('admin.form_pabrik_edit',[
-            'judul' => 'edit',
-            'pabrik' => $pabrik
-        ]);
-    }
 }

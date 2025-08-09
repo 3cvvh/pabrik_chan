@@ -16,7 +16,7 @@
         <div class="bg-white rounded-lg shadow-md p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Form Data Pabrik</h2>
 
-            <form action="/dashboard/admin/crud_pabrik" method="post" class="space-y-6">
+            <form action="/dashboard/admin/crud_pabrik" method="post" class="space-y-6"  enctype="multipart/form-data">
                 @csrf
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Pabrik</label>
@@ -47,6 +47,12 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+                <div class="mb-6">
+                    <label for="gambar" class="block text-gray-700 text-sm font-medium mb-2">logo</label>
+                    <input type="file" id="gambar" name="gambar" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+                    @error('gambar')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
 
                 <button  type="submit"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out">
