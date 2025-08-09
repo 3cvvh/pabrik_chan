@@ -6,6 +6,8 @@
             orang gudang
         @elseif (Auth::user()->role_id === 3)
             owner
+            @else
+            super admin
         @endif
     </div>
     <div class="flex items-center space-x-4">
