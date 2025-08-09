@@ -60,12 +60,11 @@ class crud_pabrikController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(pabrik $pabrik)
+    public function edit($id)
     {
-        return $pabrik;
         return view('admin.form_pabrik_edit', [
             'judul' => 'Edit Pabrik',
-            'pabrik' => $pabrik
+            'pabrik' => pabrik::find($id)
         ]);
     }
 
