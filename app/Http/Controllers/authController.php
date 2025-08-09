@@ -35,6 +35,8 @@ class authController extends Controller
         return back()->with('gagal','password atau email salah!!');
     }
     public function logout(Request $request){
+        Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect(route('login'));

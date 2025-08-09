@@ -7,7 +7,7 @@
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">User List</h1>
-            <a href="/dashboard/super_admin/crud_user/create">
+            <a href="/dashboard/super_admin/crud_users/create">
             <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Add New User
@@ -90,7 +90,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex space-x-2">
                                 <a href="" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">Edit</a>
-                                <form action="/dashboard/super_admin/crud_user/{{ $user->id }}" method="post" class="delete-form">
+                                <form action="/dashboard/super_admin/crud_users/{{ $user->id }}" method="post" class="delete-form">
                                     @csrf
                                     @method('delete')
                                     <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">Hapus</button>

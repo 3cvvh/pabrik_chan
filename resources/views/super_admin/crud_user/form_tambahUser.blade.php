@@ -1,6 +1,6 @@
 @extends('layout.main')
 @section('content')
-<form action="/dashboard/super_admin/crud_user" method="post">
+<form action="/dashboard/super_admin/crud_users" method="post">
 @csrf
 <label for="name">name:</label>
 <input type="text" name="name" id="name"><br>
@@ -43,6 +43,6 @@
 <span class="text-red-500 text-sm">{{ $message }}</span><br>
 @enderror
 <button type="submit">Simpan</button>
-<a href="/dashboard/super_admin/crud_user" class="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg text-sm font-medium transition-colors duration-200">Kembali</a>
+<a href="/dashboard/super_admin/crud_users" class="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg text-sm font-medium transition-colors duration-200">Kembali</a>
 </form>
 @endsection

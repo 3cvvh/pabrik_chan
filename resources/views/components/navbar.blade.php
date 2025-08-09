@@ -16,7 +16,7 @@
             <i class="fas fa-industry w-5 h-5 mr-2"></i>
             Pabrik
         </a>
-         <a href="/dashboard/super_admin/crud_user" class="flex items-center text-white font-medium hover:text-blue-200 transition px-3 py-2">
+         <a href="/dashboard/super_admin/crud_users" class="flex items-center text-white font-medium hover:text-blue-200 transition px-3 py-2">
             <i class="fas fa-users w-5 h-5 mr-2"></i>
             user
         </a>
