@@ -29,7 +29,7 @@ class authController extends Controller
                 return redirect()->intended(route('owner.index'));
             }else{
                 $request->session()->regenerate();
-                return redirect()->intended('/dashboard/super_admin');
+                return redirect()->intended(route('super.index'));
             }
         }
         return back()->with('gagal','password atau email salah!!');

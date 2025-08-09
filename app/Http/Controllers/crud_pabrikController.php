@@ -71,8 +71,9 @@ class crud_pabrikController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, pabrik $pabrik)
+    public function update(Request $request, $id)
     {
+        $pabrik = pabrik::find($id);
    $dataedit = $request->validate([
             'name' => ['required','max:80'],
             'alamat' => ['required'],
