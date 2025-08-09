@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class user_crudController extends Controller
 {
@@ -12,9 +13,10 @@ class user_crudController extends Controller
      */
     public function index()
     {
+        $user = User::where('pabrik_id', Auth::user()->pabrik_id)->get();
         return view('admin.crud_user', [
         'judul' => 'crud user',
-        'data_user' => User::all()
+        'data_user' => $user
         ]);
     }
 

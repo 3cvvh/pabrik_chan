@@ -1,9 +1,7 @@
 <?php
 
 use App\Http\Controllers\adminController;
-use App\Http\Controllers\PabrikController;
 use App\Http\Controllers\authController;
-use App\Http\Controllers\crud_userContoller;
 use App\Http\Controllers\crud_pabrikController;
 use App\Http\Controllers\orang_gudangController;
 use App\Http\Controllers\ownerController;
