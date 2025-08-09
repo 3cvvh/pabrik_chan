@@ -9,6 +9,7 @@ use App\Http\Controllers\stock_crudController;
 use App\Http\Controllers\user_crudController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\super_beatriceController;
+use App\Http\Controllers\users_crudController;
 
 //daftar route Jika user belum login
 Route::middleware(['guest'])->group(function(){
@@ -19,8 +20,6 @@ Route::middleware(['guest'])->group(function(){
 Route::middleware(['beatrice','admin'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
-    Route::get('/dashboard/admin/crud_pabrik',[crud_pabrikController::class,'index'])->name('crud_pabrik.index');
-    Route::resource('/dashboard/admin/crud_pabrik',crud_pabrikController::class);
 });
 
 //daftar route jika user sudah login sebagai orang gudang
@@ -35,6 +34,8 @@ Route::middleware(['beatrice','owner'])->group(function () {
 });
 //daftar route jika user sudah login sebagai super admin
 Route::middleware(['beatrice','beatricekawaii'])->group(function () {
+    Route::resource('/dashboard/super_admin/crud_pabrik',crud_pabrikController::class);
+    Route::resource('/dashboard/super_admin/crud_user',users_crudController::class);
     Route::get('/dashboard/super_admin',[super_beatriceController::class, 'index'])->name('super.index');
 });
 //logout

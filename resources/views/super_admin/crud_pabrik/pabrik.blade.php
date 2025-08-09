@@ -11,7 +11,7 @@
         </div>
     @endif
 @endforeach
-    <a href="/dashboard/admin/crud_pabrik/create" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mb-4 transition">Tambah Pabrik</a>
+    <a href="/dashboard/super_admin/crud_pabrik/create" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mb-4 transition">Tambah Pabrik</a>
     <div class="overflow-x-auto rounded shadow">
         <table class="min-w-full bg-white border border-gray-200">
             <thead class="bg-gray-100">
@@ -24,9 +24,9 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($pabrik as $pabriks => $pabrik)
+                @forelse($pabrik as $index => $pabrik)
                 <tr class="hover:bg-gray-50">
-                    <td class="py-2 px-4 border-b">{{ $loop->iteration }}</td>
+                    <td class="py-2 px-4 border-b">{{ $index+1 }}</td>
                     <td class="py-2 px-4 border-b">{{ $pabrik->name }}</td>
                     <td class="py-2 px-4 border-b">{{ $pabrik->alamat }}</td>
                     <td class="py-2 px-4 border-b">
@@ -37,11 +37,8 @@
                         @endif
                     </td>
                     <td class="py-2 px-4 border-b">
-
-
-
-                        <a href="/dashboard/admin/crud_pabrik/{{ $pabrik->id }}/edit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 transition">Edit</a>
-                        <form action="/dashboard/admin/crud_pabrik/{{ $pabrik->id }}" method="POST" class="inline" style="display:inline;">
+                        <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}/edit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 transition">Edit</a>
+                        <form action="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}" method="POST" class="inline" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <input type="hidden" name="id" value="{{ $pabrik->id }}">
