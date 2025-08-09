@@ -14,7 +14,7 @@ class authController extends Controller
     }
     public function store(Request $request){
         $datavalid = $request->validate([
-            'email' => 'required|email:dns',
+            'email' => 'required',
             'password' => 'required|min:5'
         ]);
         if(Auth::attempt($datavalid)){
@@ -27,6 +27,9 @@ class authController extends Controller
             }elseif(Auth::getUser()->role_id == 3){
                 $request->session()->regenerate();
                 return redirect()->intended(route('owner.index'));
+            }else{
+                $request->session()->regenerate();
+                return redirect()->intended('/dashboard/super_admin');
             }
         }
         return back()->with('gagal','password atau email salah!!');

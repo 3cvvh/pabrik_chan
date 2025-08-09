@@ -33,6 +33,9 @@ class DatabaseSeeder extends Seeder
         role::create([
             'name' => 'owner'
         ]);
+        role::create([
+            'name' => 'bearice❤aqil'
+        ]);
         User::factory()->create([
             'name' => 'aqil',
             'pabrik_id' => 1,
@@ -56,6 +59,14 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email' => 'tasnim@gmail.com',
             'alamat' => 'jelekong chan'
+        ]);
+        User::factory()->create([
+            'name' => 'Killua',
+            'pabrik_id' => 1,
+            'role_id' => 4,
+            'password' => Hash::make('password'),
+            'email' => 'killua@gmail.com',
+            'alamat' => 'Shiranai'
         ]);
     }
 }

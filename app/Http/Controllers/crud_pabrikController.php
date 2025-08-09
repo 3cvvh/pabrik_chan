@@ -94,10 +94,11 @@ class crud_pabrikController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(pabrik $pabrik,Request $request)
+    public function destroy($id,Request $request)
     {
-        if($pabrik->gambar == true){
-            Storage::delete($request->gambar);
+        $pabrik =  pabrik::find($id);
+        if($pabrik->gambar){
+            Storage::delete($pabrik->gambar);
         }
        pabrik::destroy($request->id);
         return redirect('/dashboard/admin/crud_pabrik')->with('hapus', 'Data berhasil dihapus');
