@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('content')
 <x-navbar></x-navbar>
-<div class="bg-blue-100 min-h-screen px-8 pt-[64px]"> 
+<div class="bg-blue-100 min-h-screen px-8 pt-[64px]">
     <form action="{{ route('crud_user.index') }}" method="GET" class="flex items-center mb-6">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari User..." class="w-1/2 px-4 py-2 rounded-l bg-white focus:outline-none" /> {{-- search bar putih --}}
         <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-r hover:bg-blue-700">Cari</button>

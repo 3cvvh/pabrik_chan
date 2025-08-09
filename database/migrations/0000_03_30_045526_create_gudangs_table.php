@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('gudangs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_pabrik');
-            $table->foreign('id_pabrik')->references('id')->on('pabriks');
+            $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->string('nama');
             $table->text('alamat');
             $table->string('no_telepon');

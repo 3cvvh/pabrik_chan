@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('alamat');
             $table->string('no_telepon')->nullable();
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }

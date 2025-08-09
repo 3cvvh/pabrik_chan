@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('detail_transaksis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_transaksi');
-            $table->foreign('id_transaksi')->references('id')->on('transaksis');
+            $table->foreign('id_transaksi')->references('id')->on('transaksis')->onDelete('cascade');
             $table->unsignedBigInteger('id_produk');
-            $table->foreign('id_produk')->references('id')->on('produks');
+            $table->foreign('id_produk')->references('id')->on('produks')->onDelete('cascade');
             $table->integer('jumlah');
             $table->integer('harga_satuan');
             $table->integer('total_harga');
