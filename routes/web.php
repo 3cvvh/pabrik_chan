@@ -10,6 +10,7 @@ use App\Http\Controllers\ownerController;
 use App\Http\Controllers\stock_crudController;
 use App\Http\Controllers\user_crudController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\super_beatriceController;
 
 //daftar route Jika user belum login
 Route::middleware(['guest'])->group(function(){
@@ -33,6 +34,10 @@ Route::middleware(['beatrice','orang_gudang'])->group(function () {
 Route::middleware(['beatrice','owner'])->group(function () {
     Route::get('/dashboard/owner',[ownerController::class,'index'])->name('owner.index');
     Route::get('/dashboard/owner/generatelaporan', [ownerController::class, 'generateLaporan'])->name('owner.generatelaporan');
+});
+//daftar route jika user sudah login sebagai super admin
+Route::middleware(['beatrice','beatricekawaii'])->group(function () {
+    Route::get('/dashboard/super_admin',[super_beatriceController::class, 'index'])->name('super.index');
 });
 //logout
 Route::post('/logout',[authController::class,'logout'])->name('logout');
