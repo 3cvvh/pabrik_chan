@@ -15,7 +15,7 @@ class authController extends Controller
     public function store(Request $request){
         $datavalid = $request->validate([
             'email' => 'required',
-            'password' => 'required|min:5'
+            'password' => 'required'
         ]);
         if(Auth::attempt($datavalid)){
             if(Auth::getUser()->role_id == 1){

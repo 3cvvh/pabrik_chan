@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pembeli');
             $table->foreign('id_pembeli')->references('id')->on('pembelis')->onDelete('cascade');
             $table->integer('jumlah');
-            $table->integer('total_harga');
+            $table->decimal('total_harga');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
             $table->dateTime('tanggal_transaksi')->useCurrent();
             $table->dateTime('tanggal_pengiriman')->nullable();

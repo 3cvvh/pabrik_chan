@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\role;
 use App\Models\User;
 use App\Models\pabrik;
+use App\Models\pembeli;
+use App\Models\transaksi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -17,12 +19,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
+          pembeli::factory()->create([
+            'name' => 'aqil',
+            'alamat' => 'jawa',
+            'no_telepon' => '021023012',
+        ]);
         pabrik::create([
             'name' => 'jelekong corp',
             'alamat' => 'kacamatan ciparay',
             'no_telepon' => '01293103910'
         ]);
+   transaksi::factory(10)->create();
 
         role::create([
             'name' => 'admin'

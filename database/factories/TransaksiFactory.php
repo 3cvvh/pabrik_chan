@@ -17,7 +17,10 @@ class TransaksiFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_pabrik' => 1,
+            'id_pembeli' => 1,
+            'jumlah' => 100,
+            'total_harga' => 1000,
         ];
     }
 }

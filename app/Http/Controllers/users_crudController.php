@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pabrik;
 use App\Models\role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class users_crudController extends Controller
 {
@@ -67,7 +69,7 @@ class users_crudController extends Controller
             'alamat' => 'required',
         ]);
         User::create($data);
-        return redirect('/dashboard/super_admin/crud_user')->with('tambah','berhasil menambah data user');
+        return redirect('/dashboard/super_admin/crud_users')->with('tambah','berhasil menambah data');
     }
 
     /**
@@ -81,17 +83,36 @@ class users_crudController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        //
+        return view('super_admin.crud_user.edit',[
+            'data' => user::find($id),
+            'pabriks' => pabrik::all(),
+            'roles' => role::where('id', '!=','4' )->get(),
+            'judul' => User::find($id)->name
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request,$id)
     {
-        //
+        $databaru = $request->validate([
+            'name' => ['required'],
+            'email' => ['email:dns','required'],
+            'role_id' => 'required|integer',
+            'pabrik_id' => 'required|integer',
+            'alamat' => 'required',
+        ]);
+        if(!$request->password){
+            $user_old_pw = User::find($id);
+            $databaru['password'] =  $user_old_pw->password;
+        }else{
+            $databaru['password'] = Hash::make($request->password);
+        }
+        User::where('id', '=',$id)->update($databaru);
+        return redirect()->route('crud_users.index')->with('edit','berhasil mengedit data');
     }
 
     /**
@@ -100,6 +121,6 @@ class users_crudController extends Controller
     public function destroy($id)
     {
         User::destroy($id);
-        return redirect('/dashboard/super_admin/crud_user')->with('hapus','berhasil menghapus data user');
+        return redirect('/dashboard/super_admin/crud_users')->with('hapus','berhasil menghapus data user');
     }
 }
