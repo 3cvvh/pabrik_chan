@@ -10,47 +10,85 @@
             super admin
         @endif
     </div>
-    <div class="flex items-center space-x-4">
-        @if(Auth::user()->role_id === 2)
-            <a href="/dashboard/org_gudang" class="bg-white text-blue-600 font-semibold px-4 py-1 rounded shadow hover:bg-blue-100 transition">Dashboard</a>
-        @endif
-        @if(auth()->user()->role_id === 1)
-        <a href="/transaksi" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v5a2 2 0 002 2h8a2 2 0 002-2v-5a2 2 0 00-2-2zm-8-2a3 3 0 016 0v2H9V7zm8 7a1 1 0 01-1 1H5a1 1 0 01-1-1v-5a1 1 0 011-1h10a1 1 0 011 1v5z"/></svg>
-            Transaksi
-        </a>
-        <a href="/dasboard/admin/crud_pabrik" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
+    <div class="flex items-center gap-6">
+        @if(Auth::user()->role_id == 4)
+         <a href="/dashboard/super_admin/crud_pabrik" class="flex items-center text-white font-medium hover:text-blue-200 transition px-3 py-2"> <!-- Added px-3 py-2 -->
+            <i class="fas fa-industry w-5 h-5 mr-2"></i>
             Pabrik
         </a>
+         <a href="/dashboard/super_admin/crud_user" class="flex items-center text-white font-medium hover:text-blue-200 transition px-3 py-2">
+            <i class="fas fa-users w-5 h-5 mr-2"></i>
+            user
+        </a>
+        @endif
+        @if(Auth::user()->role_id === 2)
+            <a href="/dashboard/org_gudang" class="bg-white text-blue-600 font-semibold px-6 py-2 rounded shadow hover:bg-blue-100 transition"> <!-- Increased padding -->
+                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
+        @endif
+        @if(auth()->user()->role_id === 1)
+            <div class="flex items-center gap-6">
+            <a href="/transaksi" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+            <i class="fas fa-user w-5 h-5 mr-1"></i>
+            user
+        </a>
+        <a href="/transaksi" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+            <i class="fas fa-exchange-alt w-5 h-5 mr-1"></i>
+            Transaksi
+        </a>
         <a href="/pembelis" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
+            <i class="fas fa-user-tag w-5 h-5 mr-1"></i>
             Pembeli
         </a>
         <a href="/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
+            <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
         </a>
         <a href="/gudang" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
+            <i class="fas fa-warehouse w-5 h-5 mr-1"></i>
             gudang
         </a>
+            </div>
         @endif
         @if (auth()->user()->role_id === 2)
         <a href="/dashboard/org_gudang/stock" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
+            <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
         </a>
         @endif
         @if (auth()->user()->role_id === 3)
         <a href="/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
-            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 7a3 3 0 11-6 0 3 3 0 016 0zm-3 5a5 5 0 00-5 5v1h10v-1a5 5 0 00-5-5z"/></svg>
+            <i class="fas fa-chart-bar w-5 h-5 mr-1"></i>
             data laporan
         </a>
         @endif
-        <form action="{{ route('logout') }}" method="post">
+        <form action="{{ route('logout') }}" method="post" class="ml-6" id="logout-form">
             @csrf
-            <button class="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded transition" type="submit">logout</button>
+            <button type="button" onclick="confirmLogout()" class="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded transition">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                logout
+            </button>
         </form>
     </div>
 </nav>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "Anda akan keluar dari sistem",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Logout!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        })
+    }
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
