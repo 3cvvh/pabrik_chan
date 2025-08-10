@@ -3,30 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Pabrik;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class user_crudController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
+
     {
-        $user = User::where('pabrik_id', Auth::user()->pabrik_id)->get();
+        $query = User::where('pabrik_id', Auth::user()->pabrik_id);
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        $data_user = $query->get();
         return view('admin.crud_user', [
-        'judul' => 'crud user',
-        'data_user' => $user
+            'judul' => 'crud user',
+            'data_user' => $data_user
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.form_user',[
-            'judul' => 'form tambah user'
+        $roles = Role::all();
+        $pabriks = Pabrik::all();
+        return view('admin.form_user', [
+            'judul' => 'form tambah user',
+            'roles' => $roles,
+            'pabriks' => $pabriks
         ]);
     }
 
@@ -35,17 +48,27 @@ class user_crudController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
+        $request->validate([
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'alamat' => 'required',
-            'pabrik' => 'required',
-            'role' => 'required',
+            'alamat' => 'required|string|max:255',
+            'pabrik_id' => 'required|exists:pabriks,id',
+            'role_id' => 'required|exists:roles,id',
+            'password' => 'required|string|min:5|confirmed',
         ]);
-        User::create($request -> all());
 
-        return redirect()->route('crud_user.index')->with('success', 'user berhasil di tamabahkan');
+        User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => bcrypt($request->password), // hash password!
+            'alamat'    => $request->alamat,
+            'pabrik_id' => $request->pabrik_id,
+            'role_id'   => $request->role_id,
+        ]);
+
+        return redirect()->route('crud_user.index')->with('success', 'User berhasil ditambahkan');
     }
+    
 
     /**
      * Display the specified resource.
@@ -58,34 +81,49 @@ class user_crudController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-         return view('admin.form_user',[
-            'judul' => 'form edit user'
+        $roles = Role::all();
+        $pabriks = Pabrik::all();
+        return view('admin.form_user', [
+            'judul' => 'form edit user',
+            'user' => User::findOrFail($id),
+            'roles' => $roles,
+            'pabriks' => $pabriks
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-         $validatedData = $request->validate([
+        $crud_user = User::findOrFail($id);
+        $validatedData = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,' . $crud_user->id,
             'alamat' => 'required',
-            'pabrik' => 'required',
-            'role' => 'required',
+            'pabrik_id' => 'required|exists:pabriks,id',
+            'role_id' => 'required|exists:roles,id',
+            'password' => 'nullable|string|min:6|confirmed',
         ]);
-        User::update($request -> all());
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $validatedData['password'] = bcrypt($request->password);
+        } else {
+            unset($validatedData['password']);
+        }
+        $crud_user->update($validatedData);
         return redirect()->route('crud_user.index')->with('success', 'user berhasil di perbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $crud_user = User::findOrFail($id);
+        $crud_user->delete();
+        return redirect()->route('crud_user.index')->with('success', 'user berhasil di hapus');
     }
 }
