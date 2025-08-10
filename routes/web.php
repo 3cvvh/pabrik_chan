@@ -6,6 +6,7 @@ use App\Http\Controllers\authController;
 use App\Http\Controllers\crud_userContoller;
 use App\Http\Controllers\crud_pabrikController;
 use App\Http\Controllers\crud_transaksiController;
+use App\Http\Controllers\crud_pembeliController;
 use App\Http\Controllers\orang_gudangController;
 use App\Http\Controllers\ownerController;
 use App\Http\Controllers\user_crudController;
@@ -23,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
     Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
     Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
+    Route::resource('/dashboard/admin/crud_user', user_crudController::class);
+    Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class);
 });
 
 //daftar route jika user sudah login sebagai orang gudang

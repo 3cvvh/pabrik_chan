@@ -28,7 +28,7 @@
         @endif
         @if(auth()->user()->role_id === 1)
             <div class="flex items-center gap-6">
-            <a href="/transaksi" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+            <a href="/dashboard/admin/crud_user" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-user w-5 h-5 mr-1"></i>
             user
         </a>
@@ -36,28 +36,28 @@
             <i class="fas fa-exchange-alt w-5 h-5 mr-1"></i>
             Transaksi
         </a>
-        <a href="/pembelis" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="/dashboard/admin/pembeli" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-user-tag w-5 h-5 mr-1"></i>
             Pembeli
         </a>
-        <a href="/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="/dashboard/admin/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
         </a>
-        <a href="/gudang" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="dashboard/admin/gudang" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-warehouse w-5 h-5 mr-1"></i>
             gudang
         </a>
             </div>
         @endif
         @if (auth()->user()->role_id === 2)
-        <a href="/dashboard/org_gudang/stock" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="/dashboard/orang_gudang/Produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
         </a>
         @endif
         @if (auth()->user()->role_id === 3)
-        <a href="/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="/dashboard/owner" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-chart-bar w-5 h-5 mr-1"></i>
             data laporan
         </a>
