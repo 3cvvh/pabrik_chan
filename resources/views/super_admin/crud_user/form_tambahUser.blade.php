@@ -11,7 +11,7 @@
         <!-- Main Card with hover effect and animation -->
         <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
             <div class="p-8">
-                <form action="{{ route('crud_users.store') }}" method="post" class="space-y-8">
+                <form action="{{ route('crud_users.store') }}" id="create-form" method="post" class="space-y-8">
                     @csrf
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -150,7 +150,7 @@
                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Kembali
                         </a>
-                        <button type="submit"
+                        <button onclick="confirmcreate()" type="button"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600
                                 transform transition-all duration-300 hover:scale-105 hover:bg-indigo-700 hover:shadow-lg
                                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -203,5 +203,21 @@ function togglePassword() {
         eyeClosed.classList.add('hidden');
     }
 }
+function confirmcreate() {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "Anda akan menambahkan user baru",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, tambah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('create-form').submit();
+            }
+        })
+    }
 </script>
 @endsection

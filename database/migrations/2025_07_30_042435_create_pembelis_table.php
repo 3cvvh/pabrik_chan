@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('pembelis', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_pabrik');
+            $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->string('name');
             $table->string('alamat');
             $table->string('no_telepon');

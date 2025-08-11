@@ -11,7 +11,7 @@
         <!-- Main Card -->
         <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
             <div class="p-8">
-                <form action="{{ route('crud_users.update',$data->id) }}" method="post" class="space-y-8">
+                <form id="edit-form" action="{{ route('crud_users.update',$data->id) }}" method="post" class="space-y-8">
                     @csrf
                     @method('put')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -147,7 +147,7 @@
                            class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white transform transition-all duration-300 hover:scale-105 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Kembali
                         </a>
-                        <button type="submit"
+                        <button type="button" onclick="confirmedit()"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 transform transition-all duration-300 hover:scale-105 hover:bg-indigo-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Update Data
                         </button>
@@ -198,5 +198,21 @@ function togglePassword() {
         eyeClosed.classList.add('hidden');
     }
 }
+function confirmedit() {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "Anda akan mengubah data user ini",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, ubah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('edit-form').submit();
+            }
+        })
+    }
 </script>
 @endsection

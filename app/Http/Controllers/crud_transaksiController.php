@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\pembeli;
+use App\Models\produk;
 use App\Models\transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use statustransaksi;
 
 class crud_transaksiController extends Controller
 {
@@ -27,7 +29,11 @@ class crud_transaksiController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.crud_transaksi.create', [
+            'judul' => 'transaksi|create',
+            'pembeli' => pembeli::all(),
+            'produk' => produk::where('id_pabrik', Auth::user()->pabrik_id)->get(),
+        ]);
     }
 
     /**

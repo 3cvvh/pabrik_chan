@@ -20,20 +20,20 @@ Route::middleware(['guest'])->group(function(){
     Route::post('/',[authController::class,'store'])->name('login.store');
 });
 //daftar route jika user sudah login sebagai admin
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','admin'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
     Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
     Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
-    Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class);
+    Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class)->except('show');
 });
 
 //daftar route jika user sudah login sebagai orang gudang
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
 });
 //daftar route jika user sudah login sebagai owner
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','owner'])->group(function () {
     Route::get('/dashboard/owner',[ownerController::class,'index'])->name('owner.index');
     Route::get('/dashboard/owner/generatelaporan', [ownerController::class, 'generateLaporan'])->name('owner.generatelaporan');
 });

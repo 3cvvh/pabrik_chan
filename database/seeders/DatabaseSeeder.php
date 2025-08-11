@@ -6,10 +6,12 @@ use App\Models\role;
 use App\Models\User;
 use App\Models\pabrik;
 use App\Models\pembeli;
+use App\Models\produk;
 use App\Models\transaksi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Pdo\Mysql;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,15 +21,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-          pembeli::factory()->create([
-            'name' => 'aqil',
-            'alamat' => 'jawa',
-            'no_telepon' => '021023012',
-        ]);
         pabrik::create([
             'name' => 'jelekong corp',
             'alamat' => 'kacamatan ciparay',
             'no_telepon' => '01293103910'
+        ]);
+            pembeli::factory()->create([
+            'name' => 'aqil',
+            'alamat' => 'jawa',
+            'no_telepon' => '021023012',
+            'id_pabrik' => 1
         ]);
    transaksi::factory(10)->create();
 
@@ -73,6 +76,20 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email' => 'killua@gmail.com',
             'alamat' => 'Shiranai'
+        ]);
+        produk::factory()->create([
+            'nama' => 'deterjen',
+            'deskripsi' => 'deterjen yang sangat wangi',
+            'harga' => 10000,
+            'id_pabrik' => 1,
+            'jenis' => 'sutra',
+        ]);
+        produk::factory()->create([
+            'nama' => 'tasnim',
+            'deskripsi' => 'tasnim yang sangat wangi',
+            'harga' => 10000,
+            'id_pabrik' => 1,
+            'jenis' => 'sutra',
         ]);
     }
 }

@@ -127,5 +127,14 @@ document.querySelector('form').addEventListener('submit', function(e) {
     btnText.textContent = 'Signing in...';
     submitBtn.disabled = true;
 });
+@if(session('out'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('out') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+@endif
 </script>
 @endsection
