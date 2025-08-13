@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Symfony\Component\HttpFoundation\Response;
 
-class beatrice
+class Beatrice
 {
     /**
      * Handle an incoming request.

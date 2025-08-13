@@ -7,15 +7,15 @@
         <!-- Enhanced Header Section -->
         <div class="flex justify-between items-center mb-8 animate-fade-in">
             <div>
-                <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar Transaksi</h1>
-                <p class="text-gray-600">Kelola semua transaksi dalam satu tempat</p>
+                <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar produk</h1>
+                <p class="text-gray-600">Kelola semua produk dalam satu tempat</p>
             </div>
-            <a href="{{ route('crud_transaksi.create') }}">
+            <a href="{{ route('produk.create') }}">
                 <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
-                    Tambah Transaksi Baru
+                    Tambah produk Baru
                 </button>
             </a>
         </div>
@@ -34,15 +34,6 @@
                         </svg>
                     </div>
                 </div>
-                <div class="w-48">
-                    <label for="roles_key" class="block text-sm font-medium text-gray-700 mb-1">Filter Pembeli</label>
-                    <select name="roles_key" id="roles_key" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                        <option value="0">Semua Pembeli</option>
-                        @foreach ($pembeli as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
                     Cari
                 </button>
@@ -56,47 +47,43 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">nama transaksi</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pembeli</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">status</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pabrik</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Gambar</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Harga</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($data as $index => $transaksi)
+                        @foreach ($data as $index => $produk)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $transaksi->judul }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $transaksi->pembeli->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @php
-                                    $statusClasses = [
-                                        'pending' => 'bg-yellow-100 text-yellow-800',
-                                        'success' => 'bg-green-100 text-green-800',
-                                        'failed' => 'bg-red-100 text-red-800',
-                                    ];
-                                    $statusClass = $statusClasses[$transaksi->status] ?? 'bg-gray-100 text-gray-800';
-                                @endphp
-                                <span class="px-3 py-1 text-xs font-medium rounded-full {{ $statusClass }}">
-                                    {{ ucfirst($transaksi->status) }}
-                                </span>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $produk->nama }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
+                            @if($produk->gambar)
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->gambar }}</td>
+                            @else
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Tidak ada gambar</td>
+                            @endif
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                Rp {{ number_format($produk->harga, 0, ',', '.') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
-                                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ route('crud_transaksi.show',$transaksi->id) }}">
+                                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ route('crud_transaksi.show',$produk->id) }}">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
                                         Details
                                     </a>
-                                    <a href="{{ route('crud_users.edit',$transaksi->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                                    <a href="{{ route('crud_users.edit',$produk->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                         Edit
                                     </a>
-                                    <form action="/dashboard/super_admin/crud_users/{{ $transaksi->id }}" method="post" class="delete-form">
+                                    <form action="/dashboard/super_admin/crud_users/{{ $produk->id }}" method="post" class="delete-form">
                                         @csrf
                                         @method('delete')
                                         <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
@@ -132,7 +119,7 @@
             </div>
 
             <div class="mt-3">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Detail Transaksi</h3>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Detail produk</h3>
                 <div id="detailContent" class="space-y-4">
                     <!-- Content will be populated by JavaScript -->
                 </div>
@@ -168,19 +155,10 @@ function confirmDelete(button) {
         showConfirmButton: false
     });
 @endif
-@if(session('success'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: '{{ session('success') }}',
-        timer: 1500,
-        showConfirmButton: false
-    });
-@endif
 
 function showDetail(id) {
     // Fetch transaction details using AJAX
-    fetch(`/dashboard/admin/crud_transaksi/${id}`)
+    fetch(`/dashboard/admin/crud_produk/${id}`)
         .then(response => response.json())
         .then(data => {
             const content = document.getElementById('detailContent');

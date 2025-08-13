@@ -81,15 +81,13 @@ class DatabaseSeeder extends Seeder
             'nama' => 'deterjen',
             'deskripsi' => 'deterjen yang sangat wangi',
             'harga' => 10000,
-            'id_pabrik' => 1,
-            'jenis' => 'sutra',
+            'id_pabrik' => 1
         ]);
         produk::factory()->create([
             'nama' => 'tasnim',
             'deskripsi' => 'tasnim yang sangat wangi',
             'harga' => 10000,
-            'id_pabrik' => 1,
-            'jenis' => 'sutra',
+            'id_pabrik' => 1
         ]);
     }
 }

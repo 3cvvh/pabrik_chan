@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class transaksi extends Model
+class Transaksi extends Model
 {
     /** @use HasFactory<\Database\Factories\TransaksiFactory> */
     use HasFactory;

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class authController extends Controller
+class AuthController extends Controller
 {
     public function login(){
         return view('login',[

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 
-class crud_pabrikController extends Controller
+class Crud_pabrikController extends Controller
 {
     /**
      * Display a listing of the resource.

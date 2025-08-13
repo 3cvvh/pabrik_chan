@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\pembeli;
 use Illuminate\Http\Request;
 
-class crud_pembeliController extends Controller
+class Crud_pembeliController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,7 +37,7 @@ class crud_pembeliController extends Controller
         $datavalid = $request->validate([
             'name' => ['required','max:80'],
             'alamat' => ['required'],
-            'no_telepon' => ['required','min:9'] 
+            'no_telepon' => ['required','min:9']
         ]);
         pembeli::create($datavalid);
         return redirect('/dashboard/admin/pembeli')->with('tambah','berhasil menambahkan data');

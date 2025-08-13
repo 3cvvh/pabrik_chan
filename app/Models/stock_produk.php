@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class stock_produk extends Model
+class Stock_produk extends Model
 {
     /** @use HasFactory<\Database\Factories\StockProdukFactory> */
     use HasFactory;

@@ -40,7 +40,7 @@
             <i class="fas fa-user-tag w-5 h-5 mr-1"></i>
             Pembeli
         </a>
-        <a href="/dashboard/admin/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="{{ route('produk.index') }}" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
         </a>

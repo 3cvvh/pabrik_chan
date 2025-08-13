@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class orang_gudang
+class Orang_gudang
 {
     /**
      * Handle an incoming request.

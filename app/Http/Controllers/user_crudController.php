@@ -8,7 +8,7 @@ use App\Models\Pabrik;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class user_crudController extends Controller
+class User_crudController extends Controller
 {
 
     /**
@@ -68,14 +68,14 @@ class user_crudController extends Controller
 
         return redirect()->route('crud_user.index')->with('success', 'User berhasil ditambahkan');
     }
-    
+
 
     /**
      * Display the specified resource.
      */
     public function show(User $user)
     {
-        
+
     }
 
     /**

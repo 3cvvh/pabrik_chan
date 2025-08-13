@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\stock_produk;
 use Illuminate\Http\Request;
 
-class stock_crudController extends Controller
+class Stock_crudController extends Controller
 {
     /**
      * Display a listing of the resource.

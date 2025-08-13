@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class users_crudController extends Controller
+class Users_crudController extends Controller
 {
     /**
      * Display a listing of the resource.
