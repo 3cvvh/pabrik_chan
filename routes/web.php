@@ -12,6 +12,7 @@ use App\Http\Controllers\crudProdukController;
 use App\Http\Controllers\users_crudController;
 use App\Http\Controllers\crud_pabrikController;
 use App\Http\Controllers\crud_pembeliController;
+use App\Http\Controllers\Crud_stock_produkController;
 use App\Http\Controllers\orang_gudangController;
 use App\Http\Controllers\crud_transaksiController;
 use App\Http\Controllers\super_beatriceController;
@@ -30,6 +31,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class)->except('show');
     Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
     Route::resource('/dashboard/admin/produk',crudProdukController::class);
+    Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);
 });
 
 //daftar route jika user sudah login sebagai orang gudang

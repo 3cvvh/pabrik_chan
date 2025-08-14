@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Gudang;
 use App\Models\role;
 use App\Models\User;
 use App\Models\pabrik;
 use App\Models\pembeli;
 use App\Models\produk;
+use App\Models\Stock_produk;
 use App\Models\transaksi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -88,6 +90,19 @@ class DatabaseSeeder extends Seeder
             'deskripsi' => 'tasnim yang sangat wangi',
             'harga' => 10000,
             'id_pabrik' => 1
+        ]);
+        Gudang::factory()->create([
+            'id_pabrik' => 1,
+            'nama' => 'gudang_sukabumi',
+            'alamat' => 'sukabumi',
+            'no_telepon' => '0123131'
+        ]);
+        Stock_produk::create([
+            'jumlah' => 100,
+            'id_produk' => 1,
+            'id_gudang' => 1,
+            'tanggal_masuk' => now(),
+            'tanggal_keluar' => now(),
         ]);
     }
 }
