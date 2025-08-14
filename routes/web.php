@@ -32,6 +32,8 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
     Route::resource('/dashboard/admin/produk',crudProdukController::class);
     Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);
+    Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal');
+    Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk');
 });
 
 //daftar route jika user sudah login sebagai orang gudang

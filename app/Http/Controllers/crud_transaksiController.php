@@ -66,7 +66,6 @@ public function store(Request $request)
         'judul' => $request->judul,
         'id_pembeli' => $request->id_pembeli,
         'id_pabrik' => Auth::user()->pabrik_id,
-        'keterangan' => $request->keterangan,
         'status_pengiriman' => 'belum_dikirim',
         'status_pembayaran' => 'belum_bayar'
     ]);
@@ -89,6 +88,7 @@ public function store(Request $request)
             'id_transaksi' => $transaksi->id,
             'id_produk' => $produk_id,
             'jumlah' => $jumlah,
+            'keterangan' => $request->keterangan,
             'total_harga' => $harga_total_produk,
         ]);
     }
@@ -109,7 +109,8 @@ public function store(Request $request)
         return view('admin.crud_transaksi.show',[
             'judul' => transaksi::find($id)->judul,
             'data_detail' => Detail_transaksi::with(['transaksi','produk'])->where('id_transaksi','=',$id)->get(),
-            'data_transaksi' => transaksi::find($id)
+            'data_transaksi' => transaksi::find($id),
+            'dataproduk' => produk::all()
         ]);
     }
 

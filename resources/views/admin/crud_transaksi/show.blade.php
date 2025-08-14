@@ -80,7 +80,7 @@
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <p class="text-sm text-gray-500">Tanggal Pengiriman</p>
-                            <p class="text-lg font-semibold text-gray-800">{{ $data_transaksi->tanggal_pengiriman?? 'belum dikirim' }}</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ $data_transaksi->tanggal_pengiriman }}</p>
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg col-span-2">
                             <p class="text-sm text-gray-500">Tanggal Pembayaran</p>
@@ -101,6 +101,36 @@
             Detail Produk
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @if($data_detail->isEmpty())
+                <div class="col-span-3 text-center text-gray-500">
+                    <form action="{{ route('admin.produk',$data_transaksi->id) }}" method="post">
+                        @csrf
+                        <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
+                        <p class="mb-4">Tidak ada produk dalam transaksi ini. tambahkan produk</p>
+                      <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors">
+                        @foreach ($dataproduk as $item)
+                        <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
+                            <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
+                                class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
+                            <span class="ml-2 select-none">{{ $item->nama }}</span>
+                            <input type="number" min="0" name="jumlah[{{ $item->id }}]"
+                                class="w-14 text-center border rounded ml-auto"
+                                placeholder="0">
+                        </div>
+                        @endforeach
+                    </div>
+                    @error('id_produk')
+                    <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
+                    @enderror
+                        @error('jumlah.' . $item->id)
+                        <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
+                        @enderror
+                </div>
+                <button type="submit">simpan produk</button>
+                    </form>
+                </div>
+
+            @endif
             @foreach ($data_detail as $data)
             <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 @if($data->produk->gambar == null)
@@ -129,7 +159,68 @@
                 </div>
             </div>
             @endforeach
+
+        </div>
+    </div>
+
+    <!-- Form Update Section -->
+    <div class="mt-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Update Tanggal
+            </h3>
+
+            <form action="{{ route('admin.tanggal',$data_transaksi->id) }}" method="POST" class="space-y-6">
+                @csrf
+                <input type="hidden" name="id" value="{{ $data_transaksi->id }}">
+                <div class="grid md:grid-cols-2 gap-6">
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Tanggal Pengiriman
+                        </label>
+                        <input type="date"
+                        value="{{ $data_transaksi->tanggal_pengiriman }}"
+                               name="tanggal_pengiriman"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Tanggal Pembayaran
+                        </label>
+                        <input type="date"
+                        value="{{ $data_transaksi->tanggal_pembayaran }}"
+                               name="tanggal_pembayaran"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Simpan Perubahan
+                    </button>
+                    <a href="{{ route('crud_transaksi.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                        Batal
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+<script>
+    @if(session('gagal'))
+    Swal.fire({
+        icon: 'warning',
+        title: 'gagal',
+        text: '{{ session('gagal') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+@endif
+</script>
 @endsection
