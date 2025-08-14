@@ -1,19 +1,20 @@
 <?php
 
-use App\Http\Controllers\adminController;
-use App\Http\Controllers\PabrikController;
-use App\Http\Controllers\authController;
-use App\Http\Controllers\crud_userContoller;
-use App\Http\Controllers\crud_pabrikController;
-use App\Http\Controllers\crud_transaksiController;
-use App\Http\Controllers\crud_pembeliController;
-use App\Http\Controllers\crudProdukController;
-use App\Http\Controllers\orang_gudangController;
-use App\Http\Controllers\ownerController;
-use App\Http\Controllers\user_crudController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\super_beatriceController;
+use App\Http\Controllers\authController;
+use App\Http\Controllers\adminController;
+use App\Http\Controllers\ownerController;
+use App\Http\Controllers\crud_userContoller;
+use App\Http\Controllers\crud_gudangController;
+use App\Http\Controllers\user_crudController;
+use App\Http\Controllers\crudProdukController;
 use App\Http\Controllers\users_crudController;
+use App\Http\Controllers\crud_pabrikController;
+use App\Http\Controllers\crud_pembeliController;
+use App\Http\Controllers\orang_gudangController;
+use App\Http\Controllers\crud_transaksiController;
+use App\Http\Controllers\super_beatriceController;
 
 //daftar route Jika user belum login
 Route::middleware(['guest'])->group(function(){
@@ -27,6 +28,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
     Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class)->except('show');
+    Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
     Route::resource('/dashboard/admin/produk',crudProdukController::class);
 });
 
