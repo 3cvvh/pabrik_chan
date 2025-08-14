@@ -28,4 +28,8 @@ class Pabrik extends Model
     {
         return $this->hasMany(User::class,'pabrik_id');
     }
+    public function pembeli():HasMany
+    {
+        return $this->hasMany(pembeli::class,'id_pabrik');
+    }
 }

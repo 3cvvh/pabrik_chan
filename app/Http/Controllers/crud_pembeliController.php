@@ -3,19 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\pembeli;
+use App\Models\pabrik;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class Crud_pembeliController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-         $pembeli = pembeli::all();
-        return view('admin.pembeli', [
-            'judul' => 'Pembeli',
-            'pembeli' => $pembeli
+          $query = pembeli::with('pabrik');
+
+        // Filter by search keyword
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('alamat', 'like', "%$search%")
+                  ->orWhere('no_telepon', 'like', "%$search%");
+            });
+        }
+
+        // Filter by pabrik
+        if ($request->filled('pabrik_filter')) {
+            $query->where('id_pabrik', $request->pabrik_filter);
+        }
+
+        $pembeli = $query->get();
+
+        return view('admin.pembeli',[
+            'judul' => 'gudang|page',
+            'pembeli' => $pembeli,
+            'pabrik' => pabrik::all()
         ]);
     }
 
@@ -26,6 +48,7 @@ class Crud_pembeliController extends Controller
     {
         return view('admin.form_pembeli',[
             'judul' => 'Tambah pembeli',
+            'pabrik' => pabrik::all()
         ]);
     }
 
@@ -35,6 +58,7 @@ class Crud_pembeliController extends Controller
     public function store(Request $request)
     {
         $datavalid = $request->validate([
+            'id_pabrik' => 'required',
             'name' => ['required','max:80'],
             'alamat' => ['required'],
             'no_telepon' => ['required','min:9']
@@ -56,9 +80,11 @@ class Crud_pembeliController extends Controller
      */
     public function edit($id)
     {
+        $pembeli = pembeli::findOrFail($id);
         return view('admin.form_pembeli_edit', [
-            'judul' => 'Edit Pabrik',
-            'pembeli' => pembeli::find($id)
+            'judul' => 'Edit pembeli',
+            'pembeli' => $pembeli,
+            'pabrik' => pabrik::all()
         ]);
     }
 
@@ -67,8 +93,9 @@ class Crud_pembeliController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $pabrik = pembeli::find($id);
+        $pembeli = pembeli::find($id);
    $dataedit = $request->validate([
+            'id_pabrik' => 'required',
             'name' => ['required','max:80'],
             'alamat' => ['required'],
             'no_telepon' => ['required','min:9']

@@ -19,6 +19,19 @@
             <form action="/dashboard/admin/pembeli" method="post" class="space-y-6"  >
                 @csrf
                 <div>
+                    <label for="id_pabrik" class="block text-sm font-medium text-gray-700 mb-1">Pilih Pabrik</label>
+                    <select name="id_pabrik" id="id_pabrik"
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">-- Pilih Pabrik --</option>
+                        @foreach($pabrik as $p)
+                            <option value="{{ $p->id }}">{{ $p->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('id_pabrik')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Pabrik</label>
                     <input type="text" name="name" id="name"
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"

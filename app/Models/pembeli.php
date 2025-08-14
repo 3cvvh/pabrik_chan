@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pembeli extends Model
@@ -14,5 +15,9 @@ class Pembeli extends Model
     public function transaksi():HasMany
     {
         return $this->hasMany(transaksi::class,'id_pembeli');
+    }
+    public function pabrik():BelongsTo
+    {
+        return $this->belongsTo(pabrik::class,'id_pabrik');
     }
 }
