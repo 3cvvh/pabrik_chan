@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class crud_gudangController extends Controller
+class Crud_gudangController extends Controller
 {
     /**
      * Display a listing of the resource.
