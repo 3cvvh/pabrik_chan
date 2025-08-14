@@ -6,10 +6,10 @@
     <x-navbar></x-navbar>
     <!-- Welcome Card -->
     <div class="flex justify-center mt-8">
-        <div class="bg-white rounded-xl shadow-md p-8 w-full max-w-md text-center">
-            <h2 class="text-xl font-semibold text-blue-700 mb-2">Welcome To Factory</h2>
-            <p class="text-gray-600 mb-4">Terimakasih telah bergabung di Factory<br>Anda login menggunakan akun <span class="text-blue-600 font-semibold">owner</span></p>
-            <a href="#" class="bg-blue-100 text-blue-700 font-semibold px-5 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition">Dashboard Owner</a>
+        <div class="bg-white rounded-xl shadow-md p-8 max-w-md text-center">
+            <h2 class="text-lg font-semibold text-blue-700 mb-2">Welcome To Factory</h2>
+            <p class="text-sm text-gray-600 mb-4">Terimakasih telah bergabung di Factory<br>Anda login menggunakan akun <span class="text-blue-600 font-semibold">owner</span></p>
+            <a href="#" class="text-sm bg-blue-100 text-blue-700 font-semibold px-5 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition">Dashboard Owner</a>
         </div>
     </div>
     <!-- Main Content -->
@@ -31,18 +31,18 @@
             <table class="min-w-full border border-gray-200 rounded-lg">
                 <thead>
                     <tr class="bg-blue-500 text-white">
-                        <th class="py-2 px-3 text-left">No</th>
-                        <th class="py-2 px-3 text-left">Outlet</th>
-                        <th class="py-2 px-3 text-left">Tanggal</th>
-                        <th class="py-2 px-3 text-left">Batas Waktu</th>
-                        <th class="py-2 px-3 text-left">Pembayaran</th>
-                        <th class="py-2 px-3 text-left">Tanggal Dibayar</th>
-                        <th class="py-2 px-3 text-left">Customer</th>
-                        <th class="py-2 px-3 text-left">Paket</th>
-                        <th class="py-2 px-3 text-left">Status Order</th>
+                        <th class="py-2 px-3 text-left text-sm">No</th>
+                        <th class="py-2 px-3 text-left text-sm">Outlet</th>
+                        <th class="py-2 px-3 text-left text-sm">Tanggal</th>
+                        <th class="py-2 px-3 text-left text-sm">Batas Waktu</th>
+                        <th class="py-2 px-3 text-left text-sm">Pembayaran</th>
+                        <th class="py-2 px-3 text-left text-sm">Tanggal Dibayar</th>
+                        <th class="py-2 px-3 text-left text-sm">Customer</th>
+                        <th class="py-2 px-3 text-left text-sm">Paket</th>
+                        <th class="py-2 px-3 text-left text-sm">Status Order</th>
                     </tr>
                 </thead>
-                <tbody class="text-gray-700">
+                <tbody class="text-gray-700 text-xs">
                     <tr class="border-b">
                         <td class="py-2 px-3">1</td>
                         <td class="py-2 px-3">Elsa Pabrik</td>
