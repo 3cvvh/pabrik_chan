@@ -11,15 +11,15 @@
         <!-- Main Card with hover effect and animation -->
         <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
             <div class="p-8">
-                <form action="{{ route('produk.store') }}" id="create-form" method="post" enctype="multipart/form-data" class="space-y-8">
+                <form action="{{ route('produk.update',$data->id) }}" id="edit-form" method="post" enctype="multipart/form-data" class="space-y-8">
                     @csrf
-
+                    @method('put')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Nama Produk Input -->
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 100ms">
                             <label for="nama" class="block text-sm font-semibold text-gray-700">Nama Produk</label>
                             <div class="mt-1 relative rounded-md shadow-sm">
-                                <input value="{{ old('nama') }}" type="text" name="nama" id="nama" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg" placeholder="Masukkan nama produk">
+                                <input value="{{ old('nama',$data->nama) }}" type="text" name="nama" id="nama" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg" placeholder="Masukkan nama produk">
                             </div>
                             @error('nama')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -33,7 +33,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">Rp</span>
                                 </div>
-                                <input type="number" name="harga" id="harga" value="{{ old('harga') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0">
+                                <input type="number" name="harga" id="harga" value="{{ old('harga',$data->harga) }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0">
                             </div>
                             @error('harga')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -44,7 +44,7 @@
                         <div class="transform transition-all duration-300 animate-fadeIn col-span-2" style="animation-delay: 300ms">
                             <label for="deskripsi" class="block text-sm font-semibold text-gray-700">Deskripsi</label>
                             <div class="mt-1">
-                                <textarea id="deskripsi" name="deskripsi" rows="3" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg" placeholder="Masukkan deskripsi produk">{{ old('deskripsi') }}</textarea>
+                                <textarea id="deskripsi" name="deskripsi" rows="3" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg" placeholder="Masukkan deskripsi produk">{{ old('deskripsi',$data->deskripsi) }}</textarea>
                             </div>
                             @error('deskripsi')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -56,6 +56,12 @@
                             <div class="mt-1">
                                 <input type="file" name="gambar" id="gambar" accept="image/*" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-2 px-4 text-sm border-gray-300 rounded-lg">
                             </div>
+                            @if($data->gambar)
+  <img class="mx-auto w-100 h-100" src="{{ asset('storage/'.$data->gambar) }}" alt="">
+  @else
+  <h1>Tidak mempunyai gambar</h1>
+                            @endif
+
                             @error('gambar')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -68,7 +74,7 @@
                                 <select name="id_pabrik" id="id_pabrik" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg">
                                     <option value="">Pilih Pabrik</option>
                                     @foreach ($pabrik as $p)
-                                        <option value="{{ $p->id }}" {{ old('id_pabrik') == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
+                                        <option value="{{ $p->id }}" {{ old('id_pabrik',$data->id_pabrik) == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -83,7 +89,7 @@
                         <a href="{{ route('produk.index') }}" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Kembali
                         </a>
-                        <button onclick="confirmCreate()" type="button" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button onclick="confirmedit()" type="button" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Simpan Produk
                         </button>
                     </div>
@@ -118,19 +124,19 @@
 </style>
 
 <script>
-function confirmCreate() {
+function confirmedit() {
     Swal.fire({
         title: 'Apakah anda yakin?',
-        text: "Anda akan menambahkan produk baru",
+        text: "Anda akan memperbarui produk",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, tambah!',
+        confirmButtonText: 'Ya, Perbarui!',
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById('create-form').submit();
+            document.getElementById('edit-form').submit();
         }
     })
 }

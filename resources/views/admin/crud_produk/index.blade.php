@@ -61,7 +61,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $produk->nama }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
                             @if($produk->gambar)
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->gambar }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><img class="mask-auto w-20 h-20" src="{{ asset('storage/' . $produk->gambar) }}" alt=""></td>
                             @else
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Tidak ada gambar</td>
                             @endif
@@ -70,20 +70,20 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
-                                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ route('crud_transaksi.show',$produk->id) }}">
+                                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ route('produk.show',$produk->id) }}">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
                                         Details
                                     </a>
-                                    <a href="{{ route('crud_users.edit',$produk->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                                    <a href="{{ route('produk.edit',$produk->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                         Edit
                                     </a>
-                                    <form action="/dashboard/super_admin/crud_users/{{ $produk->id }}" method="post" class="delete-form">
+                                    <form action="{{ route('produk.destroy',$produk->id) }}" method="post" class="form">
                                         @csrf
                                         @method('delete')
                                         <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
@@ -151,6 +151,24 @@ function confirmDelete(button) {
         icon: 'success',
         title: 'Berhasil!',
         text: '{{ session('hapus') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+@endif
+@if(session('berhasil'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('berhasil') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+@endif
+@if(session('edit'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('edit') }}',
         timer: 1500,
         showConfirmButton: false
     });
