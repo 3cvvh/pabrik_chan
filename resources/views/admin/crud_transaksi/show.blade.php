@@ -94,45 +94,67 @@
 
     <!-- Products Section -->
     <div class="mt-8">
-        <h3 class="text-xl font-bold mb-6 text-gray-800 flex items-center">
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-            </svg>
-            Detail Produk
-        </h3>
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                Detail Produk
+            </h3>
+            @if(!$data_detail->isEmpty())
+            <button type="button" onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                </svg>
+                Tambah Produk
+            </button>
+            @endif
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @if($data_detail->isEmpty())
-                <div class="col-span-3 text-center text-gray-500">
-                    <form action="{{ route('admin.produk',$data_transaksi->id) }}" method="post">
+                <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
+                    <div class="mb-4">
+                        <svg class="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                            <circle cx="24" cy="24" r="20" stroke-width="2" stroke="currentColor" fill="none"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 24h16M24 16v16" />
+                        </svg>
+                    </div>
+                    <p class="text-lg text-gray-600 mb-2 font-semibold">Belum ada produk dalam transaksi ini</p>
+                    <p class="text-gray-500 mb-6">Silakan tambahkan produk ke transaksi dengan memilih produk di bawah ini.</p>
+                    <form action="{{ route('admin.produk',$data_transaksi->id) }}" method="post" id="form-tambah-product" class="w-full max-w-md">
                         @csrf
                         <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
-                        <p class="mb-4">Tidak ada produk dalam transaksi ini. tambahkan produk</p>
-                      <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors">
-                        @foreach ($dataproduk as $item)
-                        <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
-                            <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
-                                class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
-                            <span class="ml-2 select-none">{{ $item->nama }}</span>
-                            <input type="number" min="0" name="jumlah[{{ $item->id }}]"
-                                class="w-14 text-center border rounded ml-auto"
-                                placeholder="0">
+                        <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors bg-white">
+                            @foreach ($dataproduk as $item)
+                            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
+                                <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
+                                    class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
+                                <span class="ml-2 select-none">{{ $item->nama }}</span>
+                                <input type="number" min="0" name="jumlah[{{ $item->id }}]"
+                                    class="w-14 text-center border rounded ml-auto"
+                                    placeholder="0">
+                            </div>
+                            @endforeach
                         </div>
-                        @endforeach
-                    </div>
-                    @error('id_produk')
-                    <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
-                    @enderror
+                        @error('id_produk')
+                        <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
+                        @enderror
                         @error('jumlah.' . $item->id)
                         <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                         @enderror
-                </div>
-                <button type="submit">simpan produk</button>
+                        <div class="flex justify-center mt-6">
+                            <button type="button" onclick="confirmTambahProduk(this)" class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                                </svg>
+                                Simpan Produk
+                            </button>
+                        </div>
                     </form>
                 </div>
-
             @endif
             @foreach ($data_detail as $data)
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
                 @if($data->produk->gambar == null)
                     <div class="bg-gray-200 h-48 flex items-center justify-center">
                         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,6 +166,16 @@
                          alt="{{ $data->produk->nama }}"
                          class="w-full h-48 object-cover">
                 @endif
+                <!-- Tombol Hapus Produk -->
+                <form action="{{ route('admin-hapus',$data->id) }}" method="POST" class="absolute top-2 right-2" onsubmit="return confirmHapusProduk(event, this)">
+                    @csrf
+                    <input type="hidden" name="id_tran" value="{{ $data->transaksi->id }}">
+                    <button type="submit" class="p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600" title="Hapus Produk">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </form>
                 <div class="p-6">
                     <h4 class="font-semibold text-lg text-gray-800 mb-2">{{ $data->produk->nama }}</h4>
                     <div class="flex justify-between items-center">
@@ -159,8 +191,44 @@
                 </div>
             </div>
             @endforeach
-
         </div>
+        @if(!$data_detail->isEmpty())
+        <!-- Modal/Form Tambah Produk (hidden by default) -->
+        <div id="form-tambah-produk" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                <button type="button" onclick="document.getElementById('form-tambah-produk').classList.add('hidden')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <form action="{{ route('admin.produk',$data_transaksi->id) }}" method="post">
+                    @csrf
+                    <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
+                    <h4 class="font-bold mb-4">Tambah Produk ke Transaksi</h4>
+                    <div class="border rounded-md p-3 space-y-1 max-h-60 overflow-y-auto">
+                        @foreach ($dataproduk as $item)
+                        <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
+                            <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
+                                class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
+                            <span class="ml-2 select-none">{{ $item->nama }}</span>
+                            <input type="number" min="0" name="jumlah[{{ $item->id }}]"
+                                class="w-14 text-center border rounded ml-auto"
+                                placeholder="0">
+                        </div>
+                        @endforeach
+                    </div>
+                    @error('id_produk')
+                    <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
+                    @enderror
+                    <div class="flex justify-end mt-4">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Simpan Produk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Form Update Section -->
@@ -221,6 +289,51 @@
         timer: 1500,
         showConfirmButton: false
     });
-@endif
+    @endif
+    @if(session('berhasil'))
+    Swal.fire({
+        icon: 'success',
+        title: 'berhasil',
+        text: '{{ session('berhasil') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+    @endif
+
+    function confirmTambahProduk(button) {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "akan menambahkan data produk ini ke transaksi?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, tambah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                button.closest('form').submit();
+            }
+        });
+    }
+
+    function confirmHapusProduk(event, form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Hapus Produk?',
+            text: "Produk akan dihapus dari transaksi ini.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
 </script>
 @endsection
