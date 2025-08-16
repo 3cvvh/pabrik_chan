@@ -33,23 +33,45 @@ class AdminController extends Controller
         ]);
         $total_harga = 0;
         foreach($request->id_produk as $produk_id) {
-        $jumlah = $request->jumlah[$produk_id] ?? 0;
-        if ($jumlah <= 0) {
-            return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','harap jumlah diisi');
-            die;
+            $jumlah = $request->jumlah[$produk_id] ?? 0;
+            if ($jumlah <= 0) {
+                return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','harap jumlah diisi');
+            }
+            $produk = Produk::find($produk_id);
+            $harga_total_produk = $produk->harga * $jumlah;
+            $total_harga += $harga_total_produk;
+
+            // Cek apakah produk sudah ada di detail_transaksi
+            $detail = DB::table('detail_transaksis')
+                ->where('id_transaksi', $request->id_tran)
+                ->where('id_produk', $produk_id)
+                ->first();
+
+            if ($detail) {
+                // Jika sudah ada, update jumlah dan total_harga
+                $new_jumlah = $detail->jumlah + $jumlah;
+                $new_total = $produk->harga * $new_jumlah;
+                DB::table('detail_transaksis')
+                    ->where('id_transaksi', $request->id_tran)
+                    ->where('id_produk', $produk_id)
+                    ->update([
+                        'jumlah' => $new_jumlah,
+                        'total_harga' => $new_total,
+                    ]);
+            } else {
+                // Jika belum ada, insert baru
+                DB::table('detail_transaksis')->insert([
+                    'id_transaksi' => $request->id_tran,
+                    'id_produk' => $produk_id,
+                    'jumlah' => $jumlah,
+                    'total_harga' => $harga_total_produk,
+                ]);
+            }
         }
-
-        $produk = Produk::find($produk_id);
-        $harga_total_produk = $produk->harga * $jumlah;
-        $total_harga += $harga_total_produk;
-
-        DB::table('detail_transaksis')->insert([
-            'id_transaksi' => $request->id_tran,
-            'id_produk' => $produk_id,
-            'jumlah' => $jumlah,
-            'total_harga' => $harga_total_produk,
-        ]);
+        return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil di tambahkan');
     }
-    return redirect(route('crud_transaksi.index'))->with('success','berhasil di ganti');
+    public function hapus_produk(Request $request, $id){
+        Detail_transaksi::destroy($id);
+        return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil menghapus produk');
     }
 }
