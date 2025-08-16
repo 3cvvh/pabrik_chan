@@ -65,7 +65,6 @@ class Crud_gudangController extends Controller
             'alamat' => 'required|string|max:255',
             'no_telepon' => 'nullable|string|max:50',
             'keterangan' => 'nullable|string',
-            'status' => 'required',
         ]);
 
         gudang::create($validated);
