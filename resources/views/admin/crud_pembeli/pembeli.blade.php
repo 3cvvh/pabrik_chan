@@ -7,7 +7,7 @@
         <div>
             <h2 class="text-2xl font-bold mb-2 text-gray-800">Data Pembeli</h2>
         </div>
-        <a href="/dashboard/admin/pembeli/create">
+        <a href="/dashboard/admin/crud_pembeli/create">
             <button class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -78,13 +78,13 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $pembeli->no_telepon }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex space-x-2">
-                                <a href="/dashboard/admin/pembeli/{{ $pembeli->id }}/edit" class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                                <a href="/dashboard/admin/crud_pembeli/{{ $pembeli->id }}/edit" class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-lg text-sm font-medium transition-colors duration-200">
                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                     Edit
                                 </a>
-                                <form action="/dashboard/admin/pembeli/{{ $pembeli->id }}" method="POST" class="inline delete-form">
+                                <form action="/dashboard/admin/crud_pembeli/{{ $pembeli->id }}" method="POST" class="inline delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <input type="hidden" name="id" value="{{ $pembeli->id }}">
