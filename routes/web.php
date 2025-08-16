@@ -28,7 +28,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
     Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
-    Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class)->except('show');
+    Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show');
     Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
     Route::resource('/dashboard/admin/produk',crudProdukController::class);
     Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);

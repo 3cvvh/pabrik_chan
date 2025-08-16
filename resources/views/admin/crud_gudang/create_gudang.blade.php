@@ -47,15 +47,6 @@
                         class="w-full px-3 py-2 border rounded-md transition-all duration-200
                         focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"></textarea>
                 </div>
-                <div class="group">
-                    <label for="status" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Status</label>
-                    <select name="status" id="status"
-                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
-                        <option value="aktif">Aktif</option>
-                        <option value="nonaktif">Tidak Aktif</option>
-                    </select>
-                </div>
             </div>
             <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
                 <a href="/dashboard/admin/crud_gudang"

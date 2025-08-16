@@ -13,14 +13,32 @@ class Crud_gudangController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $gudang = gudang::all();
-         $g = gudang::with(['pabrik'])->where('id_pabrik','=',Auth::user()->id_pabrik);
+        $query = gudang::with(['pabrik']);
+
+        // Filter berdasarkan pabrik jika ada
+        if ($request->filled('pabrik_filter')) {
+            $query->where('id_pabrik', $request->pabrik_filter);
+        }
+
+        // Filter berdasarkan search (nama/alamat/no_telepon/keterangan)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")
+                  ->orWhere('alamat', 'like', "%$search%")
+                  ->orWhere('no_telepon', 'like', "%$search%")
+                  ->orWhere('keterangan', 'like', "%$search%");
+            });
+        }
+
+        // Optional: urutkan terbaru
+        $gudang = $query->orderBy('id', 'desc')->get();
+
         return view('admin.crud_gudang.gudang',[
             'judul' => 'gudang|page',
             'gudang' => $gudang,
-            'data' => $g->get(),
             'pabrik' => pabrik::all()
         ]);
     }
@@ -47,7 +65,6 @@ class Crud_gudangController extends Controller
             'alamat' => 'required|string|max:255',
             'no_telepon' => 'nullable|string|max:50',
             'keterangan' => 'nullable|string',
-            'status' => 'required',
         ]);
 
         gudang::create($validated);

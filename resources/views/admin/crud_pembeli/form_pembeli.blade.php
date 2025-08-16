@@ -4,7 +4,7 @@
     <div class="max-w-lg mx-auto">
         <!-- Back button -->
         <div class="mb-6">
-            <a href="/dashboard/admin/pembeli" class="inline-flex items-center text-gray-600 hover:text-gray-800">
+            <a href="/dashboard/admin/crud_pembeli" class="inline-flex items-center text-gray-600 hover:text-gray-800">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
@@ -16,7 +16,7 @@
         <div class="bg-white rounded-lg shadow-md p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Form tambah pembeli</h2>
 
-            <form action="/dashboard/admin/pembeli" method="post" class="space-y-6"  >
+            <form action="/dashboard/admin/crud_pembeli" method="post" class="space-y-6"  >
                 @csrf
                 <div>
                     <label for="id_pabrik" class="block text-sm font-medium text-gray-700 mb-1">Pilih Pabrik</label>
