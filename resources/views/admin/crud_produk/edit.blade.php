@@ -4,7 +4,7 @@
     <div class="max-w-3xl mx-auto animate-fadeIn">
         <!-- Card Header with animation -->
         <div class="mb-6 transform transition-all duration-500 animate-slideDown">
-            <h2 class="text-3xl font-extrabold text-gray-900">Tambah Produk Baru</h2>
+            <h2 class="text-3xl font-extrabold text-gray-900">Edit produk</h2>
             <p class="mt-1 text-sm text-gray-600">Silahkan isi data produk dengan lengkap</p>
         </div>
 
@@ -68,20 +68,6 @@
                         </div>
 
                         <!-- ID Pabrik Select -->
-                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
-                            <label for="id_pabrik" class="block text-sm font-semibold text-gray-700">Pabrik</label>
-                            <div class="mt-1 relative rounded-md shadow-sm">
-                                <select name="id_pabrik" id="id_pabrik" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg">
-                                    <option value="">Pilih Pabrik</option>
-                                    @foreach ($pabrik as $p)
-                                        <option value="{{ $p->id }}" {{ old('id_pabrik',$data->id_pabrik) == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('id_pabrik')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
                     </div>
 
                     <!-- Action Buttons with enhanced animations -->

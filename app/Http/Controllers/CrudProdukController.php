@@ -8,6 +8,7 @@ use App\Models\produk;
 use App\Models\Produk as ModelsProduk;
 use App\Models\Stock_produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class CrudProdukController extends Controller
@@ -19,7 +20,7 @@ class CrudProdukController extends Controller
     {
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  produk::all()
+            'data' =>  produk::where('id_pabrik','=',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
 
@@ -30,7 +31,7 @@ class CrudProdukController extends Controller
     {
         return view('admin.crud_produk.form_tambah_produk',[
             'judul' => 'formtambah|produk',
-            'pabrik' => pabrik::all(),
+            'pabrik' => pabrik::where('id',Auth::user()->pabrik_id)->get(),
         ]);
     }
 
@@ -73,7 +74,6 @@ class CrudProdukController extends Controller
             return view('admin.crud_produk.edit', [
             'judul' => $produk->judul,
             'data' => $produk,
-            'pabrik' => pabrik::all()
         ]);
     }
 
@@ -87,7 +87,6 @@ class CrudProdukController extends Controller
             'harga' => ['required'],
             'deskripsi' => 'nullable',
             'gambar' => ['nullable','image'],
-            'id_pabrik' => 'required|integer'
         ]);
         if($request->file('gambar')){
             if($produk->gambar){
