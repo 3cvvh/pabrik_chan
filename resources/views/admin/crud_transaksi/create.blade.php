@@ -17,7 +17,7 @@
                 <div class="group">
                     <label class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Nama Transaksi
                     </label>
-                    <input type="text" value="{{ old('judul',$transaksi->judul) }}" name="judul"
+                    <input type="text" value="{{ old('judul',$transaksi->judul ?? '' ) }}" name="judul"
                         class="w-full h-10 px-3 border rounded-md transition-all duration-200
                         focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
                     @error('judul')
@@ -32,7 +32,7 @@
                         focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
                         <option value="">Pilih pembeli</option>
                         @foreach ($pembeli as $item)
-                        <option value="{{ $item->id }}" {{ old('id_pembeli',$transaksi->id_pembeli  ) == $item->id ? 'selected' : '' }}>
+                        <option value="{{ $item->id }}" {{ old('id_pembeli',$transaksi->id_pembeli ?? ''  ) == $item->id ? 'selected' : '' }}>
                             {{ $item->name }}
                         </option>
                         @endforeach
@@ -76,7 +76,7 @@
                     </label>
                     <textarea name="keterangan" rows="2"
                         class="w-full px-3 py-2 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">{{ old('keterangan',$transaksi->keterangan) }}</textarea>
+                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">{{ old('keterangan',$transaksi->keterangan?? '') }}</textarea>
                     @error('keterangan')
                     <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                     @enderror

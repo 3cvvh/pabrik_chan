@@ -9,6 +9,7 @@ use App\Models\produk;
 use App\Models\pembeli;
 use App\Models\Pembeli as ModelsPembeli;
 use App\Models\transaksi;
+use App\Models\Transaksi as ModelsTransaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -35,7 +36,7 @@ class Crud_transaksiController extends Controller
     {
         return view('admin.crud_transaksi.create', [
             'judul' => 'transaksi|create',
-            'pembeli' => pembeli::all(),
+            'pembeli' => pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
             'produk' => produk::where('id_pabrik', Auth::user()->pabrik_id)->get(),
         ]);
     }
@@ -108,10 +109,14 @@ public function store(Request $request)
      */
     public function show($id)
     {
+        $data =  transaksi::find($id);
+        if(Auth::user()->pabrik_id !== $data->id_pabrik ){
+            abort(404);
+        }
         return view('admin.crud_transaksi.show',[
             'judul' => transaksi::find($id)->judul,
             'data_detail' => Detail_transaksi::with(['transaksi','produk'])->where('id_transaksi','=',$id)->get(),
-            'data_transaksi' => transaksi::find($id),
+            'data_transaksi' => $data,
             'dataproduk' => produk::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
@@ -121,7 +126,11 @@ public function store(Request $request)
      */
     public function edit($id)
     {
+
         $transaksi = transaksi::findOrFail($id);
+        if(Auth::user()->pabrik_id !== $transaksi->id_pabrik ){
+            abort(404);
+        }
         return view('admin.crud_transaksi.create',[
             'judul' => 'edit transaksi',
             'transaksi' => $transaksi,
