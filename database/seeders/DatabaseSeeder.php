@@ -28,6 +28,11 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'kacamatan ciparay',
             'no_telepon' => '01293103910'
         ]);
+        pabrik::create([
+            'name' => 'ciparay corp',
+            'alamat' => 'kacamatan ciparay',
+            'no_telepon' => '01293103231'
+        ]);
             pembeli::factory()->create([
             'name' => 'aqil',
             'alamat' => 'jawa',
@@ -46,7 +51,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'owner'
         ]);
         role::create([
-            'name' => 'bearice❤aqil'
+            'name' => 'super admin'
         ]);
         User::factory()->create([
             'name' => 'aqil',
@@ -73,6 +78,14 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'jelekong chan'
         ]);
         User::factory()->create([
+            'name' => 'beti',
+            'pabrik_id' => 2,
+            'role_id' => 1,
+            'password' => Hash::make('password'),
+            'email' => 'beatrice@gmail.com',
+            'alamat' => 'jelekong chan'
+        ]);
+        User::factory()->create([
             'name' => 'Killua',
             'role_id' => 4,
             'password' => Hash::make('password'),
@@ -96,13 +109,6 @@ class DatabaseSeeder extends Seeder
             'nama' => 'gudang_sukabumi',
             'alamat' => 'sukabumi',
             'no_telepon' => '0123131'
-        ]);
-        Stock_produk::create([
-            'jumlah' => 100,
-            'id_produk' => 1,
-            'id_gudang' => 1,
-            'tanggal_masuk' => now(),
-            'tanggal_keluar' => now(),
         ]);
     }
 }

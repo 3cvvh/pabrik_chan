@@ -4,17 +4,20 @@
     <div class="bg-white border rounded-lg shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
         <div class="border-b p-4 bg-gradient-to-r from-gray-50 to-white">
             <h2 class="font-semibold text-xl bg-clip-text text-transparent bg-gradient-to-r from-gray-700 to-gray-900">
-                Tambah Transaksi
+               {{ isset($transaksi)? 'edit transaksi': 'tambah transaksi' }}
             </h2>
         </div>
 
-        <form action="{{ route('crud_transaksi.store') }}" class="form" method="post" class="p-6">
+        <form action="{{ isset($transaksi)? route('crud_transaksi.update',$transaksi->id) : route('crud_transaksi.store') }}" class="form" method="post" class="p-6">
             @csrf
+            @if(isset($transaksi))
+            @method('put')
+            @endif
             <div class="space-y-4">
                 <div class="group">
                     <label class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Nama Transaksi
                     </label>
-                    <input type="text" name="judul"
+                    <input type="text" value="{{ old('judul',$transaksi->judul) }}" name="judul"
                         class="w-full h-10 px-3 border rounded-md transition-all duration-200
                         focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
                     @error('judul')
@@ -29,7 +32,7 @@
                         focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
                         <option value="">Pilih pembeli</option>
                         @foreach ($pembeli as $item)
-                        <option value="{{ $item->id }}" {{ old('id_pembeli') == $item->id ? 'selected' : '' }}>
+                        <option value="{{ $item->id }}" {{ old('id_pembeli',$transaksi->id_pembeli  ) == $item->id ? 'selected' : '' }}>
                             {{ $item->name }}
                         </option>
                         @endforeach
@@ -38,7 +41,8 @@
                     <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                     @enderror
                 </div>
-
+                @if(!isset($transaksi))
+                @if(isset($produk))
                 <div class="group">
                     <label class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Produk</label>
                     <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors">
@@ -60,6 +64,10 @@
                         <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                         @enderror
                 </div>
+                @elseif(!isset($Produk))
+                <h1>produk belum ditambahkan</h1>wdadaaaaaaaaaaaaaaaaaaa
+                @endif
+                  @endif
 
                 <div class="grid grid-cols-2 gap-4">
 
@@ -68,7 +76,7 @@
                     </label>
                     <textarea name="keterangan" rows="2"
                         class="w-full px-3 py-2 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">{{ old('keterangan') }}</textarea>
+                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">{{ old('keterangan',$transaksi->keterangan) }}</textarea>
                     @error('keterangan')
                     <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                     @enderror

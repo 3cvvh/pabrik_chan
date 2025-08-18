@@ -24,7 +24,11 @@ class AdminController extends Controller
             'tanggal_pembayaran' => 'nullable',
         ]);
         Transaksi::where('id',$transaksi->id)->update($data);
-        return redirect()->route('crud_transaksi.index')->with('success', 'Tanggal berhasil diperbarui');
+        if($request->tanggal_pengiriman and $request->tanggal_pembayaran){
+            $transaksi->status = 'completed';
+            $transaksi->save();
+        }
+        return redirect()->route('crud_transaksi.show',$transaksi->id)->with('berhasil', 'Tanggal berhasil diperbarui');
 
     }
     public function produk(Request $request){
@@ -65,6 +69,7 @@ class AdminController extends Controller
                     'id_produk' => $produk_id,
                     'jumlah' => $jumlah,
                     'total_harga' => $harga_total_produk,
+                    'harga_satuan' => $produk->harga
                 ]);
             }
         }

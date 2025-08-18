@@ -20,4 +20,8 @@ class Stock_produk extends Model
     {
         return $this->belongsTo(gudang::class,'id_gudang');
     }
+    public function pabrik():BelongsTo
+    {
+        return $this->belongsTo(pabrik::class,'id_pabrik');
+    }
 }

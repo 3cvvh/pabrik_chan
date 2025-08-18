@@ -80,7 +80,7 @@
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <p class="text-sm text-gray-500">Tanggal Pengiriman</p>
-                            <p class="text-lg font-semibold text-gray-800">{{ $data_transaksi->tanggal_pengiriman }}</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ $data_transaksi->tanggal_pengiriman?? 'belum di kirim' }}</p>
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg col-span-2">
                             <p class="text-sm text-gray-500">Tanggal Pembayaran</p>
@@ -241,7 +241,7 @@
                 Update Tanggal
             </h3>
 
-            <form action="{{ route('admin.tanggal',$data_transaksi->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.tanggal',$data_transaksi->id) }}" id="form-tgl" method="POST" class="space-y-6">
                 @csrf
                 <input type="hidden" name="id" value="{{ $data_transaksi->id }}">
                 <div class="grid md:grid-cols-2 gap-6">
@@ -269,7 +269,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-3">
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="button"  onclick="confirmtgl(this)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                         Simpan Perubahan
                     </button>
                     <a href="{{ route('crud_transaksi.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
@@ -304,6 +304,22 @@
         Swal.fire({
             title: 'Apakah anda yakin?',
             text: "akan menambahkan data produk ini ke transaksi?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, tambah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                button.closest('form').submit();
+            }
+        });
+    }
+    function confirmtgl(button) {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "akan menambahkan data tanggal ini ke transaksi?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',

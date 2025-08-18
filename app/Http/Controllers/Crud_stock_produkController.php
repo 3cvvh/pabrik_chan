@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gudang;
+use App\Models\Pabrik;
 use App\Models\Produk as beatriceMYbini;
 use App\Models\Produk;
 use App\Models\Stock_produk;
@@ -19,7 +20,7 @@ class Crud_stock_produkController extends Controller
     {
         return view('admin.crud_stock_produk.index', [
             'judul' => 'crud|stock_produk',
-            'data' => Stock_produk::all(),
+            'data' => Stock_produk::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
 
@@ -51,6 +52,7 @@ class Crud_stock_produkController extends Controller
             'id_produk.required' => 'Produk belum dipilih!',
             'id_gudang.required' => 'Gudang belum dipilih!'
         ]);
+        $valid['id_pabrik'] = Auth::user()->pabrik_id;
         if($request->jumlah > 0){
             $valid['status'] = 'tersedia';
         }else{
