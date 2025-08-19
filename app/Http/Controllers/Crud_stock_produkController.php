@@ -73,29 +73,47 @@ class Crud_stock_produkController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Stock_produk $stock_produk)
+    public function edit($id)
     {
+        $stock = Stock_produk::find($id);
         return view('admin.crud_stock_produk.edit',[
             'judul' => 'edit|stok',
             'data' => Stock_produk::all(),
-            'produk' => Produk::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
             'gudang' => Gudang::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
+            'stock' => $stock
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Stock_produk $stock_produk)
+    public function update(Request $request, $id)
     {
-        //
+        $stock_produk = Stock_produk::find($id);
+        $request->validate([
+            'jumlah' => ['required'],
+            'tanggal_masuk' => ['required'],
+            'keterangan' => 'nullable',
+            'gudang' => 'integer',
+        ]);
+        if($request->jumlah == 0){
+            $stock_produk->status = 'habis';
+        }
+        $stock_produk->jumlah = $request->jumlah;
+        $stock_produk->id_gudang = $request->gudang;
+        $stock_produk->tanggal_masuk = $request->tanggal_masuk;
+        $stock_produk->keterangan = $request->keterangan;
+        $stock_produk->save();
+        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil mengedit stok');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Stock_produk $stock_produk)
+    public function destroy($id)
     {
-        //
+        $data = Stock_produk::findOrFail($id);
+        $data->delete();
+        return redirect()->route('Stock_produk.index')->with('hapus','berhasil menghapus data');
     }
 }
