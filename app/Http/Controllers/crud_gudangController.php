@@ -48,9 +48,14 @@ class Crud_gudangController extends Controller
      */
     public function create()
     {
+        $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+
+        $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
+
+
         return view('admin.crud_gudang.create_gudang', [
             'judul' => 'Tambah Gudang',
-            'pabrik' => pabrik::all()
+            'pabrik' => $pabrik_terkait // <-- Sekarang $pabrik adalah OBJEK MODEL tunggal
         ]);
     }
 
@@ -85,11 +90,14 @@ class Crud_gudangController extends Controller
      */
     public function edit($id)
     {
-        $gudang = gudang::findOrFail($id);
+                $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+
+        $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
+        $gudang = Gudang::with('pabrik')->findOrFail($id);
         return view('admin.crud_gudang.edit_gudang', [
             'judul' => 'Edit Gudang',
             'gudang' => $gudang,
-            'pabrik' => pabrik::all()
+            'pabrik' => $pabrik_terkait
         ]);
     }
 

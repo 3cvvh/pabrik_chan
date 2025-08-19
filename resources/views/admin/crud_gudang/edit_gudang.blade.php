@@ -8,13 +8,12 @@
         @csrf
         @method('PUT')
         <div class="mb-4">
-            <label for="id_pabrik" class="block font-semibold mb-1">Pilih Pabrik</label>
-            <select name="id_pabrik" id="id_pabrik" class="w-full border border-gray-300 rounded px-3 py-2">
-                <option value="">-- Pilih Pabrik --</option>
-                @foreach($pabrik as $p)
-                    <option value="{{ $p->id }}" {{ $gudang->$pabrik == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
-                @endforeach
-            </select>
+                               <label for="id_pabrik" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Pabrik</label>
+                    <input name="id_pabrik" id="id_pabrik"
+                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
+                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"
+                        value="{{ $pabrik->name }}" readonly>
+        <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
         </div>
         <div class="mb-4">
             <label for="nama" class="block font-semibold mb-1">Nama Gudang</label>
