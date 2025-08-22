@@ -7,7 +7,9 @@ use DB;
 use statustransaksi;
 use App\Models\produk;
 use App\Models\pembeli;
+use App\Models\Pembeli as ModelsPembeli;
 use App\Models\transaksi;
+use App\Models\Transaksi as ModelsTransaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -23,7 +25,7 @@ class Crud_transaksiController extends Controller
         return view('admin.crud_transaksi.index',[
             'judul' => 'transaksi|page',
             'data' => $t->get(),
-            'pembeli' => pembeli::all()
+            'pembeli' => ModelsPembeli::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
 
@@ -34,7 +36,7 @@ class Crud_transaksiController extends Controller
     {
         return view('admin.crud_transaksi.create', [
             'judul' => 'transaksi|create',
-            'pembeli' => pembeli::all(),
+            'pembeli' => pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
             'produk' => produk::where('id_pabrik', Auth::user()->pabrik_id)->get(),
         ]);
     }
@@ -50,7 +52,7 @@ public function store(Request $request)
         'id_pembeli' => 'required',
         'id_produk' => 'required|array',
         'jumlah' => 'required|array',
-        'keterangan' => 'nullable'
+        'keterangan' => 'nullable',
     ],[
         'id_produk.required' => 'produk tidak dipilih',
         'id_pembeli.required' => 'pembeli tidak dipilih',
@@ -66,9 +68,9 @@ public function store(Request $request)
         'judul' => $request->judul,
         'id_pembeli' => $request->id_pembeli,
         'id_pabrik' => Auth::user()->pabrik_id,
-        'keterangan' => $request->keterangan,
         'status_pengiriman' => 'belum_dikirim',
-        'status_pembayaran' => 'belum_bayar'
+        'status_pembayaran' => 'belum_bayar',
+        'keterangan' => $request->keterangan,
     ]);
 
     // buat detail transaksi untuk setiap produk yang dipilih
@@ -90,6 +92,7 @@ public function store(Request $request)
             'id_produk' => $produk_id,
             'jumlah' => $jumlah,
             'total_harga' => $harga_total_produk,
+            'harga_satuan' => $produk->harga
         ]);
     }
 
@@ -106,34 +109,74 @@ public function store(Request $request)
      */
     public function show($id)
     {
+        $data =  transaksi::find($id);
+        if(Auth::user()->pabrik_id !== $data->id_pabrik ){
+            abort(404);
+        }
         return view('admin.crud_transaksi.show',[
             'judul' => transaksi::find($id)->judul,
             'data_detail' => Detail_transaksi::with(['transaksi','produk'])->where('id_transaksi','=',$id)->get(),
-            'data_transaksi' => transaksi::find($id)
+            'data_transaksi' => $data,
+            'dataproduk' => produk::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(transaksi $transaksi)
+    public function edit($id)
     {
-        //
+
+        $transaksi = transaksi::findOrFail($id);
+        if(Auth::user()->pabrik_id !== $transaksi->id_pabrik ){
+            abort(404);
+        }
+        return view('admin.crud_transaksi.create',[
+            'judul' => 'edit transaksi',
+            'transaksi' => $transaksi,
+            'pembeli' => pembeli::where('id_pabrik',Auth::getUser()->pabrik_id)->get()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, transaksi $transaksi)
+    public function update(Request $request,$id)
     {
-        //
+        $transaksi = transaksi::find($id);
+          $request->validate([
+        'judul' => 'required',
+        'id_pembeli' => 'required',
+        'keterangan' => 'nullable',
+    ],[
+        'id_produk.required' => 'produk tidak dipilih',
+        'id_pembeli.required' => 'pembeli tidak dipilih',
+        'judul.required' => 'tolong nama transaksi diisi',
+        'jumlah.required' => 'jumlah produk harap di isi',
+        'jumlah.*.required' => 'jumlah produk harap di isi',
+        'jumlah.*.numeric' => 'jumlah produk harus berupa angka',
+        'jumlah.*.min' => 'jumlah produk minimal 1'
+    ]);
+    $transaksi->judul = $request->judul;
+    $transaksi->id_pembeli = $request->id_pembeli;
+    $transaksi->keterangan = $request->keterangan;
+    $transaksi->save();
+    return redirect()->route('crud_transaksi.index')->with('success','berhasil mengedit transaksi');
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(transaksi $transaksi)
+    public function destroy($id)
     {
-        //
+    $transaksi_detil = Detail_transaksi::where('id_transaksi','=',$id)->get();
+        if(isset($transaksi_detil)){
+            foreach($transaksi_detil as $detail){
+                Detail_transaksi::destroy($detail->id);
+            }
+        }
+        transaksi::destroy($id);
+        return redirect(route('crud_transaksi.index'))->with('success','berhasil menghapus data');
     }
 }

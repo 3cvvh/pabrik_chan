@@ -12,7 +12,10 @@ use App\Http\Controllers\crudProdukController;
 use App\Http\Controllers\users_crudController;
 use App\Http\Controllers\crud_pabrikController;
 use App\Http\Controllers\crud_pembeliController;
+use App\Http\Controllers\Crud_stock_produkController;
 use App\Http\Controllers\orang_gudangController;
+use App\Http\Controllers\Orang_gudangProdukController;
+use App\Http\Controllers\Orang_gudang_StockController;
 use App\Http\Controllers\crud_transaksiController;
 use App\Http\Controllers\super_beatriceController;
 
@@ -27,14 +30,20 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
     Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
-    Route::resource('/dashboard/admin/pembeli', crud_pembeliController::class)->except('show');
+    Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show');
     Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
     Route::resource('/dashboard/admin/produk',crudProdukController::class);
+    Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);
+    Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal');
+    Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk');
+    Route::post('/dashboard/admin/hapus/{Detail_transaksi:id}',[adminController::class,'hapus_produk'])->name('admin-hapus');
 });
 
 //daftar route jika user sudah login sebagai orang gudang
 Route::middleware(['auth','orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
+    Route::resource('/dashboard/org_gudang/produk',Orang_gudangProdukController::class);
+    Route::resource('/dashboard/org_gudang/stock_produk',Orang_gudang_stockController::class);
 });
 //daftar route jika user sudah login sebagai owner
 Route::middleware(['auth','owner'])->group(function () {

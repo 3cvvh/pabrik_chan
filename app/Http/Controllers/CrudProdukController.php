@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\pabrik;
 use App\Models\Pabrik as ModelsPabrik;
 use App\Models\produk;
+use App\Models\Produk as ModelsProduk;
+use App\Models\Stock_produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class CrudProdukController extends Controller
@@ -17,7 +20,7 @@ class CrudProdukController extends Controller
     {
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  produk::all()
+            'data' =>  produk::where('id_pabrik','=',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
 
@@ -28,7 +31,7 @@ class CrudProdukController extends Controller
     {
         return view('admin.crud_produk.form_tambah_produk',[
             'judul' => 'formtambah|produk',
-            'pabrik' => pabrik::all(),
+            'pabrik' => pabrik::where('id',Auth::user()->pabrik_id)->get(),
         ]);
     }
 
@@ -48,7 +51,7 @@ class CrudProdukController extends Controller
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
         produk::create($valid);
-        return redirect()->route('produk.index')->with('tambah','berhasil menambahkan produk');
+        return redirect()->route('produk.index')->with('berhasil','berhasil menambahkan produk');
     }
 
     /**
@@ -56,7 +59,11 @@ class CrudProdukController extends Controller
      */
     public function show(produk $produk)
     {
-        //
+        return view('admin.crud_produk.show', [
+            'judul' => $produk->judul,
+            'stock' => Stock_produk::where('id_produk', '=',$produk->id)->get()
+
+        ]);
     }
 
     /**
@@ -64,7 +71,10 @@ class CrudProdukController extends Controller
      */
     public function edit(produk $produk)
     {
-        //
+            return view('admin.crud_produk.edit', [
+            'judul' => $produk->judul,
+            'data' => $produk,
+        ]);
     }
 
     /**
@@ -72,7 +82,20 @@ class CrudProdukController extends Controller
      */
     public function update(Request $request, produk $produk)
     {
-        //
+        $valid = $request->validate([
+            'nama' => ['required'],
+            'harga' => ['required'],
+            'deskripsi' => 'nullable',
+            'gambar' => ['nullable','image'],
+        ]);
+        if($request->file('gambar')){
+            if($produk->gambar){
+                Storage::delete($produk->gambar);
+            }
+            $valid['gambar'] = $request->file('gambar')->store('produk-img');
+        }
+        produk::where('id','=',$produk->id)->update($valid);
+        return redirect()->route('produk.index')->with('edit','berhasil mengedit data');
     }
 
     /**
@@ -80,6 +103,10 @@ class CrudProdukController extends Controller
      */
     public function destroy(produk $produk)
     {
-        //
+        if($produk->gambar){
+            Storage::delete($produk->gambar);
+        }
+        ModelsProduk::destroy($produk->id);
+        return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
     }
 }

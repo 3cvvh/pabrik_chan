@@ -27,6 +27,36 @@
             @endif
         @endforeach
 
+        <!-- Search/Filter Section -->
+        <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
+            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
+                <div class="flex-1 min-w-[200px]">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Gudang</label>
+                    <div class="relative">
+                        <input autocomplete="off" name="search" id="search" type="text"
+                            placeholder="Cari gudang..."
+                            class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200"
+                            value="{{ request('search') }}">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="w-48">
+                    <label for="pabrik_filter" class="block text-sm font-medium text-gray-700 mb-1">Filter Pabrik</label>
+                    <select name="pabrik_filter" id="pabrik_filter" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
+                        <option value="">Semua Pabrik</option>
+                        @foreach ($pabrik as $p)
+                            <option value="{{ $p->id }}" {{ request('pabrik_filter') == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
+                    Cari
+                </button>
+            </form>
+        </div>
+
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">

@@ -90,13 +90,13 @@
                                         </svg>
                                         Details
                                     </a>
-                                    <a href="{{ route('crud_users.edit',$transaksi->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                                    <a href="{{ route('crud_transaksi.edit',$transaksi->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                         Edit
                                     </a>
-                                    <form action="/dashboard/super_admin/crud_users/{{ $transaksi->id }}" method="post" class="delete-form">
+                                    <form action="{{ route('crud_transaksi.destroy',$transaksi->id) }}" method="post" class="delete-form">
                                         @csrf
                                         @method('delete')
                                         <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">

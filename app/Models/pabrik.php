@@ -12,6 +12,10 @@ class Pabrik extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    public function stock():HasMany
+    {
+        return $this->hasMany(Pabrik::class,'id_pabrik');
+    }
     public function produk():HasMany
     {
         return $this->hasMany(produk::class,'id_pabrik');
@@ -27,5 +31,9 @@ class Pabrik extends Model
     public function user():HasMany
     {
         return $this->hasMany(User::class,'pabrik_id');
+    }
+    public function pembeli():HasMany
+    {
+        return $this->hasMany(pembeli::class,'id_pabrik');
     }
 }

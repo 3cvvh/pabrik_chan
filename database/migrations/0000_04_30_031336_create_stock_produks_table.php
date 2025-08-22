@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -18,6 +19,8 @@ return new class extends Migration
             $table->foreign('id_produk')->references('id')->on('produks')->onDelete('cascade');
             $table->unsignedBigInteger('id_gudang');
             $table->foreign('id_gudang')->references('id')->on('gudangs')->onDelete('cascade');
+            $table->unsignedBigInteger('id_pabrik');
+            $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar')->nullable();
             $table->string('keterangan')->nullable();

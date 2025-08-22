@@ -36,7 +36,7 @@
             <i class="fas fa-exchange-alt w-5 h-5 mr-1"></i>
             Transaksi
         </a>
-        <a href="/dashboard/admin/pembeli" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="/dashboard/admin/crud_pembeli" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-user-tag w-5 h-5 mr-1"></i>
             Pembeli
         </a>
@@ -48,12 +48,20 @@
             <i class="fas fa-warehouse w-5 h-5 mr-1"></i>
             gudang
         </a>
+        <a href="{{ route('Stock_produk.index') }}" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+            <i class="fa fa-cubes w-5 h-5 mr-1"></i>
+            Stock
+        </a>
             </div>
         @endif
         @if (auth()->user()->role_id === 2)
-        <a href="/dashboard/orang_gudang/Produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="/dashboard/org_gudang/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
+        </a>
+        <a href="/dashboard/org_gudang/stock_produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+            <i class="fa fa-cubes w-5 h-5 mr-1"></i>
+            Stock
         </a>
         @endif
         @if (auth()->user()->role_id === 3)
