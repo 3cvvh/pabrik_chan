@@ -13,15 +13,12 @@
             @csrf
             <div class="space-y-4">
                 <div class="group">
-                    <label for="id_pabrik" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Pilih Pabrik</label>
-                    <select name="id_pabrik" id="id_pabrik"
+                    <label for="id_pabrik" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Pabrik</label>
+                    <input name="id_pabrik" id="id_pabrik"
                         class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
-                        <option value="">-- Pilih Pabrik --</option>
-                        @foreach($pabrik as $p)
-                            <option value="{{ $p->id }}">{{ $p->name }}</option>
-                        @endforeach
-                    </select>
+                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"
+                        value="{{ $pabrik->name }}" readonly>
+        <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
                 </div>
                 <div class="group">
                     <label for="nama" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Nama Gudang</label>
