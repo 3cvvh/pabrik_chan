@@ -26,18 +26,28 @@
         <div class="border-b border-gray-200 px-8 py-6">
             <div class="flex justify-between items-center">
                 <h1 class="text-3xl font-bold text-gray-800">{{ $data_transaksi->judul }}</h1>
-                <span class="px-4 py-2 rounded-full text-sm font-semibold inline-flex items-center
-                    @if($data_transaksi->status == 'pending') bg-yellow-100 text-yellow-800
-                    @elseif($data_transaksi->status == 'completed') bg-green-100 text-green-800
-                    @else bg-gray-100 text-gray-800
-                    @endif">
-                    <span class="w-2 h-2 rounded-full mr-2
-                        @if($data_transaksi->status == 'pending') bg-yellow-400
-                        @elseif($data_transaksi->status == 'completed') bg-green-400
-                        @else bg-gray-400
-                        @endif"></span>
-                    {{ $data_transaksi->status }}
-                </span>
+                <div class="flex items-center space-x-3">
+                    <span class="px-4 py-2 rounded-full text-sm font-semibold inline-flex items-center
+                        @if($data_transaksi->status == 'pending') bg-yellow-100 text-yellow-800
+                        @elseif($data_transaksi->status == 'completed') bg-green-100 text-green-800
+                        @else bg-gray-100 text-gray-800
+                        @endif">
+                        <span class="w-2 h-2 rounded-full mr-2
+                            @if($data_transaksi->status == 'pending') bg-yellow-400
+                            @elseif($data_transaksi->status == 'completed') bg-green-400
+                            @else bg-gray-400
+                            @endif"></span>
+                        {{ $data_transaksi->status }}
+                    </span>
+                    <button type="button"
+                        onclick="confirmGenerate('{{ route('admin.laporan', $data_transaksi->id) }}')"
+                        class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Generate Laporan
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -350,6 +360,23 @@
             }
         });
         return false;
+    }
+
+    function confirmGenerate(url) {
+        Swal.fire({
+            title: 'Generate Laporan?',
+            text: "Laporan transaksi akan dibuka di tab baru.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, generate',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open(url, '_blank');
+            }
+        });
     }
 </script>
 @endsection

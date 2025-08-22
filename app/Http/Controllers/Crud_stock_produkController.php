@@ -31,8 +31,9 @@ class Crud_stock_produkController extends Controller
     {
         return view('admin.crud_stock_produk.create', [
             'judul' => 'formtambah|stok',
-            'produk' => beatriceMYbini::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
+            'produk' => produk::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
             'gudang' => Gudang::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
+
         ]);
     }
 
@@ -41,6 +42,7 @@ class Crud_stock_produkController extends Controller
      */
     public function store(Request $request)
     {
+        $stock_ada = Stock_produk::where('id_produk', $request->id_produk)->get();
         $valid = $request->validate([
             'jumlah' => ['required'],
             'keterangan' => ['nullable'],
@@ -58,9 +60,17 @@ class Crud_stock_produkController extends Controller
         }else{
             $valid['status'] = 'habis';
         }
-        Stock_produk::create($valid);
-        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil menambahkan stok');
-    }
+        foreach ($stock_ada as $stock) {
+            if ($stock->id_gudang == $valid['id_gudang'] && $stock->id_produk == $valid['id_produk']) {
+                $valid['jumlah'] = $stock->jumlah + $valid['jumlah'];
+                Stock_produk::where('id', $stock->id)->update($valid);
+                return redirect()->route('Stock_produk.index')->with('berhasil', 'berhasil menambahkan stok');
+            }
+        }
+            Stock_produk::create($valid);
+             return redirect()->route('Stock_produk.index')->with('berhasil','berhasil menambahkan stok');
+        }
+
 
     /**
      * Display the specified resource.

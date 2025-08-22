@@ -1,139 +1,130 @@
 @extends('layout.main')
 @section('content')
-<div class="p-6 bg-gray-50 min-h-screen">
-    <!-- Breadcrumb -->
-    <nav class="flex mb-4" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a href="{{ route('produk.index') }}" class="text-gray-700 hover:text-blue-600">
-                    <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                    </svg>
-                    Dashboard
-                </a>
-            </li>
-            <li class="flex items-center">
-                <span class="mx-2">/</span>
-                <span class="text-gray-500">Detail Produk</span>
-            </li>
-        </ol>
-    </nav>
 
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
-        @if($stock == null)
-        @foreach ($stock as $index => $stock)
-        <div class="grid md:grid-cols-2 gap-0">
-            <!-- Product Image Section -->
-            <div class="relative group overflow-hidden cursor-pointer" onclick="openModal()">
-                <img src="{{ asset('storage/' . $stock->produk->gambar) }}"
-                     alt="{{ $stock->produk->nama }}"
-                     class="w-full h-[600px] object-cover transform group-hover:scale-110 transition duration-700 ease-in-out"
-                     id="productImage">
-                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div class="bg-white/90 rounded-full p-3 transform translate-y-4 group-hover:translate-y-0 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8">
-                    <h1 class="text-white text-4xl font-bold mb-2">{{ $stock->produk->nama }}</h1>
-                    <p class="text-white/90 text-xl font-semibold">Rp {{ number_format($stock->produk->harga, 0, ',', '.') }}</p>
-                </div>
-            </div>
-
-            <!-- Product Information -->
-            <div class="p-8 bg-white">
-                <div class="space-y-6">
-                    <!-- Stock Status Badge -->
-                    <div class="inline-flex items-center">
-                        <span class="px-3 py-1 text-sm rounded-full {{ $stock->jumlah > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $stock->jumlah > 0 ? 'Tersedia' : 'Stok Habis' }}
-                        </span>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center pb-4 border-b border-gray-200">
-                            <span class="text-gray-600">Stok Tersedia</span>
-                            <span class="font-semibold text-gray-800">{{ $stock->jumlah }} unit</span>
-                        </div>
-
-                        <div class="pb-4">
-                            <h3 class="text-gray-600 mb-2">Deskripsi Produk</h3>
-                            <p class="text-gray-800 leading-relaxed">{{ $stock->produk->deskripsi ?: 'Tidak ada deskripsi' }}</p>
-                        </div>
-
-                        <!-- Product Metadata -->
-                        <div class="grid grid-cols-2 gap-4 py-4 border-t border-gray-200">
-                            <div>
-                                <span class="text-gray-500 text-sm">Terakhir Diupdate</span>
-                                <p class="text-gray-800">{{ $stock->updated_at->format('d M Y') }}</p>
-                            </div>
-                            <div>
-                                <span class="text-gray-500 text-sm">ID Produk</span>
-                                <p class="text-gray-800">#{{ $stock->id }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex gap-3 pt-6">
-                        <a href="{{ route('produk.edit', $stock->id) }}"
-                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition duration-200 text-center font-semibold">
-                            Edit Produk
-                        </a>
-                        <a href="{{ route('produk.index') }}"
-                           class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg transition duration-200 text-center font-semibold">
-                            Kembali
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endforeach
-        @else
-        <h1>data stock belum ada</h1>
-        @endif
+<div class="max-w-6xl mx-auto p-6">
+    <!-- Tombol Kembali -->
+    <div class="mb-4">
+        <button onclick="window.history.back()" class="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Kembali
+        </button>
     </div>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center cursor-zoom-out" onclick="closeModal()">
-        <div class="relative max-w-4xl max-h-[90vh] mx-auto">
-            <img id="modalImage" src="" alt="Product Image Large"
-                 class="max-w-full max-h-[90vh] object-contain">
-            <button class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors duration-200"
-                    onclick="closeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-    </div>
+	<section class="bg-white shadow rounded-lg overflow-hidden">
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
+			<!-- Galeri -->
+			<div class="lg:col-span-6">
+				<div class="rounded-lg overflow-hidden">
+                    @if($produk->gambar)
+                        <img src="{{ asset('storage/' . $produk->gambar) }}" alt="gambar-produk" class="w-full h-96 object-cover rounded">
+                    @else
+				<h1>tidak ada gambar</h1>
+                    @endif
+				</div>
 
-    <!-- Add this script section at the end of your content -->
-    <script>
-        function openModal() {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            const productImg = document.getElementById('productImage');
+				<div class="mt-4 flex gap-3">
+					<!-- Thumbnail utama (produk.gambar) -->
+					<button type="button" class="thumbnail w-20 h-20 rounded overflow-hidden border-2 border-transparent focus:border-blue-500" data-src="{{ asset('storage/' . $produk->gambar) }}">
+					</button>
+				</div>
+			</div>
 
-            modalImg.src = productImg.src;
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+			<!-- Detail -->
+			<div class="lg:col-span-6 flex flex-col justify-between">
+				<div>
+					<h1 class="text-2xl font-bold">{{ $produk->nama }}</h1>
 
-        function closeModal() {
-            const modal = document.getElementById('imageModal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
+					<div class="mt-4 flex items-center gap-4">
+						<div class="text-2xl font-extrabold text-rose-600">Rp {{ number_format($produk->harga,0,',','.') }}</div>
+					</div>
 
-        // Close modal with escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-    </script>
+					<div class="mt-4 text-sm text-gray-700">
+						<p>{{ $produk->deskripsi }}</p>
+					</div>
+
+					<div class="mt-6 flex items-center gap-4">
+						<!-- Quantity -->
+						@php $totalStock = $stock->sum('jumlah'); @endphp
+
+						<!-- Stock -->
+						<div class="text-sm text-gray-600">Total stok: <span id="stock" class="font-semibold">{{ $totalStock }}</span></div>
+					</div>
+	</section>
+
+	<!-- Daftar stock detail -->
+	<section class="mt-6 bg-white shadow rounded-lg p-6">
+		<h2 class="text-lg font-semibold mb-4">Detail Stok</h2>
+
+		@foreach ($stock as $index => $item)
+			<div class="mb-4 border rounded p-4">
+				<div class="flex justify-between items-start">
+					<div>
+						<h3 class="font-semibold">Stock {{ $index + 1 }}</h3>
+						<p class="text-sm text-gray-600">{{ $item->gudang->nama ?? '—' }}</p>
+					</div>
+                    <div>
+                        <a href="{{ route('Stock_produk.edit',$item->id) }}">edit stock</a>
+                    </div>
+					<div class="text-right">
+						<p class="text-sm text-gray-600">Status: <span class="font-medium">{{ $item->status ?? '—' }}</span></p>
+						<p class="text-sm text-gray-600">Jumlah: <span class="font-medium">{{ $item->jumlah }}</span></p>
+					</div>
+				</div>
+
+				<div class="mt-3 text-sm text-gray-700">
+					<p>tanggal_masuk: {{ $item->tanggal_masuk ?? 'Tidak ada' }}</p>
+					<p>tanggal_keluar: {{ $item->tanggal_keluar ?? 'Tidak ada' }}</p>
+					<p>keterangan: {{ $item->keterangan ?? '-' }}</p>
+				</div>
+			</div>
+		@endforeach
+	</section>
 </div>
+
+<!-- Skrip kecil untuk interaksi -->
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		// Ganti gambar utama saat klik thumbnail
+		document.querySelectorAll('.thumbnail').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const src = btn.getAttribute('data-src');
+				document.getElementById('mainImage').src = src;
+				document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('ring-2','ring-blue-500'));
+				btn.classList.add('ring-2','ring-blue-500');
+			});
+		});
+
+		// Kontrol kuantitas sederhana
+		const qtyInput = document.getElementById('qty');
+		const formQty = document.getElementById('formQty');
+		const stockEl = document.getElementById('stock');
+		const stock = parseInt(stockEl.textContent || '0', 10);
+
+		document.getElementById('incr').addEventListener('click', () => {
+			let v = parseInt(qtyInput.value||'1',10);
+			if (v < stock) qtyInput.value = v + 1;
+			formQty.value = qtyInput.value;
+		});
+		document.getElementById('decr').addEventListener('click', () => {
+			let v = parseInt(qtyInput.value||'1',10);
+			if (v > 1) qtyInput.value = v - 1;
+			formQty.value = qtyInput.value;
+		});
+		qtyInput.addEventListener('change', () => {
+			let v = parseInt(qtyInput.value||'1',10);
+			if (v < 1) v = 1;
+			if (v > stock) v = stock;
+			qtyInput.value = v;
+			formQty.value = v;
+		});
+
+		// Tombol aksi (placeholder)
+		document.getElementById('buyNow').addEventListener('click', () => {
+			alert('Proses pembelian (demo).');
+		});
+	});
+</script>
+
 @endsection

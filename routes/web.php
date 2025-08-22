@@ -35,6 +35,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal');
     Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk');
     Route::post('/dashboard/admin/hapus/{Detail_transaksi:id}',[adminController::class,'hapus_produk'])->name('admin-hapus');
+    Route::get('/dashboard/admin/generate_report/{transaksi:id}',[AdminController::class, 'generateReport'])->name('admin.laporan');
 });
 
 //daftar route jika user sudah login sebagai orang gudang
