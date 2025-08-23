@@ -18,9 +18,11 @@ class Crud_stock_produkController extends Controller
      */
     public function index()
     {
+        $stock = Stock_produk::with(['produk','gudang'])->where('id_pabrik',Auth::user()->pabrik_id);
+
         return view('admin.crud_stock_produk.index', [
             'judul' => 'crud|stock_produk',
-            'data' => Stock_produk::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
+            'data' => $stock->get(),
         ]);
     }
 
