@@ -31,9 +31,8 @@ class Crud_stock_produkController extends Controller
     {
         return view('admin.crud_stock_produk.create', [
             'judul' => 'formtambah|stok',
-            'produk' => produk::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
+            'produk' => beatriceMYbini::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
             'gudang' => Gudang::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
-
         ]);
     }
 
@@ -42,7 +41,6 @@ class Crud_stock_produkController extends Controller
      */
     public function store(Request $request)
     {
-        $stock_ada = Stock_produk::where('id_produk', $request->id_produk)->get();
         $valid = $request->validate([
             'jumlah' => ['required'],
             'keterangan' => ['nullable'],
@@ -60,17 +58,9 @@ class Crud_stock_produkController extends Controller
         }else{
             $valid['status'] = 'habis';
         }
-        foreach ($stock_ada as $stock) {
-            if ($stock->id_gudang == $valid['id_gudang'] && $stock->id_produk == $valid['id_produk']) {
-                $valid['jumlah'] = $stock->jumlah + $valid['jumlah'];
-                Stock_produk::where('id', $stock->id)->update($valid);
-                return redirect()->route('Stock_produk.index')->with('berhasil', 'berhasil menambahkan stok');
-            }
-        }
-            Stock_produk::create($valid);
-             return redirect()->route('Stock_produk.index')->with('berhasil','berhasil menambahkan stok');
-        }
-
+        Stock_produk::create($valid);
+        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil menambahkan stok');
+    }
 
     /**
      * Display the specified resource.
@@ -114,7 +104,7 @@ class Crud_stock_produkController extends Controller
         $stock_produk->tanggal_masuk = $request->tanggal_masuk;
         $stock_produk->keterangan = $request->keterangan;
         $stock_produk->save();
-        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil mengedit stok');
+        return redirect('/dashboard/admin/stock_produk')->with('berhasil','berhasil mengedit stok');
     }
 
     /**

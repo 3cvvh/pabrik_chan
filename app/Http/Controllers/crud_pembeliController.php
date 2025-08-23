@@ -46,9 +46,12 @@ class Crud_pembeliController extends Controller
      */
     public function create()
     {
+        $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+
+        $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
         return view('admin.crud_pembeli.form_pembeli',[
             'judul' => 'Tambah pembeli',
-            'pabrik' => pabrik::all()
+            'pabrik' => $pabrik_terkait
         ]);
     }
 
@@ -80,11 +83,13 @@ class Crud_pembeliController extends Controller
      */
     public function edit($id)
     {
+        $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+        $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
         $pembeli = pembeli::findOrFail($id);
         return view('admin.crud_pembeli.form_pembeli_edit', [
             'judul' => 'Edit pembeli',
             'pembeli' => $pembeli,
-            'pabrik' => pabrik::all()
+            'pabrik' => $pabrik_terkait
         ]);
     }
 
