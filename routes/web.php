@@ -43,8 +43,6 @@ Route::middleware(['auth','admin'])->group(function () {
 //daftar route jika user sudah login sebagai orang gudang
 Route::middleware(['auth','orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
-    Route::resource('/dashboard/org_gudang/produk',Orang_gudangProdukController::class);
-    Route::resource('/dashboard/org_gudang/stock_produk',Orang_gudang_stockController::class);
 });
 //daftar route jika user sudah login sebagai owner
 Route::middleware(['auth','owner'])->group(function () {
