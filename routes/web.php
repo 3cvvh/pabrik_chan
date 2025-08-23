@@ -12,6 +12,7 @@ use App\Http\Controllers\crudProdukController;
 use App\Http\Controllers\users_crudController;
 use App\Http\Controllers\crud_pabrikController;
 use App\Http\Controllers\crud_pembeliController;
+use App\Http\Controllers\Crud_stock_produk2Controller;
 use App\Http\Controllers\Crud_stock_produkController;
 use App\Http\Controllers\orang_gudangController;
 use App\Http\Controllers\Orang_gudangProdukController;
@@ -43,6 +44,7 @@ Route::middleware(['auth','admin'])->group(function () {
 //daftar route jika user sudah login sebagai orang gudang
 Route::middleware(['auth','orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
+    Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
 });
 //daftar route jika user sudah login sebagai owner
 Route::middleware(['auth','owner'])->group(function () {

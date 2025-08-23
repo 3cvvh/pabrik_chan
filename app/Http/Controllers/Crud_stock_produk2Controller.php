@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
-class Crud_stock_produkController extends Controller
+class Crud_stock_produk2Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class Crud_stock_produkController extends Controller
     {
         $stock = Stock_produk::with(['produk','gudang'])->where('id_pabrik',Auth::user()->pabrik_id);
 
-        return view('admin.crud_stock_produk.index', [
+        return view('orang_gudang.crud_stock.index', [
             'judul' => 'crud|stock_produk',
             'data' => $stock->get(),
         ]);
@@ -31,7 +31,7 @@ class Crud_stock_produkController extends Controller
      */
     public function create()
     {
-        return view('admin.crud_stock_produk.create', [
+        return view('orang_gudang.crud_stock.create', [
             'judul' => 'formtambah|stok',
             'produk' => beatriceMYbini::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
             'gudang' => Gudang::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
@@ -61,14 +61,14 @@ class Crud_stock_produkController extends Controller
         }else{
             $valid['status'] = 'habis';
         }
-        foreach($stock_ada as $item){
-            if($item->id_gudang == $request->id_gudang){
-                return redirect()->route('Stock_produk.index')->with('warning','Stok dengan produk dan gudang yang sama sudah ada!');
+        foreach($stock_ada as $stock){
+            if($stock->id_gudang == $request->id_gudang){
+                $gudang = Gudang::find($request->id_gudang)->nama;
+                return redirect()->route('crud_stocks.index')->with('warning','stock di gudang' . $gudang );
             }
         }
-
         Stock_produk::create($valid);
-        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil menambahkan stok');
+        return redirect()->route('crud_stocks.index')->with('berhasil','berhasil menambahkan stok');
     }
 
     /**
@@ -85,7 +85,7 @@ class Crud_stock_produkController extends Controller
     public function edit($id)
     {
         $stock = Stock_produk::find($id);
-        return view('admin.crud_stock_produk.edit',[
+        return view('orang_gudang.crud_stock.edit',[
             'judul' => 'edit|stok',
             'data' => Stock_produk::all(),
             'gudang' => Gudang::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
@@ -113,7 +113,7 @@ class Crud_stock_produkController extends Controller
         $stock_produk->tanggal_masuk = $request->tanggal_masuk;
         $stock_produk->keterangan = $request->keterangan;
         $stock_produk->save();
-        return redirect('/dashboard/admin/stock_produk')->with('berhasil','berhasil mengedit stok');
+        return redirect(route('crud_stocks.index'))->with('berhasil','berhasil mengedit stok');
     }
 
     /**
@@ -123,6 +123,6 @@ class Crud_stock_produkController extends Controller
     {
         $data = Stock_produk::findOrFail($id);
         $data->delete();
-        return redirect()->route('Stock_produk.index')->with('hapus','berhasil menghapus data');
+        return redirect()->route('crud_stocks.index')->with('hapus','berhasil menghapus data');
     }
 }
