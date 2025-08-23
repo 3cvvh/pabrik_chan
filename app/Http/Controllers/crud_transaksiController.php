@@ -20,12 +20,29 @@ class Crud_transaksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $t = transaksi::with(['pembeli','pabrik'])->where('id_pabrik','=',Auth::user()->pabrik_id);
+         $data = transaksi::with(['pembeli'])
+    ->where('id','!=',Auth::user()->id)
+    ->latest();
+     if($request->has('search') || $request->has('pembelis_key')){
+        $data = transaksi::query()
+            ->where('id', '!=', Auth::user()->id)
+            ->when($request->search, function($query) use ($request) {
+                $query->where(function($q) use ($request) {
+                    $q->where('judul', 'like', '%'.$request->search.'%')
+                      ->orWhere('status', 'like', '%'.$request->search.'%');
+                });
+            })
+            ->when($request->pembelis_key, function($query) use ($request) {
+                $query->where('id_pembeli', $request->pembelis_key);
+            })
+            ->with(['pembeli'])
+            ->latest();
+    }
         return view('admin.crud_transaksi.index',[
             'judul' => 'transaksi|page',
-            'data' => $t->get(),
+            'data' => $data->get(),
             'pembeli' => ModelsPembeli::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
         ]);
     }
@@ -99,21 +116,25 @@ public function store(Request $request)
     $transaksi->update([
         'total_harga' => $total_harga
     ]);
-    $stock = Stock_produk::where('id_produk',$produk_id)->andWhere('id_pabrik',Auth::getUser()->pabrik_id)->first();
-        if($stock->jumlah >= $jumlah){
-            $stock->jumlah -= $jumlah;
-            $stock->save();
-        }else{
-            transaksi::destroy($transaksi->id);
-            Detail_transaksi::where('id_transaksi', $transaksi->id)->delete();
-            return redirect(route('crud_transaksi.create'))->with('warning','stok tidak mencukupi');
+    $stock = Stock_produk::where('id_produk',$produk_id)->where('id_pabrik',Auth::getUser()->pabrik_id)->where('jumlah','>','0')->get();
+    foreach($stock as $stocks){
+        if($stocks >= $jumlah){
+            $stocks->jumlah -= $jumlah;
+            $stocks->save();
+            return redirect()->route('crud_transaksi.index')->with('success','berhasil menambahkan transaksi');
         }
+        // }else{
+        //     //   transaksi::destroy($transaksi->id);
+        //     // Detail_transaksi::where('id_transaksi', $transaksi->id)->delete();
+        //     // return redirect(route('crud_transaksi.create'))->with('warning','stok tidak mencukupi');
+        //     return 'gagal';
+        // }
 
+    }
+
+return redirect()->route('crud_transaksi.index')->with('gagal','stok tidak mencukupi');
 
     // redirect ke index dengan pesan sukses
-    if($transaksi){
-        return redirect(route('crud_transaksi.index'))->with('success','berhasil membuat transaksi');
-    }
 }
 
     /**
