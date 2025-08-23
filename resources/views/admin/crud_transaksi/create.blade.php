@@ -166,11 +166,11 @@ input[type="checkbox"]:checked {
         }
     });
 }
-@if(session('jumlah'))
+@if(session('warning'))
     Swal.fire({
         icon: 'error',
         title: 'gagal!',
-        text: '{{ session('jumlah') }}',
+        text: '{{ session('warning') }}',
         timer: 1500,
         showConfirmButton: false
     });

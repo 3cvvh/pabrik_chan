@@ -13,6 +13,7 @@ use App\Models\Transaksi as ModelsTransaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use App\Models\Stock_produk;
 
 class Crud_transaksiController extends Controller
 {
@@ -62,7 +63,6 @@ public function store(Request $request)
         'jumlah.*.numeric' => 'jumlah produk harus berupa angka',
         'jumlah.*.min' => 'jumlah produk minimal 1'
     ]);
-
     // create transaksi
     $transaksi = transaksi::create([
         'judul' => $request->judul,
@@ -79,7 +79,7 @@ public function store(Request $request)
         $jumlah = $request->jumlah[$produk_id] ?? 0;
         if ($jumlah <= 0) {
             transaksi::destroy($transaksi->id);
-            return redirect(route('crud_transaksi.create'))->with('jumlah','harap jumlah diisi');
+            return redirect(route('crud_transaksi.create'))->with('warning','harap jumlah diisi');
             die;
         }
 
@@ -99,9 +99,21 @@ public function store(Request $request)
     $transaksi->update([
         'total_harga' => $total_harga
     ]);
+    $stock = Stock_produk::where('id_produk',$produk_id)->andWhere('id_pabrik',Auth::getUser()->pabrik_id)->first();
+        if($stock->jumlah >= $jumlah){
+            $stock->jumlah -= $jumlah;
+            $stock->save();
+        }else{
+            transaksi::destroy($transaksi->id);
+            Detail_transaksi::where('id_transaksi', $transaksi->id)->delete();
+            return redirect(route('crud_transaksi.create'))->with('warning','stok tidak mencukupi');
+        }
 
-    return redirect()->route('crud_transaksi.index')
-        ->with('success', 'Transaksi berhasil dibuat');
+
+    // redirect ke index dengan pesan sukses
+    if($transaksi){
+        return redirect(route('crud_transaksi.index'))->with('success','berhasil membuat transaksi');
+    }
 }
 
     /**
@@ -170,12 +182,6 @@ public function store(Request $request)
      */
     public function destroy($id)
     {
-    $transaksi_detil = Detail_transaksi::where('id_transaksi','=',$id)->get();
-        if(isset($transaksi_detil)){
-            foreach($transaksi_detil as $detail){
-                Detail_transaksi::destroy($detail->id);
-            }
-        }
         transaksi::destroy($id);
         return redirect(route('crud_transaksi.index'))->with('success','berhasil menghapus data');
     }
