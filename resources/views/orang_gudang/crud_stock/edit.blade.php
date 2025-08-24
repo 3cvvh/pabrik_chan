@@ -45,23 +45,6 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        <!-- ID Gudang Select -->
-                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
-                            <label for="id_gudang" class="block text-sm font-semibold text-gray-700">Gudang</label>
-                            <div class="mt-1 relative rounded-md shadow-sm">
-                                <select name="id_gudang" id="id_gudang" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg">
-                                    <option value="">Pilih Gudang</option>
-                                    @foreach ($gudang as $g)
-                                        <option value="{{ $g->id }}" {{ old('id_gudang',$stock->id_gudang) == $g->id ? 'selected' : '' }}>{{ $g->nama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('id_gudang')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
                     <!-- Action Buttons with enhanced animations -->
                     <div class="flex justify-end space-x-4 pt-6 border-t animate-fadeIn" style="animation-delay: 700ms">
                         <a href="{{ route('crud_stocks.index') }}" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
