@@ -65,7 +65,7 @@
 						<p class="text-sm text-gray-600">{{ $item->gudang->nama ?? '—' }}</p>
 					</div>
                     <div>
-                        <a href="{{ route('Stock_produk.edit',$item->id) }}">edit stock</a>
+                        <a href="{{ Auth::user()->role_id == 1 ? route('Stock_produk.edit',$item->id) : route('crud_stocks.edit',$item->id) }}">edit stock</a>
                     </div>
 					<div class="text-right">
 						<p class="text-sm text-gray-600">Status: <span class="font-medium">{{ $item->status ?? '—' }}</span></p>

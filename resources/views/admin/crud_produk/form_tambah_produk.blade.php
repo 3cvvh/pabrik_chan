@@ -11,7 +11,7 @@
         <!-- Main Card with hover effect and animation -->
         <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
             <div class="p-8">
-                <form action="{{ route('produk.store') }}" id="create-form" method="post" enctype="multipart/form-data" class="space-y-8">
+                <form action="{{ Auth::user()->role_id == 1 ? route('produk.store') : route('crud_produk.store') }}" id="create-form" method="post" enctype="multipart/form-data" class="space-y-8">
                     @csrf
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

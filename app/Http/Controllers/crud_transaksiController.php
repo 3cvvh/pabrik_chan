@@ -24,6 +24,7 @@ class Crud_transaksiController extends Controller
     {
          $data = transaksi::with(['pembeli'])
     ->where('id','!=',Auth::user()->id)
+    ->where('id_pabrik','=',Auth::user()->pabrik_id)
     ->latest();
      if($request->has('search') || $request->has('pembelis_key')){
         $data = transaksi::query()

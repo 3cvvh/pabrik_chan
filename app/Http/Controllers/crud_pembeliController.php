@@ -15,7 +15,7 @@ class Crud_pembeliController extends Controller
      */
     public function index(Request $request)
     {
-          $query = pembeli::with('pabrik');
+          $query = pembeli::with('pabrik')->where('id_pabrik',Auth::user()->pabrik_id);
 
         // Filter by search keyword
         if ($request->filled('search')) {
@@ -46,7 +46,7 @@ class Crud_pembeliController extends Controller
      */
     public function create()
     {
-        $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+        $id_pabrik_pengguna = Auth::user()->pabrik_id;
 
         $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
         return view('admin.crud_pembeli.form_pembeli',[
@@ -83,7 +83,7 @@ class Crud_pembeliController extends Controller
      */
     public function edit($id)
     {
-        $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+        $id_pabrik_pengguna = Auth::user()->pabrik_id;
         $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
         $pembeli = pembeli::findOrFail($id);
         return view('admin.crud_pembeli.form_pembeli_edit', [

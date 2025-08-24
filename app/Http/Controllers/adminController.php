@@ -85,12 +85,6 @@ class AdminController extends Controller
                     'total_harga' => $harga_total_produk,
                     'harga_satuan' => $produk->harga
                 ]);
-                if($jumlah < $stock->jumlah){
-                    $stock->jumlah -= $jumlah;
-                    $stock->save();
-                }else{
-                    return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak mencukupi');
-                }
             }
         }
         $stock = Stock_produk::where('id_produk',$produk_id)->first();
@@ -102,6 +96,14 @@ class AdminController extends Controller
         return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil di tambahkan');
     }
     public function hapus_produk(Request $request, $id){
+        $detail = Detail_transaksi::find($id);
+        $stock = Stock_produk::where('id_produk','=',$detail->id_produk)->get();
+        foreach($stock as $item){
+            if($item){
+                $item->jumlah += $detail->jumlah;
+                $item->save();
+            }
+        }
         Detail_transaksi::destroy($id);
         return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil menghapus produk');
     }
