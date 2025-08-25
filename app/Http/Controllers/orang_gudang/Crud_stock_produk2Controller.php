@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\orang_gudang;
 
 use App\Models\Gudang;
 use App\Models\Pabrik;
-use App\Models\Produk as beatriceMYbini;
 use App\Models\Produk;
 use App\Models\Stock_produk;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Produk as beatriceMYbini;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class Crud_stock_produk2Controller extends Controller

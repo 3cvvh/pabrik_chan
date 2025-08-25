@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
-use App\Models\Detail_transaksi;
 use DB;
 use statustransaksi;
 use App\Models\produk;
 use App\Models\pembeli;
-use App\Models\Pembeli as ModelsPembeli;
 use App\Models\transaksi;
-use App\Models\Transaksi as ModelsTransaksi;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB as FacadesDB;
 use App\Models\Stock_produk;
+use Illuminate\Http\Request;
+use App\Models\Detail_transaksi;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Pembeli as ModelsPembeli;
+use App\Models\Transaksi as ModelsTransaksi;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class Crud_transaksiController extends Controller
 {

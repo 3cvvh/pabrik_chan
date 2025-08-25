@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
 use App\Models\pabrik;
 use App\Models\Produk;
@@ -9,6 +9,7 @@ use App\Models\Stock_produk;
 use Illuminate\Http\Request;
 use App\Models\Detail_transaksi;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
