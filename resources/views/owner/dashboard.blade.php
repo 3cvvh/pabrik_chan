@@ -1,126 +1,68 @@
 @extends('layout.main')
 @section('content')
 {{-- <x-navbar></x-navbar> --}}
-<div class="bg-blue-100 min-h-screen py-0">
+<div class="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-50 min-h-screen py-0">
     <!-- Header -->
     <x-navbar></x-navbar>
     <!-- Welcome Card -->
-    <div class="flex justify-center mt-8">
-        <div class="bg-white rounded-xl shadow-md p-8 w-full max-w-md text-center">
-            <h2 class="text-xl font-semibold text-blue-700 mb-2">Welcome To Factory</h2>
-            <p class="text-gray-600 mb-4">Terimakasih telah bergabung di Factory<br>Anda login menggunakan akun <span class="text-blue-600 font-semibold">owner</span></p>
-            <a href="#" class="bg-blue-100 text-blue-700 font-semibold px-5 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition">Dashboard Owner</a>
+    <div class="flex justify-center mt-10">
+        <div class="bg-white rounded-2xl shadow-xl p-10 w-full max-w-lg text-center border border-blue-200">
+            <h2 class="text-2xl font-bold text-blue-700 mb-3 tracking-wide">Welcome To Factory</h2>
+            <p class="text-gray-600 mb-6 leading-relaxed">Terimakasih telah bergabung di Factory<br>Anda login menggunakan akun <span class="text-blue-600 font-semibold">owner</span></p>
+            <a href="#" class="bg-blue-50 text-blue-700 font-semibold px-6 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 hover:shadow transition-all duration-200">Dashboard Owner</a>
         </div>
     </div>
     <!-- Main Content -->
-    <div class="max-w-5xl mx-auto mt-10 bg-white rounded-xl shadow-lg p-8">
-        <div class="flex justify-between items-center mb-4">
+    <div class="max-w-5xl mx-auto mt-12 bg-white rounded-2xl shadow-2xl p-10 border border-blue-100">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800">Halaman Dashboard Owner</h2>
-                <p class="text-gray-600 text-sm">History Data Transaksi Barang</p>
+                <h2 class="text-3xl font-extrabold text-gray-800 mb-1">Halaman Dashboard Owner</h2>
+                <p class="text-gray-500 text-base">History Data Transaksi Barang</p>
             </div>
-            <button class="bg-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition">Cetak Generate Laporan</button>
+            <button class="bg-gradient-to-r from-green-400 to-green-600 text-white px-8 py-2 rounded-lg font-bold shadow hover:from-green-500 hover:to-green-700 transition-all duration-200 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6 1a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Cetak Generate Laporan
+            </button>
         </div>
         <!-- Search -->
-        <form class="flex items-center gap-2 mb-6">
-            <input type="text" placeholder="Cari transaksi..." class="flex-1 border border-blue-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Cari</button>
+        <form class="flex flex-col sm:flex-row items-center gap-3 mb-8">
+            <input type="text" placeholder="Cari transaksi..." class="flex-1 border border-blue-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm transition" />
+            <button type="submit" class="bg-blue-600 text-white px-8 py-2 rounded-lg font-semibold hover:bg-blue-700 shadow transition">Cari</button>
         </form>
         <!-- Table -->
-        <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200 rounded-lg">
+        <div class="overflow-x-auto rounded-xl border border-gray-200 shadow">
+            <table class="min-w-full bg-white rounded-xl">
                 <thead>
-                    <tr class="bg-blue-500 text-white">
-                        <th class="py-2 px-3 text-left">No</th>
-                        <th class="py-2 px-3 text-left">Outlet</th>
-                        <th class="py-2 px-3 text-left">Tanggal</th>
-                        <th class="py-2 px-3 text-left">Batas Waktu</th>
-                        <th class="py-2 px-3 text-left">Pembayaran</th>
-                        <th class="py-2 px-3 text-left">Tanggal Dibayar</th>
-                        <th class="py-2 px-3 text-left">Customer</th>
-                        <th class="py-2 px-3 text-left">Paket</th>
-                        <th class="py-2 px-3 text-left">Status Order</th>
+                    <tr class="bg-gradient-to-r from-blue-500 to-blue-400 text-white">
+                        <th class="py-3 px-4 text-left font-semibold">No</th>
+                        <th class="py-3 px-4 text-left font-semibold">Nama Transaksi</th>
+                        <th class="py-3 px-4 text-left font-semibold">Customer</th>
+                        <th class="py-3 px-4 text-left font-semibold">Status Order</th>
+                        <th class="py-3 px-4 text-left font-semibold">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
-                    <tr class="border-b">
-                        <td class="py-2 px-3">1</td>
-                        <td class="py-2 px-3">Elsa Pabrik</td>
-                        <td class="py-2 px-3">2025-07-31</td>
-                        <td class="py-2 px-3">2025-08-22</td>
-                        <td class="py-2 px-3">Belum Dibayar</td>
-                        <td class="py-2 px-3">2025-08-23</td>
-                        <td class="py-2 px-3">DJ Panda</td>
-                        <td class="py-2 px-3">Kain Sutra</td>
-                        <td class="py-2 px-3">
-                            <span class="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">Proses</span>
+                    @forelse ($transaksi as $index => $transaksi)
+                    <tr class="border-b hover:bg-blue-50 transition">
+                        <td class="py-3 px-4">{{ $index+1 }}</td>
+                        <td class="py-3 px-4 font-medium">{{ $transaksi->judul }}</td>
+                        <td class="py-3 px-4">{{ $transaksi->pembeli->name }}</td>
+                        <td class="py-3 px-4">
+                            <span class="{{ $transaksi->status == 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'  }} px-4 py-1 rounded-full text-xs font-bold border border-gray-200 shadow-sm">
+                                {{ ucfirst($transaksi->status) }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <a href="{{ route('transaksi.show',$transaksi->id) }}" class="bg-blue-500 text-white px-5 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-600 shadow transition">Detail</a>
                         </td>
                     </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-3">2</td>
-                        <td class="py-2 px-3">Tiara Pabrik</td>
-                        <td class="py-2 px-3">2025-08-02</td>
-                        <td class="py-2 px-3">2025-08-25</td>
-                        <td class="py-2 px-3">Dibayar</td>
-                        <td class="py-2 px-3">2025-08-26</td>
-                        <td class="py-2 px-3">Noel</td>
-                        <td class="py-2 px-3">Kain Katun</td>
-                        <td class="py-2 px-3">
-                            <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">Selesai</span>
-                        </td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-3">3</td>
-                        <td class="py-2 px-3">Raisya Pabrik</td>
-                        <td class="py-2 px-3">2025-08-11</td>
-                        <td class="py-2 px-3">2025-08-29</td>
-                        <td class="py-2 px-3">Dibayar</td>
-                        <td class="py-2 px-3">2025-08-30</td>
-                        <td class="py-2 px-3">Blueraii</td>
-                        <td class="py-2 px-3">Kain Wol</td>
-                        <td class="py-2 px-3">
-                            <span class="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">Proses</span>
-                        </td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-3">4</td>
-                        <td class="py-2 px-3">Tasnim Pabrik</td>
-                        <td class="py-2 px-3">2025-08-24</td>
-                        <td class="py-2 px-3">2025-09-03</td>
-                        <td class="py-2 px-3">Dibayar</td>
-                        <td class="py-2 px-3">2025-09-04</td>
-                        <td class="py-2 px-3">Aqil</td>
-                        <td class="py-2 px-3">Kain Linen</td>
-                        <td class="py-2 px-3">
-                            <span class="bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">Baru</span>
-                        </td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-3">5</td>
-                        <td class="py-2 px-3">Rasya Pabrik</td>
-                        <td class="py-2 px-3">2025-09-01</td>
-                        <td class="py-2 px-3">2025-09-17</td>
-                        <td class="py-2 px-3">Dibayar</td>
-                        <td class="py-2 px-3">2025-09-18</td>
-                        <td class="py-2 px-3">Tasnim</td>
-                        <td class="py-2 px-3">Kain Sutra</td>
-                        <td class="py-2 px-3">
-                            <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">Selesai</span>
-                        </td>
-                    </tr>
+                    @empty
                     <tr>
-                        <td class="py-2 px-3">6</td>
-                        <td class="py-2 px-3">Aqil Pabrik</td>
-                        <td class="py-2 px-3">2025-09-09</td>
-                        <td class="py-2 px-3">2025-09-20</td>
-                        <td class="py-2 px-3">Dibayar</td>
-                        <td class="py-2 px-3">2025-09-21</td>
-                        <td class="py-2 px-3">Rasya</td>
-                        <td class="py-2 px-3">Kain Wol</td>
-                        <td class="py-2 px-3">
-                            <span class="bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">Baru</span>
+                        <td colspan="5" class="py-6 text-center text-gray-400 text-lg">
+                            Tidak ada data transaksi tersedia.
                         </td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

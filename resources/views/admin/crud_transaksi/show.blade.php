@@ -5,7 +5,7 @@
     <nav class="flex mb-5" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-                <a href="{{ route('crud_transaksi.index') }}" class="text-gray-700 hover:text-blue-600 inline-flex items-center">
+                <a href="{{ Auth::user()->role_id == 1 ? route('crud_transaksi.index') : route('owner.index') }}" class="text-gray-700 hover:text-blue-600 inline-flex items-center">
                     <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
                     </svg>
@@ -40,7 +40,7 @@
                         {{ $data_transaksi->status }}
                     </span>
                     <button type="button"
-                        onclick="confirmGenerate('{{ route('admin.laporan', $data_transaksi->id) }}')"
+                        onclick="confirmGenerate('{{ Auth::user()->role_id == 1 ? route('admin.laporan', $data_transaksi->id) : route('owner.laporan',$data_transaksi->id) }}')"
                         class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -111,6 +111,7 @@
                 </svg>
                 Detail Produk
             </h3>
+            @if(Auth::user()->role_id == 1)
             @if(!$data_detail->isEmpty())
             <button type="button" onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,8 +120,10 @@
                 Tambah Produk
             </button>
             @endif
+               @endif
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @if(Auth::user()->role_id == 1)
             @if($data_detail->isEmpty())
                 <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
                     <div class="mb-4">
@@ -146,6 +149,7 @@
                             </div>
                             @endforeach
                         </div>
+                        @endif
                         @error('id_produk')
                         <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                         @enderror
@@ -176,7 +180,7 @@
                          alt="{{ $data->produk->nama }}"
                          class="w-full h-48 object-cover">
                 @endif
-                <!-- Tombol Hapus Produk -->
+                @if(Auth::user()->role_id == 1)
                 <form action="{{ route('admin-hapus',$data->id) }}" method="POST" class="absolute top-2 right-2" onsubmit="return confirmHapusProduk(event, this)">
                     @csrf
                     <input type="hidden" name="id_tran" value="{{ $data->transaksi->id }}">
@@ -186,6 +190,7 @@
                         </svg>
                     </button>
                 </form>
+                                @endif
                 <div class="p-6">
                     <h4 class="font-semibold text-lg text-gray-800 mb-2">{{ $data->produk->nama }}</h4>
                     <div class="flex justify-between items-center">
@@ -202,6 +207,7 @@
             </div>
             @endforeach
         </div>
+        @if(Auth::user()->role_id == 1)
         @if(!$data_detail->isEmpty())
         <!-- Modal/Form Tambah Produk (hidden by default) -->
         <div id="form-tambah-produk" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
@@ -240,8 +246,9 @@
         </div>
         @endif
     </div>
-
+        @endif
     <!-- Form Update Section -->
+    @if(Auth::user()->role_id == 1)
     <div class="mt-8">
         <div class="bg-white rounded-lg shadow-lg p-6">
             <h3 class="text-xl font-bold mb-6 text-gray-800 flex items-center">
@@ -289,6 +296,7 @@
             </form>
         </div>
     </div>
+        @endif
 </div>
 <script>
     @if(session('gagal'))

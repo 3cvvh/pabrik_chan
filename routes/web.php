@@ -49,6 +49,8 @@ Route::middleware(['auth','orang_gudang'])->group(function () {
 Route::middleware(['auth','owner'])->group(function () {
     Route::get('/dashboard/owner',[ownerController::class,'index'])->name('owner.index');
     Route::get('/dashboard/owner/generatelaporan', [ownerController::class, 'generateLaporan'])->name('owner.generatelaporan');
+    Route::get('/dashboard/owner/generate/{transaksi:id}',[AdminController::class, 'generateReport'])->name('owner.laporan');
+    Route::resource('/dashboard/owner/transaksi',crud_transaksiController::class)->except(['create','store','destroy','edit','update']);
 });
 //daftar route jika user sudah login sebagai super admin
 Route::middleware(['beatrice','beatricekawaii'])->group(function () {
