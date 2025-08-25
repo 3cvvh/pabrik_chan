@@ -140,4 +140,7 @@ function confirmDelete(button) {
     animation: fade-in-up 0.6s ease-out forwards;
 }
 </style>
+<script>
+    <x-alert></x-alert>
+</script>
 @endsection
