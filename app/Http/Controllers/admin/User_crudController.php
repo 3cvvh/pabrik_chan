@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
-use App\Models\Gudang;
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
+use App\Models\Gudang;
 use App\Models\Pabrik;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class User_crudController extends Controller

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\super_admin;
 
-use App\Models\Gudang;
-use App\Models\pabrik;
 use App\Models\role;
 use App\Models\User;
+use App\Models\Gudang;
+use App\Models\pabrik;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
