@@ -101,5 +101,6 @@
 window.addEventListener('load', function(){
     setTimeout(function(){ window.print(); }, 500);
 });
+<x-alert></x-alert>
 </script>
 @endsection
