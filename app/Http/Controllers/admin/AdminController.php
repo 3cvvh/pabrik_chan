@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Detail_transaksi;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Cache\RedisTagSet;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -109,6 +110,9 @@ class AdminController extends Controller
         return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil menghapus produk');
     }
     public function generateReport(Transaksi $transaksi){
+        if($transaksi->id_pabrik != Auth::user()->pabrik_id){
+            return redirect()->route('admin.index')->with('gagal','Anda tidak memiliki akses ke laporan ini');
+        }
           return view('admin.crud_transaksi.laporan', [
             'judul' => 'Laporan Transaksi',
             'data_transaksi' => $transaksi,
