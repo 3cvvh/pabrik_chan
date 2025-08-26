@@ -10,6 +10,18 @@
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar produk</h1>
                 <p class="text-gray-600">Kelola semua produk dalam satu tempat</p>
             </div>
+            <div class="flex flex-wrap gap-3">
+        <!-- Tombol Kamera Scanner -->
+        <a href="{{ route('admin.produk.scanner') }}">
+            <button class="px-4 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2zm9 3a4 4 0 100 8 4 4 0 000-8z"/>
+                </svg>
+                Kamera Scanner
+            </button>
+        </a>
+
             <a href="{{ route('produk.create') }}">
                 <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,6 +31,7 @@
                 </button>
             </a>
         </div>
+    </div>
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
