@@ -39,6 +39,12 @@ class DatabaseSeeder extends Seeder
             'no_telepon' => '021023012',
             'id_pabrik' => 1
         ]);
+                Gudang::factory()->create([
+            'id_pabrik' => 1,
+            'nama' => 'gudang_sukabumi',
+            'alamat' => 'sukabumi',
+            'no_telepon' => '0123131'
+        ]);
    transaksi::factory(10)->create();
 
         role::create([
@@ -65,6 +71,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'rasya',
             'pabrik_id' => 1,
             'role_id' => 2,
+            'gudang_id' => 1,
             'password' => Hash::make('password'),
             'email' => 'rasya@gmail.com',
             'alamat' => 'jelekong chan'
@@ -103,12 +110,6 @@ class DatabaseSeeder extends Seeder
             'deskripsi' => 'tasnim yang sangat wangi',
             'harga' => 10000,
             'id_pabrik' => 1
-        ]);
-        Gudang::factory()->create([
-            'id_pabrik' => 1,
-            'nama' => 'gudang_sukabumi',
-            'alamat' => 'sukabumi',
-            'no_telepon' => '0123131'
         ]);
     }
 }

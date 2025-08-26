@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\orang_gudang;
 
 use App\Models\pabrik;
-use App\Models\Pabrik as ModelsPabrik;
 use App\Models\produk;
-use App\Models\Produk as ModelsProduk;
 use App\Models\Stock_produk;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Pabrik as ModelsPabrik;
+use App\Models\Produk as ModelsProduk;
 use Illuminate\Support\Facades\Storage;
 
-class CrudProdukController extends Controller
+class CrudProduk2Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -57,8 +58,15 @@ class CrudProdukController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(produk $produk)
+    public function show($id)
     {
+        $produk = produk::find($id);
+                if($produk->id_pabrik != Auth::user()->pabrik_id OR $produk->id == null){
+            abort(404);
+        }
+        if($produk->id == null){
+            abort(404);
+        }
         return view('admin.crud_produk.show', [
             'judul' => $produk->judul,
             'produk' => $produk,
@@ -70,8 +78,9 @@ class CrudProdukController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(produk $produk)
+    public function edit($id)
     {
+        $produk = produk::find($id);
             return view('admin.crud_produk.edit', [
             'judul' => $produk->judul,
             'data' => $produk,
@@ -81,8 +90,9 @@ class CrudProdukController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, produk $produk)
+    public function update(Request $request, $id)
     {
+        $produk = produk::find($id);
         $valid = $request->validate([
             'nama' => ['required'],
             'harga' => ['required'],
@@ -102,32 +112,13 @@ class CrudProdukController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(produk $produk)
+    public function destroy($id)
     {
+        $produk = produk::find($id);
         if($produk->gambar){
             Storage::delete($produk->gambar);
         }
         ModelsProduk::destroy($produk->id);
         return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
     }
-
-    public function scanner()
-{
-    return view('admin.crud_produk.scanner', [
-        'judul' => 'Scanner Produk'
-    ]);
-}
-
-public function scannerProcess(Request $request)
-{
-    $kodeProduk = $request->input('kode'); // nilai dari QR code
-    $produk = Produk::where('id', $kodeProduk)->first();
-
-    if (!$produk) {
-        return redirect()->back()->with('error', 'Produk tidak ditemukan!');
-    }
-
-    // Redirect ke halaman detail produk
-    return redirect()->route('produk.show', $produk->id);
-}
 }

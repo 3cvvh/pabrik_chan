@@ -61,7 +61,7 @@
                             @enderror
                         </div>
                          <div class="mt-1 relative rounded-md shadow-sm">
-                                <input readonly value="{{ old('jumlah',$stock->produk->nama) }}" type="text" name="jumlah" id="nama" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg" placeholder="Masukkan jumlah stok">
+                                <input readonly value="{{ old('jumlah',$stock->produk->nama) }}" type="text" name="" id="nama" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg" placeholder="Masukkan jumlah stok">
                             </div>
                     </div>
 

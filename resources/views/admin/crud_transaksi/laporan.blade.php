@@ -1,98 +1,106 @@
 @extends('layout.main')
 @section('content')
-<div class="container mx-auto px-4 py-6">
-	<div class="bg-white p-6 rounded-lg shadow">
-		<div class="flex justify-between items-start mb-6">
-			<div>
-				<h2 class="text-2xl font-bold">Laporan Transaksi</h2>
-				<p class="text-sm text-gray-600">Tanggal Cetak: {{ date('d-m-Y H:i') }}</p>
-			</div>
-			<div class="text-right">
-				<p class="font-semibold">{{ $data_transaksi->judul ?? '—' }}</p>
-				<p class="text-sm text-gray-600">Status: {{ $data_transaksi->status ?? '—' }}</p>
-			</div>
-		</div>
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+    <div class="bg-white p-8 rounded-lg shadow-lg">
+        <div class="flex justify-between items-start mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">Laporan Transaksi</h2>
+                <p class="text-sm text-gray-600 mt-2">Tanggal Cetak: {{ date('d-m-Y H:i') }}</p>
+            </div>
+            <div class="text-right">
+                <p class="font-semibold text-lg text-gray-800">{{ $data_transaksi->judul ?? '—' }}</p>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $data_transaksi->status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }} mt-2">
+                    Status: {{ $data_transaksi->status ?? '—' }}
+                </span>
+            </div>
+        </div>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
-			<div>
-				<p class="font-semibold mb-1">Pabrik</p>
-				<p>{{ $data_transaksi->pabrik->name ?? '-' }}</p>
-			</div>
-			<div>
-				<p class="font-semibold mb-1">Pembeli</p>
-				<p>{{ $data_transaksi->pembeli->name ?? '-' }}</p>
-			</div>
-			<div>
-				<p class="font-semibold mb-1">Tanggal Transaksi</p>
-				<p>{{ $data_transaksi->tanggal_transaksi ?? '-' }}</p>
-			</div>
-			<div>
-				<p class="font-semibold mb-1">Tanggal Pengiriman / Pembayaran</p>
-				<p>{{ $data_transaksi->tanggal_pengiriman ?? '-' }} / {{ $data_transaksi->tanggal_pembayaran ?? '-' }}</p>
-			</div>
-		</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="font-semibold text-gray-700 mb-2">Pabrik</p>
+                <p class="text-gray-800">{{ $data_transaksi->pabrik->name ?? '-' }}</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="font-semibold text-gray-700 mb-2">Pembeli</p>
+                <p class="text-gray-800">{{ $data_transaksi->pembeli->name ?? '-' }}</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="font-semibold text-gray-700 mb-2">Tanggal Transaksi</p>
+                <p class="text-gray-800">{{ $data_transaksi->tanggal_transaksi ?? '-' }}</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="font-semibold text-gray-700 mb-2">Tanggal Pengiriman / Pembayaran</p>
+                <p class="text-gray-800">{{ $data_transaksi->tanggal_pengiriman ?? '-' }} / {{ $data_transaksi->tanggal_pembayaran ?? '-' }}</p>
+            </div>
+        </div>
 
-		<div class="overflow-x-auto">
-			<table class="w-full border-collapse text-sm">
-				<thead>
-					<tr class="bg-gray-100">
-						<th class="border px-3 py-2 text-left">No</th>
-						<th class="border px-3 py-2 text-left">Produk</th>
-						<th class="border px-3 py-2 text-right">Jumlah</th>
-						<th class="border px-3 py-2 text-right">Harga Satuan</th>
-						<th class="border px-3 py-2 text-right">Total</th>
-					</tr>
-				</thead>
-				<tbody>
-					@php $grandTotal = 0; $i = 1; @endphp
-					@foreach($data_detail as $item)
-						@php
-							$jumlah = (int) $item->jumlah;
-							$total = (float) $item->total_harga;
-							$harga_satuan = ($jumlah > 0) ? ($total / $jumlah) : 0;
-							$grandTotal += $total;
-						@endphp
-						<tr>
-							<td class="border px-3 py-2">{{ $i++ }}</td>
-							<td class="border px-3 py-2">{{ $item->produk->nama ?? '—' }}</td>
-							<td class="border px-3 py-2 text-right">{{ $jumlah }}</td>
-							<td class="border px-3 py-2 text-right">Rp {{ number_format($harga_satuan,0,',','.') }}</td>
-							<td class="border px-3 py-2 text-right">Rp {{ number_format($total,0,',','.') }}</td>
-						</tr>
-					@endforeach
-				</tbody>
-				<tfoot>
-					<tr class="bg-gray-50">
-						<td colspan="4" class="border px-3 py-2 text-right font-semibold">Grand Total</td>
-						<td class="border px-3 py-2 text-right font-bold">Rp {{ number_format($grandTotal,0,',','.') }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
+        <div class="overflow-x-auto bg-gray-50 rounded-lg p-4">
+            <table class="w-full border-collapse text-sm">
+                <thead>
+                    <tr>
+                        <th class="bg-gray-100 border-b-2 border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">No</th>
+                        <th class="bg-gray-100 border-b-2 border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Produk</th>
+                        <th class="bg-gray-100 border-b-2 border-gray-300 px-4 py-3 text-right font-semibold text-gray-700">Jumlah</th>
+                        <th class="bg-gray-100 border-b-2 border-gray-300 px-4 py-3 text-right font-semibold text-gray-700">Harga Satuan</th>
+                        <th class="bg-gray-100 border-b-2 border-gray-300 px-4 py-3 text-right font-semibold text-gray-700">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $grandTotal = 0; $i = 1; @endphp
+                    @foreach($data_detail as $item)
+                        @php
+                            $jumlah = (int) $item->jumlah;
+                            $total = (float) $item->total_harga;
+                            $harga_satuan = ($jumlah > 0) ? ($total / $jumlah) : 0;
+                            $grandTotal += $total;
+                        @endphp
+                        <tr class="hover:bg-gray-100">
+                            <td class="border-b border-gray-200 px-4 py-3">{{ $i++ }}</td>
+                            <td class="border-b border-gray-200 px-4 py-3">{{ $item->produk->nama ?? '—' }}</td>
+                            <td class="border-b border-gray-200 px-4 py-3 text-right">{{ number_format($jumlah, 0, ',', '.') }}</td>
+                            <td class="border-b border-gray-200 px-4 py-3 text-right">Rp {{ number_format($harga_satuan,0,',','.') }}</td>
+                            <td class="border-b border-gray-200 px-4 py-3 text-right">Rp {{ number_format($total,0,',','.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="px-4 py-3 text-right font-semibold text-gray-700">Grand Total</td>
+                        <td class="px-4 py-3 text-right font-bold text-gray-800 bg-gray-200">Rp {{ number_format($grandTotal,0,',','.') }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-		<div class="mt-6 flex justify-between items-center">
-			<div class="text-sm text-gray-600">
-				<p>Catatan: {{ $data_transaksi->catatan ?? '-' }}</p>
-			</div>
-			<div class="space-x-2">
-				<button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 no-print">Print Laporan</button>
-		</div>
-	</div>
+        <div class="mt-8 flex justify-between items-center">
+            <div class="bg-gray-50 p-4 rounded-lg flex-grow mr-4">
+                <p class="font-semibold text-gray-700 mb-2">Catatan:</p>
+                <p class="text-gray-800">{{ $data_transaksi->catatan ?? '-' }}</p>
+            </div>
+            <button onclick="window.print()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 no-print flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                Print Laporan
+            </button>
+        </div>
+    </div>
 </div>
 
-{{-- tambahan: sembunyikan elemen bertipe .no-print saat mencetak --}}
 <style>
-@media print{
-	.no-print{ display:none !important; }
+@media print {
+    @page { margin: 0.5cm; }
+    body { padding: 1cm; }
+    .no-print { display: none !important; }
+    .container { max-width: none !important; }
+    .shadow-lg { box-shadow: none !important; }
 }
 </style>
 
-{{-- ganti skrip kondisional dengan auto-print saat halaman dimuat --}}
 <script>
-	window.addEventListener('load', function(){
-		// delay kecil agar layout selesai dirender sebelum memanggil print
-		setTimeout(function(){ window.print(); }, 300);
-	});
+window.addEventListener('load', function(){
+    setTimeout(function(){ window.print(); }, 500);
+});
+<x-alert></x-alert>
 </script>
-
 @endsection

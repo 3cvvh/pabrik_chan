@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
+use App\Models\Gudang;
 use App\Models\Pabrik;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class User_crudController extends Controller
@@ -34,12 +36,13 @@ class User_crudController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where('id','!=',4)->get();
         $pabriks = Pabrik::all();
         return view('admin.form_user', [
             'judul' => 'form tambah user',
             'roles' => $roles,
-            'pabriks' => $pabriks
+            'pabriks' => $pabriks,
+            'gudang' => Gudang::where('id_pabrik', Auth::user()->pabrik_id)->get(),
         ]);
     }
 
@@ -65,6 +68,11 @@ class User_crudController extends Controller
             'pabrik_id' => $request->pabrik_id,
             'role_id'   => $request->role_id,
         ]);
+        if($request->gudang_id){
+            $user = User::where('email',$request->email)->first();
+            $user->gudang_id = $request->gudang_id;
+            $user->save();
+        }
 
         return redirect()->route('crud_user.index')->with('success', 'User berhasil ditambahkan');
     }
@@ -83,13 +91,18 @@ class User_crudController extends Controller
      */
     public function edit($id)
     {
-        $roles = Role::all();
+        $user = User::findOrFail($id);
+        if($user->pabrik_id != Auth::user()->pabrik_id){
+            abort(404);
+        }
+        $roles = Role::where('id','!=',4);
         $pabriks = Pabrik::all();
         return view('admin.form_user', [
             'judul' => 'form edit user',
-            'user' => User::findOrFail($id),
-            'roles' => $roles,
-            'pabriks' => $pabriks
+            'user' => $user,
+            'roles' => $roles->get(),
+            'pabriks' => $pabriks,
+            'gudang' => Gudang::where('id_pabrik', Auth::user()->pabrik_id)->get(),
         ]);
     }
 
@@ -112,6 +125,10 @@ class User_crudController extends Controller
             $validatedData['password'] = bcrypt($request->password);
         } else {
             unset($validatedData['password']);
+        }
+        if($request->gudang_id){
+            $crud_user->gudang_id = $request->gudang_id;
+            $crud_user->save();
         }
         $crud_user->update($validatedData);
         return redirect()->route('crud_user.index')->with('success', 'user berhasil di perbarui');

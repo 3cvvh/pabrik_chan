@@ -12,7 +12,7 @@
         <!-- Main Card with hover effect and animation -->
         <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
             <div class="p-8">
-                <form action="{{ route('Stock_produk.update',$stock->id) }}" id="create-form" method="post" enctype="multipart/form-data" class="space-y-8">
+                <form action="{{ route('crud_stocks.update',$stock->id) }}" id="create-form" method="post" enctype="multipart/form-data" class="space-y-8">
                     @csrf
                     @method('put')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -45,26 +45,9 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        <!-- ID Gudang Select -->
-                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
-                            <label for="id_gudang" class="block text-sm font-semibold text-gray-700">Gudang</label>
-                            <div class="mt-1 relative rounded-md shadow-sm">
-                                <select name="id_gudang" id="id_gudang" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm border-gray-300 rounded-lg">
-                                    <option value="">Pilih Gudang</option>
-                                    @foreach ($gudang as $g)
-                                        <option value="{{ $g->id }}" {{ old('id_gudang',$stock->id_gudang) == $g->id ? 'selected' : '' }}>{{ $g->nama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('id_gudang')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
                     <!-- Action Buttons with enhanced animations -->
                     <div class="flex justify-end space-x-4 pt-6 border-t animate-fadeIn" style="animation-delay: 700ms">
-                        <a href="/dashboard/org_gudang/stock_produk" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <a href="{{ route('crud_stocks.index') }}" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Kembali
                         </a>
                         <button onclick="confirmCreate()" type="button" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

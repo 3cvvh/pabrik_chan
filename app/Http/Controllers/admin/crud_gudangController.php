@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
 use App\Models\pabrik;
 use App\Models\gudang;
@@ -15,7 +15,7 @@ class Crud_gudangController extends Controller
      */
     public function index(Request $request)
     {
-        $query = gudang::with(['pabrik']);
+        $query = gudang::with(['pabrik'])->where('id_pabrik',Auth::getUser()->pabrik_id);
 
         // Filter berdasarkan pabrik jika ada
         if ($request->filled('pabrik_filter')) {
@@ -48,7 +48,7 @@ class Crud_gudangController extends Controller
      */
     public function create()
     {
-        $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+        $id_pabrik_pengguna = Auth::user()->pabrik_id;
 
         $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
 
@@ -90,7 +90,7 @@ class Crud_gudangController extends Controller
      */
     public function edit($id)
     {
-                $id_pabrik_pengguna = Auth::user()->pabrik_id; 
+                $id_pabrik_pengguna = Auth::user()->pabrik_id;
 
         $pabrik_terkait = Pabrik::find($id_pabrik_pengguna);
         $gudang = Gudang::with('pabrik')->findOrFail($id);
