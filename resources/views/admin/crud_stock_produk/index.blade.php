@@ -143,15 +143,7 @@ function confirmDelete(button) {
         showConfirmButton: false
     });
 @endif
-@if(session('berhasil'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: '{{ session('berhasil') }}',
-        timer: 1500,
-        showConfirmButton: false
-    });
-@endif
+<x-alert></x-alert>
 @if(session('edit'))
     Swal.fire({
         icon: 'success',

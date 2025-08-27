@@ -55,11 +55,11 @@
             </div>
         @endif
         @if (auth()->user()->role_id === 2)
-        <a href="/dashboard/org_gudang/produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="{{ route('crud_produk.index') }}" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fas fa-boxes w-5 h-5 mr-1"></i>
             Produk
         </a>
-        <a href="/dashboard/org_gudang/stock_produk" class="flex items-center text-white font-medium hover:text-blue-200 transition">
+        <a href="{{ route('crud_stocks.index') }}" class="flex items-center text-white font-medium hover:text-blue-200 transition">
             <i class="fa fa-cubes w-5 h-5 mr-1"></i>
             Stock
         </a>

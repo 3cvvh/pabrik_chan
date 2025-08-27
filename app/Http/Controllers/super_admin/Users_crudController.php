@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\super_admin;
 
-use App\Models\pabrik;
 use App\Models\role;
 use App\Models\User;
+use App\Models\Gudang;
+use App\Models\pabrik;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -52,6 +54,7 @@ class Users_crudController extends Controller
             'judul' => 'user|tambah',
             'roles' => role::where('id', '!=', 4)->get(),
             'pabrik' => \App\Models\Pabrik::all(),
+            'gudang' => Gudang::all(),
         ]);
     }
 
@@ -68,6 +71,14 @@ class Users_crudController extends Controller
             'pabrik_id' => 'required',
             'alamat' => 'required',
         ]);
+        if($request->role_id == 2){
+            $request->validate([
+                'gudang_id' => 'required'
+            ],[
+                'gudang_id.required' => 'Gudang harus diisi jika role orang gudang'
+            ]);
+            $data['gudang_id'] = $request->gudang_id;
+        }
         User::create($data);
         return redirect('/dashboard/super_admin/crud_users')->with('tambah','berhasil menambah data');
     }
@@ -89,7 +100,8 @@ class Users_crudController extends Controller
             'data' => user::find($id),
             'pabriks' => pabrik::all(),
             'roles' => role::where('id', '!=','4' )->get(),
-            'judul' => User::find($id)->name
+            'judul' => User::find($id)->name,
+            'gudang' => Gudang::where('id_pabrik',User::find($id)->pabrik_id)->get(),
         ]);
     }
 
@@ -110,6 +122,14 @@ class Users_crudController extends Controller
             $databaru['password'] =  $user_old_pw->password;
         }else{
             $databaru['password'] = Hash::make($request->password);
+        }
+        if($request->role_id == 2){
+            $request->validate([
+                'gudang_id' => 'required|integer',
+            ],[
+                'gudang_id.required' => 'Gudang harus diisi jika role orang gudang'
+            ]);
+            $databaru['gudang_id'] = $request->gudang_id;
         }
         User::where('id', '=',$id)->update($databaru);
         return redirect()->route('crud_users.index')->with('edit','berhasil mengedit data');

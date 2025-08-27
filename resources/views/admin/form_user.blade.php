@@ -85,11 +85,48 @@
                 </select>
             </div>
 
+            <div id="gudang-extra-input" style="display: none;">
+                <select name="gudang_id" id="">
+                    <option value="">pilih gudang</option>
+                @foreach ( $gudang as $item )
+                @if($item->id == old('gudang_id',$user->gudang_id?? ''))
+                <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
+                @endif
+                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                </select>
+            @endforeach
+            </div>
+
             <div class="flex justify-end gap-3">
                 <a href="{{ route('crud_user.index') }}" class="px-5 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">Batal</a>
                 <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none transition-colors">Simpan</button>
             </div>
         </form>
+        {{-- Script untuk toggle input gudang --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const roleSelect = document.getElementById('role_id');
+                const gudangInput = document.getElementById('gudang-extra-input');
+                const kodeGudangInput = document.getElementById('kode_gudang');
+                // Ambil id role "orang gudang" langsung dari koleksi (pastikan ada)
+                const orangGudangRoleId = "{{ $roles->where('name', 'orang gudang')->first()->id ?? '' }}";
+                // Debug: cek id dan value
+                console.log('Orang Gudang Role ID:', orangGudangRoleId, 'Selected:', roleSelect.value);
+
+                function toggleGudangInput() {
+                    if (roleSelect.value === orangGudangRoleId && orangGudangRoleId !== '') {
+                        gudangInput.style.display = '';
+                        if (kodeGudangInput) kodeGudangInput.required = true;
+                    } else {
+                        gudangInput.style.display = 'none';
+                        if (kodeGudangInput) kodeGudangInput.required = false;
+                    }
+                }
+
+                roleSelect.addEventListener('change', toggleGudangInput);
+                toggleGudangInput(); // initial check
+            });
+        </script>
     </div>
 </div>
 @endsection

@@ -18,15 +18,13 @@
                 @csrf
                 @method('put')
                 <input type="hidden" name="id" value="{{ $pembeli->id }}">
-                <div>
-                    <label for="id_pabrik" class="block text-sm font-medium text-gray-700 mb-1">Pilih Pabrik</label>
-                    <select name="id_pabrik" id="id_pabrik"
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">-- Pilih Pabrik --</option>
-                        @foreach($pabrik as $p)
-                            <option value="{{ $p->id }}" {{ $pembeli->id_pabrik == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
-                        @endforeach
-                    </select>
+                <div class="mb-4">
+                               <label for="id_pabrik" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Pabrik</label>
+                    <input name="id_pabrik" id="id_pabrik"
+                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
+                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"
+                        value="{{ $pabrik->name }}" readonly>
+        <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
                     @error('id_pabrik')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

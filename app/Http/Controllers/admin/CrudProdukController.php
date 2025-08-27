@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
 use App\Models\pabrik;
-use App\Models\Pabrik as ModelsPabrik;
 use App\Models\produk;
-use App\Models\Produk as ModelsProduk;
 use App\Models\Stock_produk;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Pabrik as ModelsPabrik;
+use App\Models\Produk as ModelsProduk;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Response;
@@ -68,6 +69,9 @@ class CrudProdukController extends Controller
      */
     public function show(produk $produk)
     {
+        if($produk->id_pabrik != Auth::user()->pabrik_id){
+            abort(404);
+        }
         return view('admin.crud_produk.show', [
             'judul' => $produk->judul,
             'produk' => $produk,
