@@ -53,11 +53,10 @@ class CrudProdukController extends Controller
         if($request->file('gambar')){
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
-        produk::create($valid);
-        return redirect()->route('produk.index')->with('berhasil','berhasil menambahkan produk');
+        $produk=produk::create($valid);
 
-        $qrCode = QrCode::format('png')->size(200)->generate($produk->id . '-' . $produk->nama);
-        $fileName = 'qrcodes/' . $produk->id . '.png';
+        $qrCode = QrCode::format('svg')->size(200)->generate($produk->id . '-' . $produk->nama);
+        $fileName = 'qrcodes/' . $produk->id . '.svg';
         Storage::disk('public')->put($fileName, $qrCode);
         $produk->update(['qr_code' => $fileName]);
 
@@ -109,10 +108,10 @@ class CrudProdukController extends Controller
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
         produk::where('id','=',$produk->id)->update($valid);
-        return redirect()->route('produk.index')->with('edit','berhasil mengedit data');
 
-        $qrCode = QrCode::format('png')->size(200)->generate($produk->id . '-' . $produk->nama);
-        $fileName = 'qrcodes/' . $produk->id . '.png';
+
+        $qrCode = QrCode::format('svg')->size(200)->generate($produk->id . '-' . $produk->nama);
+        $fileName = 'qrcodes/' . $produk->id . '.svg';
         Storage::disk('public')->put($fileName, $qrCode);
         $produk->update(['qr_code' => $fileName]);
 
@@ -138,8 +137,8 @@ class CrudProdukController extends Controller
     {
         $svg = QrCode::format('svg')->size(300)->generate($produk->id);
         return Response::make($svg, 200, [
-            'Content-Type' => 'image/png',
-            'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.png"'
+            'Content-Type' => 'image/svg',
+            'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.svg"'
         ]);
     }
 
