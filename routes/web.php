@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\authController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\admin\adminController;
 use App\Http\Controllers\owner\ownerController;
 use App\Http\Controllers\admin\crud_gudangController;
@@ -15,16 +15,21 @@ use App\Http\Controllers\orang_gudang\Crud_stock_produk2Controller;
 use App\Http\Controllers\admin\Crud_stock_produkController;
 use App\Http\Controllers\orang_gudang\orang_gudangController;
 use App\Http\Controllers\admin\crud_transaksiController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\orang_gudang\CrudProduk2Controller;
 use App\Http\Controllers\super_admin\super_beatriceController;
 
 //daftar route Jika user belum login
-Route::middleware(['guest'])->group(function(){
-    Route::get('/',[authController::class,'login'])->name('login');
-    Route::post('/',[authController::class,'store'])->name('login.store');
+Route::middleware(['beatrice'])->group(function(){
+    Route::get('/',[AuthController::class,'login'])->name('login');
+    Route::post('/',[AuthController::class,'store'])->name('login.store');
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
 });
 //daftar route jika user sudah login sebagai admin
-Route::middleware(['auth','admin'])->group(function () {
+Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
     Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
     Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
@@ -40,23 +45,24 @@ Route::middleware(['auth','admin'])->group(function () {
 });
 
 //daftar route jika user sudah login sebagai orang gudang
-Route::middleware(['auth','orang_gudang'])->group(function () {
+Route::middleware(['orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
     Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
     Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update']);
 });
 //daftar route jika user sudah login sebagai owner
-Route::middleware(['auth','owner'])->group(function () {
+Route::middleware(['owner'])->group(function () {
     Route::get('/dashboard/owner',[ownerController::class,'index'])->name('owner.index');
     Route::get('/dashboard/owner/generatelaporan', [ownerController::class, 'generateLaporan'])->name('owner.generatelaporan');
     Route::get('/dashboard/owner/generate/{transaksi:id}',[AdminController::class, 'generateReport'])->name('owner.laporan');
     Route::resource('/dashboard/owner/transaksi',crud_transaksiController::class)->except(['create','store','destroy','edit','update']);
+    Route::get('/dashboard/owner/dawgboard',[OwnerController::class, 'dashboard'])->name('owner.dash');
 });
 //daftar route jika user sudah login sebagai super admin
-Route::middleware(['beatrice','beatricekawaii'])->group(function () {
+Route::middleware(['beatricekawaii'])->group(function () {
     Route::resource('/dashboard/super_admin/crud_pabrik',crud_pabrikController::class);
     Route::resource('/dashboard/super_admin/crud_users',users_crudController::class)->except('show');
     Route::get('/dashboard/super_admin',[super_beatriceController::class, 'index'])->name('super.index');
 });
 //logout
-Route::post('/logout',[authController::class,'logout'])->name('logout');
+Route::post('/logout',[AuthController::class,'logout'])->name('logout');

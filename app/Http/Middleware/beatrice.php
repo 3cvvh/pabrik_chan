@@ -17,8 +17,18 @@ class Beatrice
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::guest()){
-            return redirect(route('login'));
+        if(Auth::check()){
+            if(Auth::user()->role_id == 4){
+                return redirect()->route('super.index');
+            }elseif(Auth::user()->role_id == 1){
+                return redirect()->route('admin.index');
+            }
+            elseif(Auth::user()->role_id == 2){
+                return redirect()->route('orang_gudang.index');
+            }
+            elseif(Auth::user()->role_id == 3){
+                return redirect()->route('owner.index');
+            }
         }
 
         return $next($request);

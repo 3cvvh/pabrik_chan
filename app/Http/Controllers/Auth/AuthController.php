@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function login(){
-        return view('login',[
+        return view('auth.login',[
             'judul' => 'login|page'
         ]);
     }
@@ -17,7 +18,8 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-        if(Auth::attempt($datavalid)){
+        $remember = $request->has('remember') ? true : false;
+        if(Auth::attempt($datavalid,$remember)){
             if(Auth::getUser()->role_id == 1){
                 $request->session()->regenerate();
                 return redirect()->intended(route('admin.index'));
@@ -26,13 +28,18 @@ class AuthController extends Controller
                 return redirect()->intended(route('orang_gudang.index'));
             }elseif(Auth::getUser()->role_id == 3){
                 $request->session()->regenerate();
-                return redirect()->intended(route('owner.index'));
+                return redirect()->intended(route('owner.dash'));
             }else{
                 $request->session()->regenerate();
                 return redirect()->intended(route('super.index'));
             }
         }
-        return back()->with('gagal','password atau email salah!!');
+        if(!Auth::attempt($datavalid)){
+            $attempts = session('percobaan',0) + 1;
+            session(['percobaan' => $attempts]);
+              return back()->with('gagal','password atau email salah!!');
+        }
+        session()->forget('percobaan');
     }
     public function logout(Request $request){
         Auth::logout();

@@ -72,6 +72,31 @@
                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                             </svg>
                         </button>
+                        @if(session('percobaan', 0) >= 3)
+                        <div class="mt-4 text-center">
+                            <div class="p-4 bg-white border border-blue-100 rounded-lg shadow-sm">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                    </svg>
+                                    <p class="text-gray-600 text-sm">Terlalu banyak percobaan gagal?</p>
+                                    <a href="{{ route('password.request') }}" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                        </svg>
+                                        Reset Password
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="flex items-center mb-2">
+                        <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="remember" class="ml-2 block text-sm text-gray-700">
+                            Remember Me
+                        </label>
                     </div>
 
                     <button type="submit" id="submitBtn"
@@ -127,7 +152,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     btnText.textContent = 'Signing in...';
     submitBtn.disabled = true;
 });
-@if(session('out'))
+@if(session()->has('out'))
     Swal.fire({
         icon: 'success',
         title: 'Berhasil!',

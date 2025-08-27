@@ -19,10 +19,6 @@
                 <h2 class="text-3xl font-extrabold text-gray-800 mb-1">Halaman Dashboard Owner</h2>
                 <p class="text-gray-500 text-base">History Data Transaksi Barang</p>
             </div>
-            <button class="bg-gradient-to-r from-green-400 to-green-600 text-white px-8 py-2 rounded-lg font-bold shadow hover:from-green-500 hover:to-green-700 transition-all duration-200 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6 1a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                Cetak Generate Laporan
-            </button>
         </div>
         <!-- Search -->
         <form class="flex flex-col sm:flex-row items-center gap-3 mb-8">
