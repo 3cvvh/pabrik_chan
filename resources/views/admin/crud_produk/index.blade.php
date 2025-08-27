@@ -51,6 +51,7 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pabrik</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Gambar</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Harga</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">QR</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
@@ -68,6 +69,18 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                 Rp {{ number_format($produk->harga, 0, ',', '.') }}
                             </td>
+
+                           <td class="px-6 py-4 whitespace-nowrap text-center">
+                               <div class="flex flex-col items-center gap-2">
+                                   {!! QrCode::size(60)->generate(route('produk.show', $produk->id)) !!}
+                                   
+                                   <a href="{{ route('produk.qrView', $produk) }}" 
+                                      class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md text-xs font-medium transition-colors duration-200">
+                                       Lihat QR
+                                   </a>
+                               </div>
+                           </td>
+                                  
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
                                     <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ route('produk.show',$produk->id) }}">
