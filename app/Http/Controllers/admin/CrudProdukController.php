@@ -149,7 +149,10 @@ class CrudProdukController extends Controller
          if (!$produk) {
              return redirect()->route('produk.index')->with('error', 'Produk tidak ditemukan');
          }
-     
+     if($produk->id_pabrik != Auth::user()->pabrik_id){
+            abort(404);
+
+     }
          return view('admin.crud_produk.qrview', [
              'produk' => $produk,
              'judul' => 'QR Code Produk'

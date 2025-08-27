@@ -11,13 +11,13 @@
         <div class="flex gap-4">
             {{-- Tombol download --}}
             <a href="{{ route('produk.qrDownload', $produk) }}" 
-               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all">
+               class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md text-xs font-medium transition-colors duration-200">
                Download QR
             </a>
 
             {{-- Tombol kembali --}}
             <a href="{{ route('produk.index') }}" 
-               class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-all">
+               class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-gray-500 transition-all">
                Kembali
             </a>
         </div>
