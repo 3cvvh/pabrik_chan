@@ -41,6 +41,8 @@ class ForgotPasswordController extends Controller
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
+        ],[
+            'token.required' => 'token ga valid'
         ]);
 
         $status = Password::reset(

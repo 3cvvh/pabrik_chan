@@ -50,6 +50,8 @@ Route::middleware(['orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
     Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
     Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update']);
+    Route::get('/dashboard/org_gudang/produk/{produk}/download-qrs', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownloads');
+    Route::get('/dashboard/org_gudang/produk/{produk}/qr-views', [crudProdukController::class, 'qrView'])->name('produk.qrViews');
 });
 //daftar route jika user sudah login sebagai owner
 Route::middleware(['owner'])->group(function () {
