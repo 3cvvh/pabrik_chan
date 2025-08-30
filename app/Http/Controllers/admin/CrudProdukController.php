@@ -138,11 +138,11 @@ class CrudProdukController extends Controller
     {
         $svg = QrCode::format('svg')->size(300)->generate($produk->id);
         return Response::make($svg, 200, [
-            'Content-Type' => 'image/png',
-            'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.png"'
+            'Content-Type' => 'image/svg',
+            'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.svg"'
         ]);
     }
-
+    
     public function qrView(produk $produk)
     {
          $produk = Produk::find($produk->id);

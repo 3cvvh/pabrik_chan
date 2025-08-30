@@ -12,6 +12,7 @@ use App\Models\Pabrik as ModelsPabrik;
 use App\Models\Produk as ModelsProduk;
 use Illuminate\Support\Facades\Storage;
 
+
 class CrudProduk2Controller extends Controller
 {
     /**
@@ -59,25 +60,22 @@ class CrudProduk2Controller extends Controller
      * Display the specified resource.
      */
     public function show($id)
-    {
-        $produk = produk::find($id);
-                if($produk->id_pabrik != Auth::user()->pabrik_id OR $produk->id == null){
-            abort(404);
-        }
-        if($produk->id == null){
-            abort(404);
-        }
-        return view('admin.crud_produk.show', [
-            'judul' => $produk->judul,
-            'produk' => $produk,
-            'stock' => Stock_produk::where('id_produk', '=',$produk->id)->get()
+{
+    $produk = produk::find($id);
 
-        ]);
+    if ($produk->id_pabrik != Auth::user()->pabrik_id || $produk->id == null) {
+        abort(404);
+    }
+    if($produk->id == null){
+        abort(404);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    return view('admin.crud_produk.show', [
+        'judul' => $produk->nama,
+        'produk' => $produk,
+        'stock' => Stock_produk::where('id_produk', '=', $produk->id)->get()
+    ]);
+}
     public function edit($id)
     {
         $produk = produk::find($id);
@@ -121,4 +119,5 @@ class CrudProduk2Controller extends Controller
         ModelsProduk::destroy($produk->id);
         return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
     }
+
 }
