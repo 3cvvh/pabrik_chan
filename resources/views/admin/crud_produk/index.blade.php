@@ -75,14 +75,14 @@
                            <td class="px-6 py-4 whitespace-nowrap text-center">
                                <div class="flex flex-col items-center gap-2">
                                    {!! QrCode::size(60)->generate(route('produk.show', $produk->id)) !!}
-                                   
-                                   <a href="{{ route('produk.qrView', $produk) }}" 
+
+                                   <a href="{{ Auth::user()->role_id == 1 ?  route('produk.qrView', $produk) : route('produk.qrViews',$produk) }}"
                                       class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md text-xs font-medium transition-colors duration-200">
                                        Lihat QR
                                    </a>
                                </div>
                            </td>
-                                  
+
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
                                     <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ Auth::user()->role_id == 1 ? route('produk.show',$produk->id) : route('crud_produk.show',$produk->id) }}">

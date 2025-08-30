@@ -5,6 +5,8 @@ namespace App\Http\Controllers\owner;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Gudang;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class OwnerController extends Controller
@@ -22,4 +24,13 @@ class OwnerController extends Controller
             'judul' => 'owner|generate laporan'
         ]);
     }
+    public function dashboard(){
+        return view('owner.dawgboard', [
+            'judul' => 'owner|dawgboarrrr',
+            'gudang' => count(Gudang::where('id_pabrik',Auth::user()->pabrik_id)->get()),
+            'admin' => count(User::where('pabrik_id',Auth::user()->pabrik_id)->where('role_id','=',1)->get()),
+            'orangGudang' => count(User::where('pabrik_id',Auth::getUser()->pabrik_id)->where('role_id','=',2)->get())
+        ]);
+    }
 }
+

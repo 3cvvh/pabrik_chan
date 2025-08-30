@@ -16,8 +16,11 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
         if(Auth::user()->role_id != 1){
-            return back();
+            abort(403,'Unauthorized');
         }
         return $next($request);
     }

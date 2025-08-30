@@ -16,8 +16,11 @@ class Orang_gudang
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::getUser()->role_id != 2){
-            return back();
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
+      if(Auth::user()->role_id != 2){
+            abort(403,'Unauthorized');
         }
         return $next($request);
     }
