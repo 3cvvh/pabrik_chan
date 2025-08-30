@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Pabrik as ModelsPabrik;
 use App\Models\Produk as ModelsProduk;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Response;
 
 class CrudProdukController extends Controller
 {
@@ -51,7 +53,13 @@ class CrudProdukController extends Controller
         if($request->file('gambar')){
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
-        produk::create($valid);
+        $produk=produk::create($valid);
+
+        $qrCode = QrCode::format('svg')->size(200)->generate($produk->id . '-' . $produk->nama);
+        $fileName = 'qrcodes/' . $produk->id . '.svg';
+        Storage::disk('public')->put($fileName, $qrCode);
+        $produk->update(['qr_code' => $fileName]);
+
         return redirect()->route('produk.index')->with('berhasil','berhasil menambahkan produk');
     }
 
@@ -100,6 +108,13 @@ class CrudProdukController extends Controller
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
         produk::where('id','=',$produk->id)->update($valid);
+
+
+        $qrCode = QrCode::format('svg')->size(200)->generate($produk->id . '-' . $produk->nama);
+        $fileName = 'qrcodes/' . $produk->id . '.svg';
+        Storage::disk('public')->put($fileName, $qrCode);
+        $produk->update(['qr_code' => $fileName]);
+
         return redirect()->route('produk.index')->with('edit','berhasil mengedit data');
     }
 
@@ -110,6 +125,9 @@ class CrudProdukController extends Controller
     {
         if($produk->gambar){
             Storage::delete($produk->gambar);
+        }
+        if($produk->qr_code){
+            Storage::delete($produk->qr_code);
         }
         ModelsProduk::destroy($produk->id);
         return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
@@ -140,4 +158,31 @@ class CrudProdukController extends Controller
         // Redirect ke halaman detail produk
         return redirect()->route('produk.show', $produk->id);
     } 
+
+    public function qrDownload(produk $produk)
+    {
+        $svg = QrCode::format('svg')->size(300)->generate($produk->id);
+        return Response::make($svg, 200, [
+            'Content-Type' => 'image/svg',
+            'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.svg"'
+        ]);
+    }
+
+    public function qrView(produk $produk)
+    {
+         $produk = Produk::find($produk->id);
+         if (!$produk) {
+             return redirect()->route('produk.index')->with('error', 'Produk tidak ditemukan');
+         }
+     if($produk->id_pabrik != Auth::user()->pabrik_id){
+            abort(404);
+
+     }
+         return view('admin.crud_produk.qrview', [
+             'produk' => $produk,
+             'judul' => 'QR Code Produk'
+         ]);
+         }
+          
+
 }

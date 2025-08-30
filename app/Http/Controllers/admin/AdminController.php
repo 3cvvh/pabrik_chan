@@ -93,6 +93,8 @@ class AdminController extends Controller
         if($stock->jumlah >= $jumlah){
             $stock->jumlah -= $jumlah;
             $stock->save();
+        }elseif($stock->jumlah == null){
+            return redirect(route('crud_transaksi.show',$request->id_tran))->with('warning','stock kosong');
         }
         // Update total_harga di transaksi
         return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil di tambahkan');

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->integer('harga');
             $table->string('gambar')->nullable();
+            $table->string('qr_code')->nullable();
             $table->timestamps();
         });
     }

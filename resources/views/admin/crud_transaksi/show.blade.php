@@ -149,11 +149,10 @@
                             </div>
                             @endforeach
                         </div>
-                        @endif
                         @error('id_produk')
                         <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                         @enderror
-                        @error('jumlah.' . $item->id)
+                        @error('jumlah.' . $data_transaksi->id)
                         <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                         @enderror
                         <div class="flex justify-center mt-6">
@@ -166,6 +165,7 @@
                         </div>
                     </form>
                 </div>
+                    @endif
             @endif
             @foreach ($data_detail as $data)
             <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">

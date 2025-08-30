@@ -16,8 +16,11 @@ class BeatriceKAWAIIII
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->role_id !== 4){
-            return back();
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
+     if(Auth::user()->role_id != 4){
+            abort(403,'Unauthorized');
         }
         return $next($request);
     }

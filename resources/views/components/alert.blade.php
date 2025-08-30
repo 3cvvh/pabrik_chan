@@ -1,4 +1,4 @@
-@if(session('berhasil'))
+@if(session()->has('berhasil'))
     Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
@@ -7,7 +7,7 @@
         showConfirmButton: false
     });
 @endif
-@if(session('gagal'))
+@if(session()->has('gagal'))
     Swal.fire({
         icon: 'error',
         title: 'gagal!',
@@ -16,7 +16,7 @@
         showConfirmButton: false
     });
 @endif
-@if(session('warning'))
+@if(session()->has('warning'))
     Swal.fire({
         icon: 'warning',
         title: 'gagal!',
