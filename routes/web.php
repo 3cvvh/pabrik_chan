@@ -44,8 +44,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin/generate_report/{transaksi:id}',[AdminController::class, 'generateReport'])->name('admin.laporan');
 
     Route::get('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scanner'])->name('admin.produk.scanner');
-    Route::post('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scannerProcess'])->name('produk.scanner.process');
-
+    Route::post('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scannerProcess'])->name('admin.produk.scanner.process');
     Route::get('/dashboard/admin/produk/{produk}/download-qr', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownload');
     Route::get('/dashboard/admin/produk/{produk}/qr-view', [crudProdukController::class, 'qrView'])->name('produk.qrView');
 
@@ -54,7 +53,7 @@ Route::middleware(['admin'])->group(function () {
 Route::middleware(['orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
     Route::get('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scanner'])->name('orang_gudang.produk.scanner');
-    Route::post('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scannerProcess'])->name('produk.scanner.process');
+    Route::post('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scannerProcess'])->name('orang_gudang.produk.scanner.process');
     Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
     Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update']);
 
