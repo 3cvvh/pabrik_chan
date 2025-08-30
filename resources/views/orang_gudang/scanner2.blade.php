@@ -25,23 +25,32 @@
     </div>
     </div>
 
-    <!-- Form tersembunyi untuk kirim hasil scan -->
-    <form id="scanForm" action="{{ route('produk.scanner.process') }}" method="POST">
-        @csrf
-        <input type="hidden" name="kode" id="kode">
-    </form>
-
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         function onScanSuccess(decodedText, decodedResult) {
-            // Isi hidden input dengan hasil scan
-            document.getElementById('kode').value = decodedText;
-            // Submit form otomatis
-            document.getElementById('scanForm').submit();
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+
+            // Kirim ke Laravel
+            fetch("{{ route('orang_gudang.produk.scanner') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ barcode: decodedText })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert("Produk: " + data.data.name);
+                } else {
+                    alert(data.message);
+                }
+            });
         }
 
         function onScanFailure(error) {
-            // Bisa diabaikan kalau error kecil
+            // console.warn(Code scan error = ${error});
         }
 
         let html5QrcodeScanner = new Html5QrcodeScanner(

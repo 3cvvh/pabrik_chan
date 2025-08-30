@@ -44,8 +44,8 @@ Route::middleware(['auth','admin'])->group(function () {
 //daftar route jika user sudah login sebagai orang gudang
 Route::middleware(['auth','orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
-    Route::get('/dashboard/org_gudang/produk/scanner', [crudProdukController::class, 'scanner'])->name('orang_gudang.produk.scanner');
-    Route::post('/dashboard/org_gudang/produk/scanner', [crudProdukController::class, 'scannerProcess'])->name('orang_gudang.produk.scanner.process');
+    Route::get('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scanner'])->name('orang_gudang.produk.scanner');
+    Route::post('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scannerProcess'])->name('produk.scanner.process');
     Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
     Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update']);
 

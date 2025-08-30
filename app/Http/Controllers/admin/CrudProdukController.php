@@ -115,6 +115,9 @@ class CrudProdukController extends Controller
         return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
     }
 
+    /**
+     * Show the form for scanning a product.
+     */
     public function scanner()
 {
     return view('admin.crud_produk.scanner', [
@@ -122,16 +125,19 @@ class CrudProdukController extends Controller
     ]);
 }
 
-public function scannerProcess(Request $request)
-{
-    $kodeProduk = $request->input('kode'); // nilai dari QR code
-    $produk = Produk::where('id', $kodeProduk)->first();
+     /**
+     * Proses hasil scan QR produk
+     */
+    public function scannerProcess(Request $request)
+    {
+        $kodeProduk = $request->input('kode'); // nilai dari QR code
+        $produk = produk::where('id', $kodeProduk)->first();
 
-    if (!$produk) {
-        return redirect()->back()->with('error', 'Produk tidak ditemukan!');
-    }
+        if (!$produk) {
+            return redirect()->back()->with('error', 'Produk tidak ditemukan!');
+        }
 
-    // Redirect ke halaman detail produk
-    return redirect()->route('produk.show', $produk->id);
-}
+        // Redirect ke halaman detail produk
+        return redirect()->route('produk.show', $produk->id);
+    } 
 }
