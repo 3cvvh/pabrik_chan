@@ -12,41 +12,39 @@
             </div>
 
             <div class="flex flex-wrap gap-3">
-        <!-- Tombol Kamera Scanner -->
-        <a href="{{ route('admin.produk.scanner') }}">
-            <button class="px-4 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2zm9 3a4 4 0 100 8 4 4 0 000-8z"/>
-                </svg>
-                Kamera Scanner
-            </button>
-        </a>
+                <!-- Tombol Kamera Scanner -->
+                <a href="{{ Auth::user()->role_id == 1 ? route('admin.produk.scanner') : route('orang_gudang.produk.scanner') }}">
+                    <button class="px-4 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2zm9 3a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        Kamera Scanner
+                    </button>
+                </a>
 
-            <a href="{{ route('produk.create') }}">
-
-            @if(Auth::user()->role_id == 1)
-            <a href="{{ Auth::user()->role_id == 1 ? route('produk.create') : route('crud_produk.create') }}">
-
-                <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah produk Baru
-                </button>
-            </a>
-              @endif
+                @if(Auth::user()->role_id == 1)
+                    <a href="{{ route('produk.create') }}">
+                        <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Tambah produk Baru
+                        </button>
+                    </a>
+                @endif
+            </div>
         </div>
-    </div>
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
             <form action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Transaksi</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Produk</label>
                     <div class="relative">
                         <input autocomplete="off" name="search" id="search" type="text"
-                            placeholder="Cari transaksi..."
+                            value="{{ request()->get('search') }}"
+                            placeholder="Cari produk..."
                             class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
                         <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>

@@ -11,17 +11,24 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Pabrik as ModelsPabrik;
 use App\Models\Produk as ModelsProduk;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Response;
 
 class CrudProduk2Controller extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $data = produk::where('id_pabrik','=',Auth::user()->pabrik_id);
+        if($request->filled('search')){
+            $search = trim($request->search);
+            $data->where('nama','LIKE','%'.$search.'%');
+        }
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  produk::where('id_pabrik','=',Auth::getUser()->pabrik_id)->get(),
+            'data' =>  $data->get()
         ]);
     }
 
@@ -120,5 +127,52 @@ class CrudProduk2Controller extends Controller
         }
         ModelsProduk::destroy($produk->id);
         return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
+    }
+        public function scanner()
+    {
+        return view('admin.crud_produk.scanner', [
+            'judul' => 'scanner|produk'
+        ]);
+    }
+    public function scannerProcess(Request $request)
+    {
+        $barcode = $request->barcode;
+
+    // Misal barcode = ID produk
+    $produk = \App\Models\Produk::where('id', $barcode)->first();
+
+    if ($produk) {
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'id' => $produk->id,
+
+            ]
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Produk tidak ditemukan'
+        ]);
+    }
+
+        $kodeProduk = $request->input('kode'); // nilai dari QR code
+        $produk = produk::where('id', $kodeProduk)->first();
+
+        if (!$produk) {
+            return redirect()->back()->with('gagal', 'Produk tidak ditemukan!');
+        }
+
+        // Redirect ke halaman detail produk
+        return redirect()->route('crud_produk.show', $produk->id);
+    }
+
+    public function qrDownload(produk $produk)
+    {
+        $svg = QrCode::format('svg')->size(300)->generate($produk->id);
+        return Response::make($svg, 200, [
+            'Content-Type' => 'image/svg',
+            'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.svg"'
+        ]);
     }
 }

@@ -19,14 +19,33 @@ class User_crudController extends Controller
     public function index(Request $request)
 
     {
-        $query = User::where('pabrik_id', Auth::user()->pabrik_id);
-        if ($request->has('search') && $request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-        $data_user = $query->get();
+    $data = User::with(['pabrik', 'role'])
+    ->where('id','!=',Auth::user()->id)
+    ->where('role_id','!=',4)
+    ->where('pabrik_id',Auth::user()->pabrik_id)
+    ->latest();
+
+    if($request->has('search') || $request->has('roles_key')){
+        $data = User::query()
+            ->where('id', '!=', Auth::user()->id)
+            ->where('role_id','!=',4)
+            ->where('pabrik_id',Auth::user()->pabrik_id)
+            ->when($request->search, function($query) use ($request) {
+                $query->where(function($q) use ($request) {
+                    $q->where('name', 'like', '%'.$request->search.'%')
+                      ->orWhere('email', 'like', '%'.$request->search.'%');
+                });
+            })
+            ->when($request->roles_key, function($query) use ($request) {
+                $query->where('role_id', $request->roles_key);
+            })
+            ->with(['pabrik', 'role'])
+            ->latest();
+    }
         return view('admin.crud_user', [
             'judul' => 'crud user',
-            'data_user' => $data_user
+            'data' => $data->get(),
+            'role' => role::where('id','!=',4)->get(),
         ]);
     }
 

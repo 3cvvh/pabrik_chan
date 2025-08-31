@@ -12,12 +12,12 @@
         @endif
     </div>
     <div class="flex items-center gap-2 sm:gap-4 md:gap-6">
-        <a href="/dashboard/super_admin"
+        @if(Auth::user()->role_id == 4)
+                <a href="/dashboard/super_admin"
                 class="font-semibold px-6 py-2 rounded-lg shadow transition-all duration-200
                 {{ request()->is('dashboard/super_admin') ? 'bg-white text-blue-900 border border-black' : 'text-white hover:bg-blue-600 hover:bg-blue-100' }}">
                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
             </a>
-        @if(Auth::user()->role_id == 4)
             <a href="/dashboard/super_admin/crud_pabrik"
                 class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
                 {{ request()->is('dashboard/super_admin/crud_pabrik*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 hover:text-white' }}">
@@ -42,6 +42,11 @@
 
         @if(auth()->user()->role_id === 1)
             <div class="flex items-center gap-2 sm:gap-4 md:gap-6">
+                <a href="{{ route('admin.index') }}"
+                class="font-semibold px-6 py-2 rounded-lg shadow transition-all duration-200
+                {{ request()->is('dashboard/admin') ? 'bg-white text-blue-900 border border-black' : 'text-white hover:bg-blue-600 hover:bg-blue-100' }}">
+                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
                 <a href="/dashboard/admin/crud_user"
                     class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
                     {{ request()->is('dashboard/admin/crud_user*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 hover:text-white' }}">
