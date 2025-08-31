@@ -133,6 +133,52 @@ class CrudProdukController extends Controller
         return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
     }
 
+    /**
+     * Halaman scanner produk
+     */
+    public function scanner()
+    {
+        return view('admin.crud_produk.scanner', [
+            'judul' => 'scanner|produk'
+        ]);
+    }
+
+     /**
+     * Proses hasil scan QR produk
+     */
+    public function scannerProcess(Request $request)
+    {
+        $barcode = $request->barcode;
+
+    // Misal barcode = ID produk
+    $produk = \App\Models\Produk::where('id', $barcode)->first();
+
+    if ($produk) {
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'id' => $produk->id,
+
+            ]
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Produk tidak ditemukan'
+        ]);
+    }
+
+        $kodeProduk = $request->input('kode'); // nilai dari QR code
+        $produk = produk::where('id', $kodeProduk)->first();
+
+        if (!$produk) {
+            return redirect()->back()->with('error', 'Produk tidak ditemukan!');
+        }
+
+        // Redirect ke halaman detail produk
+        return redirect()->route('produk.show', $produk->id);
+    } 
+
     public function qrDownload(produk $produk)
     {
         $svg = QrCode::format('svg')->size(300)->generate($produk->id);
@@ -158,4 +204,5 @@ class CrudProdukController extends Controller
          ]);
          }
           
+
 }
