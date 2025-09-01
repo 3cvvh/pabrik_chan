@@ -36,7 +36,6 @@ Route::middleware(['admin'])->group(function () {
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
     Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show');
     Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
-    Route::resource('/dashboard/admin/produk',crudProdukController::class);
     Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);
     Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal');
     Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk');
@@ -72,6 +71,9 @@ Route::middleware(['beatricekawaii'])->group(function () {
     Route::resource('/dashboard/super_admin/crud_pabrik',crud_pabrikController::class);
     Route::resource('/dashboard/super_admin/crud_users',users_crudController::class)->except('show');
     Route::get('/dashboard/super_admin',[super_beatriceController::class, 'index'])->name('super.index');
+});
+Route::middleware(['org_gudang/admin'])->group(function(){
+    Route::resource('/dashboard/admin/produk',crudProdukController::class);
 });
 //logout
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');

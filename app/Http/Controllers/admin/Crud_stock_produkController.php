@@ -135,15 +135,17 @@ class Crud_stock_produkController extends Controller
             'keterangan' => 'nullable',
             'gudang' => 'integer',
         ]);
-        if($request->jumlah == 0){
+        if($request->jumlah <= 0){
             $stock_produk->status = 'habis';
+        }elseif($request->jumlah > 0){
+            $stock_produk->status = 'tersedia';
         }
         $stock_produk->jumlah = $request->jumlah;
         $stock_produk->id_gudang = $request->gudang;
         $stock_produk->tanggal_masuk = $request->tanggal_masuk;
         $stock_produk->keterangan = $request->keterangan;
         $stock_produk->save();
-        return redirect('/dashboard/admin/stock_produk')->with('berhasil','berhasil mengedit stok');
+        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil mengedit stok');
     }
 
     /**
