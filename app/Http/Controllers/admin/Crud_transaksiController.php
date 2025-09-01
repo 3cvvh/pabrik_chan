@@ -21,33 +21,33 @@ class Crud_transaksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-         $data = transaksi::with(['pembeli'])
-    ->where('id','!=',Auth::user()->id)
-    ->where('id_pabrik','=',Auth::user()->pabrik_id)
-    ->latest();
-     if($request->has('search') || $request->has('pembelis_key')){
-        $data = transaksi::query()
-            ->where('id', '!=', Auth::user()->id)
-            ->when($request->search, function($query) use ($request) {
-                $query->where(function($q) use ($request) {
-                    $q->where('judul', 'like', '%'.$request->search.'%')
-                      ->orWhere('status', 'like', '%'.$request->search.'%');
-                });
-            })
-            ->when($request->pembelis_key, function($query) use ($request) {
-                $query->where('id_pembeli', $request->pembelis_key);
-            })
-            ->with(['pembeli'])
-            ->latest();
-    }
-        return view('admin.crud_transaksi.index',[
-            'judul' => 'transaksi|page',
-            'data' => $data->get(),
-            'pembeli' => ModelsPembeli::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
-        ]);
-    }
+  public function index(Request $request)
+{
+    $query = transaksi::with('pembeli')
+        ->where('id', '!=', Auth::id())
+        ->where('id_pabrik', Auth::user()->pabrik_id);
+
+    // search di judul atau status
+    $query->when($request->search, function ($q, $search) {
+        $q->where(function ($q2) use ($search) {
+            $q2->where('judul', 'like', '%'.$search.'%')
+               ->orWhere('status', 'like', '%'.$search.'%');
+        });
+    });
+
+    // filter by pembeli
+    $query->when($request->pembelis_key, function ($q, $pembeliId) {
+        $q->where('id_pembeli', $pembeliId);
+    });
+
+    $data = $query->latest()->paginate(15)->appends($request->only(['search', 'pembelis_key']));
+
+    return view('admin.crud_transaksi.index', [
+        'judul' => 'transaksi|page',
+        'data' => $data,
+        'pembeli' => ModelsPembeli::where('id_pabrik', Auth::user()->pabrik_id)->get(),
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.

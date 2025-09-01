@@ -17,11 +17,6 @@ class Crud_gudangController extends Controller
     {
         $query = gudang::with(['pabrik'])->where('id_pabrik',Auth::getUser()->pabrik_id);
 
-        // Filter berdasarkan pabrik jika ada
-        if ($request->filled('pabrik_filter')) {
-            $query->where('id_pabrik', $request->pabrik_filter);
-        }
-
         // Filter berdasarkan search (nama/alamat/no_telepon/keterangan)
         if ($request->filled('search')) {
             $search = $request->search;

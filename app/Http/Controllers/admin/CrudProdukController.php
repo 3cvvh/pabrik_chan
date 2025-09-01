@@ -19,11 +19,16 @@ class CrudProdukController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $data = produk::where('id_pabrik','=',Auth::user()->pabrik_id);
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $data->where('nama', 'like', '%' . $search . '%');
+        }
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  produk::where('id_pabrik','=',Auth::getUser()->pabrik_id)->get(),
+            'data' =>  $data->get(),
         ]);
     }
 
@@ -177,7 +182,7 @@ class CrudProdukController extends Controller
 
         // Redirect ke halaman detail produk
         return redirect()->route('produk.show', $produk->id);
-    } 
+    }
 
     public function qrDownload(produk $produk)
     {
@@ -203,6 +208,6 @@ class CrudProdukController extends Controller
              'judul' => 'QR Code Produk'
          ]);
          }
-          
+
 
 }

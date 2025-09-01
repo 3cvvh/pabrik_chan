@@ -19,7 +19,7 @@
             Pindai kode QR produk untuk mendapatkan informasi.
         </p>
          <div class="flex gap-4">
-        <a href="{{ route('produk.index') }}" 
+        <a href="{{ Auth::user()->role_id == 1 ?  route('produk.index') : route('crud_produk.index') }}"
         class="mt-6 inline-block bg-blue-400 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 hover:shadow transition-all duration-200">Kembali
     </a>
     </div>
@@ -31,7 +31,7 @@
             console.log(`Code matched = ${decodedText}`, decodedResult);
 
             // Kirim ke Laravel
-            fetch("{{ route('admin.produk.scanner.process') }}", {
+            fetch("{{ Auth::user()->role_id == 1 ?  route('admin.produk.scanner.process') : route('orang_gudang.produk.scanner.process') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -55,7 +55,7 @@
         }
 
         let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", 
+            "reader",
             { fps: 10, qrbox: { width: 250, height: 250 } }
         );
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
