@@ -67,6 +67,7 @@ class Users_crudController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
+            'role_id' => 'required',
             'pabrik_id' => 'required',
             'alamat' => 'required',
         ]);
@@ -104,6 +105,7 @@ class Users_crudController extends Controller
         $databaru = $request->validate([
             'name' => ['required'],
             'email' => ['email:dns','required'],
+            'role_id' => 'required|integer',
             'pabrik_id' => 'required|integer',
             'alamat' => 'required',
         ]);

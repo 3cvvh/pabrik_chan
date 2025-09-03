@@ -33,12 +33,35 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">Rp</span>
                                 </div>
-                                <input type="number" name="harga" id="harga" value="{{ old('harga') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0">
+                                <input 
+                                    type="text" 
+                                    name="harga" 
+                                    id="harga" 
+                                    value="{{ old('harga') }}" 
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0">
                             </div>
                             @error('harga')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <!-- Script khusus input harga -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hargaInput = document.getElementById('harga');
+
+        if (hargaInput) {
+            hargaInput.addEventListener('input', function () {
+                let value = this.value.replace(/\D/g, ''); // hanya angka
+                this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
+            });
+
+            hargaInput.form.addEventListener('submit', function () {
+                hargaInput.value = hargaInput.value.replace(/\./g, '');
+            });
+        }
+    });
+</script>
 
                         <!-- Deskripsi Input -->
                         <div class="transform transition-all duration-300 animate-fadeIn col-span-2" style="animation-delay: 300ms">
