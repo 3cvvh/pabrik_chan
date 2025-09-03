@@ -20,4 +20,8 @@ class Gudang extends Model
     {
         return $this->belongsTo(pabrik::class,'id_pabrik');
     }
+    public function user():HasMany
+    {
+        return $this->hasMany(User::class,'gudang_id');
+    }
 }

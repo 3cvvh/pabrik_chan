@@ -89,12 +89,9 @@
                 <select name="gudang_id" id="">
                     <option value="">pilih gudang</option>
                 @foreach ( $gudang as $item )
-                @if($item->id == old('gudang_id',$user->gudang_id?? ''))
-                <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
-                @endif
                 <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                      @endforeach
                 </select>
-            @endforeach
             </div>
 
             <div class="flex justify-end gap-3">
