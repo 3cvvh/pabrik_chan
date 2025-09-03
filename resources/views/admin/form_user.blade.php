@@ -1,6 +1,5 @@
 @extends('layout.main')
 @section('content')
-<x-navbar></x-navbar>
 <div class="bg-blue-100 min-h-screen pt-[64px] px-4 py-8 flex items-center justify-center">
     <div class="max-w-xl w-full bg-white p-8 rounded-xl shadow-lg">
         <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">

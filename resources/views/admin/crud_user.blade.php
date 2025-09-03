@@ -7,15 +7,15 @@
         <!-- Enhanced Header Section -->
         <div class="flex justify-between items-center mb-8 animate-fade-in">
             <div>
-                <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar Pengguna</h1>
-                <p class="text-gray-600">Kelola semua pengguna dalam sistem</p>
+                <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar User</h1>
+                <p class="text-gray-600">Kelola semua User dalam sistem</p>
             </div>
             <a href="{{ route('crud_user.create') }}">
                 <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
-                    Tambah Pengguna Baru
+                    Tambah User Baru
                 </button>
             </a>
         </div>
@@ -24,7 +24,7 @@
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
             <form action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Pengguna</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari User</label>
                     <div class="relative">
                         <input autocomplete="off" name="search" id="search" type="text"
                             placeholder="Cari berdasarkan nama atau email..."

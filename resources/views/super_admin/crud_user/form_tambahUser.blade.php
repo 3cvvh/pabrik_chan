@@ -4,8 +4,8 @@
     <div class="max-w-3xl mx-auto animate-fadeIn">
         <!-- Card Header with animation -->
         <div class="mb-6 transform transition-all duration-500 animate-slideDown">
-            <h2 class="text-3xl font-extrabold text-gray-900">Tambah User Baru</h2>
-            <p class="mt-1 text-sm text-gray-600">Silahkan isi data user dengan lengkap</p>
+            <h2 class="text-3xl font-extrabold text-gray-900">Tambah admin Baru</h2>
+            <p class="mt-1 text-sm text-gray-600">Silahkan isi data admin dengan lengkap</p>
         </div>
 
         <!-- Main Card with hover effect and animation -->
@@ -89,30 +89,6 @@
                                 <input type="text" name="alamat" value="{{ old('alamat') }}" id="alamat" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 py-3 text-sm border-gray-300 rounded-lg" placeholder="Masukkan alamat lengkap">
                             </div>
                             @error('alamat')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Role Select with animation -->
-                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 500ms">
-                            <label for="role" class="block text-sm font-semibold text-gray-700">Role</label>
-                            <div class="mt-1 relative rounded-md shadow-sm">
-                                <select name="role_id" id="role_id" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 pl-3 pr-10 text-sm border-gray-300 rounded-lg appearance-none">
-                                    <option value="">Pilih Role</option>
-                                    @foreach ($roles as $role)
-                                    @if($role->id == old('role_id'))
-                                        <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
-                                    @endif
-                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            @error('role_id')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -207,7 +183,6 @@
                 const gudangInput = document.getElementById('gudang-extra-input');
                 const kodeGudangInput = document.getElementById('kode_gudang');
                 // Ambil id role "orang gudang" langsung dari koleksi (pastikan ada)
-                const orangGudangRoleId = "{{ $roles->where('name', 'orang gudang')->first()->id ?? '' }}";
                 // Debug: cek id dan value
                 console.log('Orang Gudang Role ID:', orangGudangRoleId, 'Selected:', roleSelect.value);
 
