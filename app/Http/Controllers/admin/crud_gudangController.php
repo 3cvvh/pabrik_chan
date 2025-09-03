@@ -122,7 +122,7 @@ class Crud_gudangController extends Controller
     public function destroy($id, Request $request)
     {
         $gudang = gudang::find($id);
-        gudang::destroy($request->id);
+        gudang::destroy($id);
         return redirect('/dashboard/admin/crud_gudang')->with('hapus', 'Gudang berhasil dihapus');
     }
 }

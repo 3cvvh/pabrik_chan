@@ -79,7 +79,7 @@
                 </a>
                 <a href="{{ route('Stock_produk.index') }}"
                     class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
-                    {{ request()->is('dahboard/admin/S      tock_produk*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 d' }}">
+                    {{ request()->is('dahboard/admin/Stock_produk*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 d' }}">
                     <i class="fa fa-cubes w-5 h-5 mr-1"></i>
                     Stock
                 </a>

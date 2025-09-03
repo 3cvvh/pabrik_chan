@@ -14,6 +14,10 @@ class OwnerController extends Controller
 
     public function index(){
          $data = Transaksi::with(['pabrik','pembeli'])->where('id_pabrik',Auth::user()->pabrik_id);
+         if(request()->filled('search')){
+            $key =  trim(request()->search);
+            $data->where('judul','LIKE','%'.$key.'%');
+         }
         return view('owner.dashboard',[
             'judul' => 'owner|dashboard',
             'transaksi' => $data->get()

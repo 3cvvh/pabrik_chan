@@ -102,8 +102,10 @@ class Crud_stock_produk2Controller extends Controller
             'tanggal_masuk' => ['required'],
             'keterangan' => 'nullable',
         ]);
-        if($request->jumlah == 0){
+        if($request->jumlah <= 0){
             $stock_produk->status = 'habis';
+        }elseif($request->jumlah > 0){
+            $stock_produk->status = 'tersedia';
         }
         $stock_produk->jumlah = $request->jumlah;
         $stock_produk->tanggal_masuk = $request->tanggal_masuk;
