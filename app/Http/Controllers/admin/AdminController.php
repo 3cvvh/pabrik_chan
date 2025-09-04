@@ -41,12 +41,15 @@ class AdminController extends Controller
         ]);
         $total_harga = 0;
         foreach($request->id_produk as $produk_id) {
-            $jumlah = $request->jumlah[$produk_id] ?? 0;
+            $jumlah = isset($request->jumlah[$produk_id]) ? (int)$request->jumlah[$produk_id] : 0;
             if ($jumlah <= 0) {
                 return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','harap jumlah diisi');
             }
             $produk = Produk::find($produk_id);
-            $harga_total_produk = $produk->harga * $jumlah;
+            if(!$produk){
+                return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','produk tidak ditemukan');
+            }
+            $harga_total_produk = $produk->harga_jual * $jumlah;
             $total_harga += $harga_total_produk;
 
             // Cek apakah produk sudah ada di detail_transaksi
@@ -54,19 +57,22 @@ class AdminController extends Controller
                 ->where('id_transaksi', $request->id_tran)
                 ->where('id_produk', $produk_id)
                 ->first();
-          $stock = Stock_produk::where('id_produk', $produk_id)->where('id_pabrik',Auth::getUser()->pabrik_id)->first();
+
+            $stock = Stock_produk::where('id_produk', $produk_id)
+                ->where('id_pabrik', Auth::user()->pabrik_id)
+                ->first();
+
+            // Pastikan stok valid
+            if (!$stock || is_null($stock->jumlah)) {
+                return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak ditemukan');
+            }
+
             if ($detail) {
                 // Jika sudah ada, update jumlah dan total_harga
                 $new_jumlah = $detail->jumlah + $jumlah;
-                $new_total = $produk->harga * $new_jumlah;
-                if($stock){
-                if($new_jumlah < $stock->jumlah){
-                    $stock->jumlah -= $jumlah;
-                    $stock->save();
-                }elseif($stock->jumlah = null or $stock->jumlah < $new_jumlah){
+                // Pastikan stok cukup untuk jumlah tambahan
+                if ($stock->jumlah < $jumlah) {
                     return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak mencukupi');
-                }}else{
-                    return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak ditemukan');
                 }
                 if($new_jumlah <= 0) {
                     return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','jumlah tidak boleh kurang dari 1');
@@ -76,27 +82,28 @@ class AdminController extends Controller
                     ->where('id_produk', $produk_id)
                     ->update([
                         'jumlah' => $new_jumlah,
-                        'total_harga' => $new_total,
+                        'total_harga' => $produk->harga_jual * $new_jumlah,
                     ]);
+                $stock->jumlah -= $jumlah;
+                $stock->save();
             } else {
-                // Jika belum ada, insert baru
+                if ($stock->jumlah < $jumlah) {
+                    return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak mencukupi');
+                }
+
                 DB::table('detail_transaksis')->insert([
                     'id_transaksi' => $request->id_tran,
                     'id_produk' => $produk_id,
                     'jumlah' => $jumlah ,
                     'total_harga' => $harga_total_produk,
-                    'harga_satuan' => $produk->harga
+                    'harga_satuan' => $produk->harga_jual
                 ]);
+                $detail_id = DB::getPdo()->lastInsertId();
+                $stock->jumlah -= $jumlah;
+                $stock->save();
             }
         }
-        $stock = Stock_produk::where('id_produk',$produk_id)->first();
-        if($stock->jumlah >= $jumlah){
-            $stock->jumlah -= $jumlah;
-            $stock->save();
-        }elseif($stock->jumlah == null){
-            return redirect(route('crud_transaksi.show',$request->id_tran))->with('warning','stock kosong');
-        }
-        // Update total_harga di transaksi
+        // Update total_harga di transaksi (jika perlu)
         return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil di tambahkan');
     }
     public function hapus_produk(Request $request, $id){

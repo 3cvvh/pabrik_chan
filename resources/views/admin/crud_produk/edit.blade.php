@@ -26,16 +26,31 @@
                             @enderror
                         </div>
 
-                        <!-- Harga Input -->
+                        <!-- Harga Input (diganti menjadi harga_jual dan harga_modal yang lebih mudah diisi) -->
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 200ms">
-                            <label for="harga" class="block text-sm font-semibold text-gray-700">Harga</label>
+                            <label class="block text-sm font-semibold text-gray-700">Harga Jual</label>
                             <div class="mt-1 relative rounded-md shadow-sm">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">Rp</span>
                                 </div>
-                                <input type="number" name="harga" id="harga" value="{{ old('harga',$data->harga) }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0">
+                                <input type="text" id="harga_jual_display" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0" inputmode="numeric" value="{{ old('harga_jual', isset($data->harga_jual) ? number_format($data->harga_jual,0,',','.') : (isset($data->harga) ? number_format($data->harga,0,',','.') : '')) }}">
+                                <input type="hidden" name="harga_jual" id="harga_jual" value="{{ old('harga_jual', $data->harga_jual ?? $data->harga ?? '') }}">
                             </div>
-                            @error('harga')
+                            @error('harga_jual')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 250ms">
+                            <label class="block text-sm font-semibold text-gray-700">Harga Modal</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">Rp</span>
+                                </div>
+                                <input type="text" id="harga_modal_display" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0" inputmode="numeric" value="{{ old('harga_modal', isset($data->harga_modal) ? number_format($data->harga_modal,0,',','.') : '') }}">
+                                <input type="hidden" name="harga_modal" id="harga_modal" value="{{ old('harga_modal', $data->harga_modal ?? '') }}">
+                            </div>
+                            @error('harga_modal')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -111,6 +126,8 @@
 
 <script>
 function confirmedit() {
+    // sinkronkan nilai display ke input hidden sebelum konfirmasi/submit
+    syncCurrencyInputs();
     Swal.fire({
         title: 'Apakah anda yakin?',
         text: "Anda akan memperbarui produk",
@@ -135,5 +152,55 @@ function confirmedit() {
         showConfirmButton: false
     });
 @endif
+</script>
+
+<script>
+// Utility: hapus semua kecuali digit
+function unformatNumber(str){
+    if(!str) return '';
+    return str.toString().replace(/[^0-9]/g,'');
+}
+
+// format angka ke pemisah ribuan lokal (tanpa desimal)
+function formatNumberDisplay(val){
+    if(val === '') return '';
+    return Number(val).toLocaleString('id-ID');
+}
+
+function syncCurrencyInputs(){
+    const displayJual = document.getElementById('harga_jual_display');
+    const hiddenJual = document.getElementById('harga_jual');
+    const displayModal = document.getElementById('harga_modal_display');
+    const hiddenModal = document.getElementById('harga_modal');
+    if(displayJual && hiddenJual){
+        hiddenJual.value = unformatNumber(displayJual.value);
+    }
+    if(displayModal && hiddenModal){
+        hiddenModal.value = unformatNumber(displayModal.value);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    const jual = document.getElementById('harga_jual_display');
+    const modal = document.getElementById('harga_modal_display');
+    if(jual){
+        jual.addEventListener('input', function(e){
+            const raw = unformatNumber(e.target.value);
+            e.target.value = formatNumberDisplay(raw);
+        });
+        jual.addEventListener('blur', syncCurrencyInputs);
+    }
+    if(modal){
+        modal.addEventListener('input', function(e){
+            const raw = unformatNumber(e.target.value);
+            e.target.value = formatNumberDisplay(raw);
+        });
+        modal.addEventListener('blur', syncCurrencyInputs);
+    }
+    const form = document.getElementById('edit-form');
+    if(form){
+        form.addEventListener('submit', function(){ syncCurrencyInputs(); });
+    }
+});
 </script>
 @endsection

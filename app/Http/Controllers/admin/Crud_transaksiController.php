@@ -66,7 +66,7 @@ class Crud_transaksiController extends Controller
      */
 public function store(Request $request)
 {
-    // Validasi request btw beatrice kawwaii
+    // Validasi request
     $request->validate([
         'judul' => 'required',
         'id_pembeli' => 'required',
@@ -82,61 +82,93 @@ public function store(Request $request)
         'jumlah.*.numeric' => 'jumlah produk harus berupa angka',
         'jumlah.*.min' => 'jumlah produk minimal 1'
     ]);
-    // create transaksi
-    $transaksi = transaksi::create([
-        'judul' => $request->judul,
-        'id_pembeli' => $request->id_pembeli,
-        'id_pabrik' => Auth::user()->pabrik_id,
-        'status_pengiriman' => 'belum_dikirim',
-        'status_pembayaran' => 'belum_bayar',
-        'keterangan' => $request->keterangan,
-    ]);
 
-    // buat detail transaksi untuk setiap produk yang dipilih
-    $total_harga = 0;
-    foreach($request->id_produk as $produk_id) {
-        $jumlah = $request->jumlah[$produk_id] ?? 0;
-        if ($jumlah <= 0) {
-            transaksi::destroy($transaksi->id);
+    // kumpulkan permintaan produk -> jumlah (pastikan key exists)
+    $requested = [];
+    foreach ($request->id_produk as $pid) {
+        $qty = isset($request->jumlah[$pid]) ? (int) $request->jumlah[$pid] : 0;
+        if ($qty <= 0) {
             return redirect(route('crud_transaksi.create'))->with('warning','harap jumlah diisi');
-            die;
         }
-
-        $produk = Produk::find($produk_id);
-        $harga_total_produk = $produk->harga * $jumlah;
-        $total_harga += $harga_total_produk;
-
-        FacadesDB::table('detail_transaksis')->insert([
-            'id_transaksi' => $transaksi->id,
-            'id_produk' => $produk_id,
-            'jumlah' => $jumlah,
-            'total_harga' => $harga_total_produk,
-            'harga_satuan' => $produk->harga
-        ]);
+        $requested[$pid] = $qty;
     }
 
-    $transaksi->update([
-        'total_harga' => $total_harga
-    ]);
-    $stock = Stock_produk::where('id_produk',$produk_id)->where('id_pabrik',Auth::getUser()->pabrik_id)->where('jumlah','>','0')->get();
-    foreach($stock as $stocks){
-        if($stocks >= $jumlah){
-            $stocks->jumlah -= $jumlah;
-            $stocks->save();
-            return redirect()->route('crud_transaksi.index')->with('success','berhasil menambahkan transaksi');
-        }
-        // }else{
-        //     //   transaksi::destroy($transaksi->id);
-        //     // Detail_transaksi::where('id_transaksi', $transaksi->id)->delete();
-        //     // return redirect(route('crud_transaksi.create'))->with('warning','stok tidak mencukupi');
-        //     return 'gagal';
-        // }
+    // cek stok keseluruhan untuk setiap produk sebelum memulai transaksi DB
+    foreach ($requested as $produk_id => $qty) {
+        $available = Stock_produk::where('id_produk', $produk_id)
+            ->where('id_pabrik', Auth::user()->pabrik_id)
+            ->sum('jumlah');
 
+        if ($available < $qty) {
+            return redirect()->route('crud_transaksi.create')->with('gagal','stok tidak mencukupi untuk produk id: '.$produk_id);
+        }
     }
 
-return redirect()->route('crud_transaksi.index')->with('gagal','stok tidak mencukupi');
+    // lakukan pembuatan transaksi dan pengurangan stok secara atomik
+    try {
+        FacadesDB::transaction(function () use ($request, $requested, &$transaksi) {
+            // buat transaksi
+            $transaksi = transaksi::create([
+                'judul' => $request->judul,
+                'id_pembeli' => $request->id_pembeli,
+                'id_pabrik' => Auth::user()->pabrik_id,
+                'status_pengiriman' => 'belum_dikirim',
+                'status_pembayaran' => 'belum_bayar',
+                'keterangan' => $request->keterangan,
+            ]);
 
-    // redirect ke index dengan pesan sukses
+            $total_harga = 0;
+
+            foreach ($requested as $produk_id => $jumlah) {
+                $produk = produk::find($produk_id);
+                if (! $produk) {
+                    throw new \Exception('Produk tidak ditemukan: '.$produk_id);
+                }
+
+                $harga_total_produk = $produk->harga_jual * $jumlah;
+                $total_harga += $harga_total_produk;
+
+                // sisipkan detail transaksi
+                FacadesDB::table('detail_transaksis')->insert([
+                    'id_transaksi' => $transaksi->id,
+                    'id_produk' => $produk_id,
+                    'jumlah' => $jumlah,
+                    'total_harga' => $harga_total_produk,
+                    'harga_satuan' => $produk->harga_jual,
+                ]);
+
+                // kurangi stok dari baris-stock (FIFO) dengan lockForUpdate untuk menghindari race condition
+                $remaining = $jumlah;
+                $stocks = Stock_produk::where('id_produk', $produk_id)
+                    ->where('id_pabrik', Auth::user()->pabrik_id)
+                    ->where('jumlah', '>', 0)
+                    ->orderBy('created_at')
+                    ->lockForUpdate()
+                    ->get();
+
+                foreach ($stocks as $stock) {
+                    if ($remaining <= 0) break;
+                    $take = min($stock->jumlah, $remaining);
+                    $stock->jumlah -= $take;
+                    $stock->save();
+                    $remaining -= $take;
+                }
+
+                if ($remaining > 0) {
+                    // seharusnya tidak terjadi karena cek sebelumnya, tapi aman untuk rollback
+                    throw new \Exception('Stok tidak mencukupi saat pengurangan untuk produk id: '.$produk_id);
+                }
+            }
+
+            // update total transaksi
+            $transaksi->update(['total_harga' => $total_harga]);
+        });
+    } catch (\Exception $e) {
+        // jika gagal, kembalikan pesan ke user
+        return redirect()->route('crud_transaksi.create')->with('warning','Gagal membuat transaksi: '.$e->getMessage());
+    }
+
+    return redirect()->route('crud_transaksi.index')->with('berhasil','berhasil menambahkan transaksi');
 }
 
     /**

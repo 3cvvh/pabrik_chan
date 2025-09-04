@@ -17,7 +17,8 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->unsignedBigInteger('id_pabrik');
             $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
-            $table->integer('harga');
+            $table->decimal('harga_modal',12,2);
+            $table->decimal('harga_jual',12,2);
             $table->string('gambar')->nullable();
             $table->string('qr_code')->nullable();
             $table->timestamps();

@@ -66,31 +66,42 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pabrik</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Gambar</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Harga</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">QR</th>
+                            <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Gambar</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Harga Jual</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Harga Modal</th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">QR</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($data as $index => $produk)
+                     </thead>
+                     <tbody class="bg-white divide-y divide-gray-200">
+                         @foreach ($data as $index => $produk)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $produk->nama }}</td>
+                            <td class="px-6 py-4 max-w-xs truncate whitespace-nowrap text-sm font-medium text-gray-800" title="{{ $produk->nama }}">{{ $produk->nama }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
                             @if($produk->gambar)
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><img class="mask-auto w-20 h-20" src="{{ asset('storage/' . $produk->gambar) }}" alt=""></td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <img class="object-cover rounded-md w-20 h-20 border border-gray-100 shadow-sm" src="{{ asset('storage/' . $produk->gambar) }}" alt="{{ $produk->nama }}">
+                            </td>
                             @else
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Tidak ada gambar</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
                             @endif
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                Rp {{ number_format($produk->harga, 0, ',', '.') }}
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Rp {{ number_format($produk->harga_jual ?? $produk->harga ?? 0, 0, ',', '.') }}
+                                </span>
+                            </td>
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    Rp {{ number_format($produk->harga_modal ?? 0, 0, ',', '.') }}
+                                </span>
                             </td>
 
                            <td class="px-6 py-4 whitespace-nowrap text-center">
                                <div class="flex flex-col items-center gap-2">
                                    {!! QrCode::size(60)->generate(route('produk.show', $produk->id)) !!}
-
                                    <a href="{{ Auth::user()->role_id == 1 ?  route('produk.qrView', $produk) : route('produk.qrViews',$produk) }}"
                                       class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md text-xs font-medium transition-colors duration-200">
                                        Lihat QR

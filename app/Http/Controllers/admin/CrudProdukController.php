@@ -38,7 +38,7 @@ class CrudProdukController extends Controller
     public function create()
     {
         return view('admin.crud_produk.form_tambah_produk',[
-            'judul' => 'formtambah|produk',
+            'judul' => 'form tambah|produk',
             'pabrik' => pabrik::where('id',Auth::user()->pabrik_id)->get(),
         ]);
     }
@@ -50,10 +50,11 @@ class CrudProdukController extends Controller
     {
         $valid = $request->validate([
             'nama' => 'required',
-            'harga' => ['required'],
             'deskripsi' => 'nullable',
             'gambar' => ['image','nullable'],
-            'id_pabrik' => 'integer'
+            'id_pabrik' => 'integer',
+            'harga_jual' => ['required'],
+            'harga_modal' => ['required']
         ]);
         if($request->file('gambar')){
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
@@ -105,6 +106,8 @@ class CrudProdukController extends Controller
             'harga' => ['required'],
             'deskripsi' => 'nullable',
             'gambar' => ['nullable','image'],
+            'harga_jual' => ['required'],
+            'harga_modal' => ['required']
         ]);
         if($request->file('gambar')){
             if($produk->gambar){

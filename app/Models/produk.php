@@ -24,5 +24,23 @@ class Produk extends Model
     {
        return $this->belongsTo(pabrik::class,'id_pabrik');
     }
+    protected $casts = [
+        'harga_modal' => 'decimal:2',
+        'harga_jual' => 'decimal:2',
+    ];
+
+    public function getLabaPerUnitAttribute()
+    {
+        if (! isset($this->harga_modal) || ! isset($this->harga_jual)) {
+            return null;
+        }
+        return round($this->harga_jual - $this->harga_modal, 2);
+    }
+
+    // relasi (jika belum ada)
+    public function detailTransaksis()
+    {
+        return $this->hasMany(Detail_transaksi::class, 'id_produk');
+    }
 
 }
