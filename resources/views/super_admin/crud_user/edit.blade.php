@@ -95,43 +95,6 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-
-                        <!-- Role Select -->
-                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 500ms">
-                            <label for="role" class="block text-sm font-semibold text-gray-700">Role</label>
-                            <div class="mt-1 relative rounded-md shadow-sm">
-                                <select name="role_id" id="role_id" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 pl-3 pr-10 text-sm border-gray-300 rounded-lg appearance-none">
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->id }}" {{ old('role_id', $data->role_id) == $role->id ? 'selected' : '' }}>
-                                            {{ $role->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            @error('role_id')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                                                <div id="gudang-extra-input" class="mt-1 relative rounded-md shadow-sm" style="display: none;">
-                <select name="gudang_id" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 pl-3 pr-10 text-sm border-gray-300 rounded-lg appearance-none" id="">
-                    <option value="">pilih gudang</option>
-                @foreach ( $gudang as $item )
-                @if($item->id == old('gudang_id',$data->gudang_id?? ''))
-                <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
-                @endif
-                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-            @endforeach
-              </select>
-                @error('gudang_id')
-                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-
                         <!-- Pabrik Select -->
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
                             <label for="pabrik" class="block text-sm font-semibold text-gray-700">Pabrik</label>
@@ -197,28 +160,7 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-                const roleSelect = document.getElementById('role_id');
-                const gudangInput = document.getElementById('gudang-extra-input');
-                const kodeGudangInput = document.getElementById('kode_gudang');
-                // Ambil id role "orang gudang" langsung dari koleksi (pastikan ada)
-                const orangGudangRoleId = "{{ $roles->where('name', 'orang gudang')->first()->id ?? '' }}";
-                // Debug: cek id dan value
-                console.log('Orang Gudang Role ID:', orangGudangRoleId, 'Selected:', roleSelect.value);
-
-                function toggleGudangInput() {
-                    if (roleSelect.value === orangGudangRoleId && orangGudangRoleId !== '') {
-                        gudangInput.style.display = '';
-                        if (kodeGudangInput) kodeGudangInput.required = true;
-                    } else {
-                        gudangInput.style.display = 'none';
-                        if (kodeGudangInput) kodeGudangInput.required = false;
-                    }
-                }
-
-                roleSelect.addEventListener('change', toggleGudangInput);
-                toggleGudangInput(); // initial check
-            });
+   
 function togglePassword() {
     const password = document.getElementById('password');
     const eyeOpen = document.getElementById('eye-open');

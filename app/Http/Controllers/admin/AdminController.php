@@ -8,17 +8,26 @@ use App\Models\Transaksi;
 use App\Models\Stock_produk;
 use Illuminate\Http\Request;
 use App\Models\Detail_transaksi;
+use Illuminate\Cache\RedisTagSet;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Cache\RedisTagSet;
+use App\Models\Pembeli;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
     public function index()
     {
+        $pabrik_id = Auth::user()->pabrik_id;
         return view('admin.dashboard',[
             'judul' => 'Dashboard|admin',
+            'user' => count(User::where('pabrik_id','=', Auth::user()->pabrik_id)->get()),
+            'produk' => count(Auth::user()->pabrik->produk),
+            'gudang' => count(Auth::user()->pabrik->gudang),
+            'pembeli' => count(Pembeli::where('id_pabrik','=',$pabrik_id)->get()),
+            'total_stock' => Stock_produk::where('id_gudang', $pabrik_id )->sum('jumlah'),
+            'transaksi' => Transaksi::where('id_pabrik', $pabrik_id)->count()
         ]);
     }
     public function tanggal(Request $request, Transaksi $transaksi)

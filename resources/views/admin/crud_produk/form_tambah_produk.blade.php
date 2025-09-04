@@ -37,6 +37,7 @@
                                 <input type="text" id="harga_jual_display" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 py-3 text-sm border-gray-300 rounded-lg" placeholder="0" inputmode="numeric" value="{{ old('harga_jual') ? number_format(old('harga_jual'), 0, ',', '.') : '' }}">
                                 <!-- hidden numeric input yang dikirim ke server -->
                                 <input type="hidden" name="harga_jual" id="harga_jual" value="{{ old('harga_jual') ?? '' }}">
+
                             </div>
                             @error('harga_jual')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -58,6 +59,24 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <!-- Script khusus input harga -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hargaInput = document.getElementById('harga');
+
+        if (hargaInput) {
+            hargaInput.addEventListener('input', function () {
+                let value = this.value.replace(/\D/g, ''); // hanya angka
+                this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
+            });
+
+            hargaInput.form.addEventListener('submit', function () {
+                hargaInput.value = hargaInput.value.replace(/\./g, '');
+            });
+        }
+    });
+</script>
 
                         <!-- Deskripsi Input -->
                         <div class="transform transition-all duration-300 animate-fadeIn col-span-2" style="animation-delay: 300ms">

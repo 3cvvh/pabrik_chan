@@ -51,4 +51,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function gudang():BelongsTo
+    {
+        return $this->belongsTo(gudang::class,'gudang_id');
+    }
 }

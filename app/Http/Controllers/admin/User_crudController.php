@@ -76,7 +76,7 @@ class User_crudController extends Controller
             'alamat' => 'required|string|max:255',
             'pabrik_id' => 'required|exists:pabriks,id',
             'role_id' => 'required|exists:roles,id',
-            'password' => 'required|string|min:5|confirmed',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         User::create([
@@ -137,7 +137,7 @@ class User_crudController extends Controller
             'alamat' => 'required',
             'pabrik_id' => 'required|exists:pabriks,id',
             'role_id' => 'required|exists:roles,id',
-            'password' => 'nullable|string|min:6|confirmed',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
         // Update password jika diisi
         if ($request->filled('password')) {

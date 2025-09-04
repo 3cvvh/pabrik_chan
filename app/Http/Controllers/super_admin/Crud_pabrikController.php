@@ -14,6 +14,7 @@ class Crud_pabrikController extends Controller
      */
     public function index()
     {
+        
         $pabrik = pabrik::all();
         return view('super_admin.crud_pabrik.pabrik', [
             'judul' => 'Pabrik',

@@ -195,7 +195,7 @@ class CrudProdukController extends Controller
             'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.svg"'
         ]);
     }
-
+    
     public function qrView(produk $produk)
     {
          $produk = Produk::find($produk->id);
