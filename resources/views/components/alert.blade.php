@@ -3,7 +3,7 @@
         icon: 'success',
         title: 'Berhasil!',
         text: '{{ session('berhasil') }}',
-        timer: 1500,
+        timer: 15000,
         showConfirmButton: false
     });
 @endif
@@ -12,7 +12,7 @@
         icon: 'error',
         title: 'gagal!',
         text: '{{ session('gagal') }}',
-        timer: 1500,
+        timer: 15000,
         showConfirmButton: false
     });
 @endif
@@ -21,7 +21,7 @@
         icon: 'warning',
         title: 'gagal!',
         text: '{{ session('warning') }}',
-        timer: 1500,
+        timer: 15000,
         showConfirmButton: false
     });
 @endif
