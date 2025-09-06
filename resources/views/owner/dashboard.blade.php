@@ -15,41 +15,6 @@
         </div>
     </div>
 
-    <!-- NEW: Pendapatan Bersih summary -->
-    <div class="max-w-5xl mx-auto mt-6 px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-3">
-                <div class="bg-white rounded-2xl shadow p-6 border border-blue-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700">Total Pendapatan Bersih</h3>
-                            <p class="text-sm text-gray-500">Dari semua produk (filter: transaksi selesai)</p>
-                        </div>
-                        <div class="text-2xl font-extrabold text-green-600">
-                            Rp {{ number_format($totalNet ?? 0,2,',','.') }}
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <h4 class="font-medium text-gray-700">Per Produk</h4>
-                        <div class="mt-3 space-y-2 max-h-48 overflow-y-auto pr-2">
-                            @if(!empty($productNets) && $productNets->count() > 0)
-                                @foreach($productNets as $p)
-                                    <div class="flex justify-between items-center bg-gray-50 rounded p-3 border">
-                                        <div class="text-gray-700">{{ $p->nama }}</div>
-                                        <div class="text-sm font-semibold text-gray-800">Rp {{ number_format($p->net ?? 0,2,',','.') }}</div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="text-sm text-gray-500">Belum ada pendapatan tercatat.</div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END NEW -->
 
     <!-- Main Content -->
     <div class="max-w-5xl mx-auto mt-12 bg-white rounded-2xl shadow-2xl p-10 border border-blue-100">

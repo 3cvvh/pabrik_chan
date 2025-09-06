@@ -87,6 +87,16 @@
                             <div class="text-sm text-gray-500">Belum ada pendapatan tercatat.</div>
                         @endif
                     </div>
+
+                    {{-- ADDED: Chart canvas for product profits --}}
+                    @if(!empty($productNets) && $productNets->count() > 0)
+                        <div class="mt-6 bg-white rounded p-4 border">
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Grafik Keuntungan per Produk</h4>
+                            <div class="w-full overflow-x-auto">
+                                <canvas id="profitChart" style="max-height:300px;"></canvas>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -94,4 +104,58 @@
 
     </div>
 </div>
+
+{{-- ADDED: Chart.js and rendering script (only when product data exists) --}}
+@if(!empty($productNets) && $productNets->count() > 0)
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script>
+        (function(){
+            const labels = {!! json_encode($productNets->pluck('nama')) !!};
+            const dataValues = {!! json_encode($productNets->pluck('net')) !!};
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const canvas = document.getElementById('profitChart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Keuntungan (IDR)',
+                            data: dataValues,
+                            backgroundColor: 'rgba(16,185,129,0.6)',
+                            borderColor: 'rgba(16,185,129,1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const v = context.parsed.y ?? context.parsed;
+                                        return 'Keuntungan: ' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v);
+                                    }
+                                }
+                            },
+                            legend: { display: false }
+                        }
+                    }
+                });
+            });
+        })();
+    </script>
+@endif
 @endsection
