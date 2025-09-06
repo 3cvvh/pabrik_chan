@@ -166,14 +166,6 @@ input[type="checkbox"]:checked {
         }
     });
 }
-@if(session('warning'))
-    Swal.fire({
-        icon: 'error',
-        title: 'gagal!',
-        text: '{{ session('warning') }}',
-        timer: 1500,
-        showConfirmButton: false
-    });
-@endif
+<x-alert></x-alert>
 </script>
 @endsection

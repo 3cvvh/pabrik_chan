@@ -104,7 +104,7 @@ public function store(Request $request)
         }
     }
 
-    // lakukan pembuatan transaksi dan pengurangan stok secara atomik
+
     try {
         FacadesDB::transaction(function () use ($request, $requested, &$transaksi) {
             // buat transaksi
@@ -120,7 +120,7 @@ public function store(Request $request)
             $total_harga = 0;
 
             foreach ($requested as $produk_id => $jumlah) {
-                $produk = produk::find($produk_id);
+                $produk = produk::findOrfail($produk_id);
                 if (! $produk) {
                     throw new \Exception('Produk tidak ditemukan: '.$produk_id);
                 }
@@ -157,6 +157,7 @@ public function store(Request $request)
                 if ($remaining > 0) {
                     // seharusnya tidak terjadi karena cek sebelumnya, tapi aman untuk rollback
                     throw new \Exception('Stok tidak mencukupi saat pengurangan untuk produk id: '.$produk_id);
+                    session()->flash('warning', 'Stok tidak mencukupi saat pengurangan untuk produk id: '.$produk_id);
                 }
             }
 

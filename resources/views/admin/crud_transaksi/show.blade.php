@@ -111,7 +111,7 @@
                 </svg>
                 Detail Produk
             </h3>
-            @if(Auth::user()->role_id == 1)
+            @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed')
             @if(!$data_detail->isEmpty())
             <button type="button" onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,7 +180,7 @@
                          alt="{{ $data->produk->nama }}"
                          class="w-full h-48 object-cover">
                 @endif
-                @if(Auth::user()->role_id == 1)
+                @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed')
                 <form action="{{ route('admin-hapus',$data->id) }}" method="POST" class="absolute top-2 right-2" onsubmit="return confirmHapusProduk(event, this)">
                     @csrf
                     <input type="hidden" name="id_tran" value="{{ $data->transaksi->id }}">
@@ -190,7 +190,7 @@
                         </svg>
                     </button>
                 </form>
-                                @endif
+                @endif
                 <div class="p-6">
                     <h4 class="font-semibold text-lg text-gray-800 mb-2">{{ $data->produk->nama }}</h4>
                     <div class="flex justify-between items-center">

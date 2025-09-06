@@ -71,7 +71,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->nama }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->alamat }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->no_telepon }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->keterangan }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->keterangan ? $g->keterangan : 'gak punya keterangan' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @php
                                     $statusClasses = [
