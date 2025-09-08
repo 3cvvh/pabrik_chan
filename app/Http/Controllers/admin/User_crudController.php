@@ -93,7 +93,7 @@ class User_crudController extends Controller
             $user->save();
         }
 
-        return redirect()->route('crud_user.index')->with('success', 'User berhasil ditambahkan');
+        return redirect()->route('crud_user.index')->with('berhasil', 'User berhasil ditambahkan');
     }
 
 
@@ -150,7 +150,7 @@ class User_crudController extends Controller
             $crud_user->save();
         }
         $crud_user->update($validatedData);
-        return redirect()->route('crud_user.index')->with('success', 'user berhasil di perbarui');
+        return redirect()->route('crud_user.index')->with('berhasil', 'user berhasil di perbarui');
     }
 
     /**
@@ -160,6 +160,6 @@ class User_crudController extends Controller
     {
         $crud_user = User::findOrFail($id);
         $crud_user->delete();
-        return redirect()->route('crud_user.index')->with('success', 'user berhasil di hapus');
+        return redirect()->route('crud_user.index')->with('berhasil', 'user berhasil di hapus');
     }
 }

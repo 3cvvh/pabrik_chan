@@ -1,36 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <title>Scan Barcode</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-50 -100 flex justify-center items-center min-h-screen">
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 flex justify-center items-center min-h-screen p-4">
 
-    <div class="bg-white shadow-lg rounded-xl p-6 text-center w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-4">Scan Barcode</h1>
+    <div class="bg-white shadow-2xl rounded-2xl p-6 md:p-8 text-center w-full max-w-lg animate-fadeIn">
+        <!-- Judul -->
+        <h1 class="text-2xl md:text-3xl font-extrabold mb-4 text-gray-800">📷 Scan Barcode</h1>
 
-        <!-- Bungkus scanner -->
-        <div class="mx-auto max-w-[350px]">
-            <div id="reader" class="rounded-lg overflow-hidden"></div>
+        <!-- Scanner Wrapper -->
+        <div class="mx-auto w-full max-w-[360px] aspect-square">
+            <div id="reader" class="rounded-xl overflow-hidden border border-gray-200 shadow"></div>
         </div>
 
-        <p class="mt-4 text-gray-600 text-base">
-            Pindai kode QR produk untuk mendapatkan informasi.
+        <!-- Deskripsi -->
+        <p class="mt-6 text-gray-600 text-sm md:text-base">
+            Pindai kode QR produk untuk mendapatkan informasi secara langsung.
         </p>
-         <div class="flex gap-4">
-        <a href="{{ route('produk.index') }}" 
-        class="mt-6 inline-block bg-blue-400 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 hover:shadow transition-all duration-200">Kembali
-    </a>
-    </div>
+
+        <!-- Tombol Aksi -->
+        <div class="mt-6 flex justify-center">
+            <a href="{{ route('produk.index') }}" 
+               class="px-6 py-2.5 bg-blue-500 text-white text-sm md:text-base rounded-lg shadow hover:bg-blue-600 hover:shadow-lg transition duration-200">
+                ⬅️ Kembali
+            </a>
+        </div>
     </div>
 
+    <!-- Scanner Script -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         function onScanSuccess(decodedText, decodedResult) {
             console.log(`Code matched = ${decodedText}`, decodedResult);
 
-            // Kirim ke Laravel
             fetch("{{ route('orang_gudang.produk.scanner') }}", {
                 method: "POST",
                 headers: {
@@ -50,7 +55,7 @@
         }
 
         function onScanFailure(error) {
-            // console.warn(Code scan error = ${error});
+            // error scanning → diamkan agar tidak spam console
         }
 
         let html5QrcodeScanner = new Html5QrcodeScanner(
@@ -59,5 +64,15 @@
         );
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     </script>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
 </body>
 </html>

@@ -67,7 +67,7 @@ class Crud_pembeliController extends Controller
             'no_telepon' => ['required','min:9']
         ]);
         pembeli::create($datavalid);
-        return redirect('/dashboard/admin/crud_pembeli')->with('tambah','berhasil menambahkan data');
+        return redirect('/dashboard/admin/crud_pembeli')->with('berhasil','berhasil menambahkan data');
     }
 
     /**
@@ -107,7 +107,7 @@ class Crud_pembeliController extends Controller
         ]);
         pembeli::where('id', $request->id)->update($dataedit);
 
-        return redirect('/dashboard/admin/crud_pembeli')->with('edit','berhasil mengedit data');
+        return redirect('/dashboard/admin/crud_pembeli')->with('berhasil','berhasil mengedit data');
     }
 
     /**
@@ -117,6 +117,6 @@ class Crud_pembeliController extends Controller
     {
         $pabrik =  pembeli::find($id);
         pembeli::destroy($request->id);
-        return redirect('/dashboard/admin/crud_pembeli')->with('hapus', 'Data berhasil dihapus');
+        return redirect('/dashboard/admin/crud_pembeli')->with('berhasil', 'Data berhasil dihapus');
     }
 }

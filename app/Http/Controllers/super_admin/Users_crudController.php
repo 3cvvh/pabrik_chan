@@ -73,7 +73,7 @@ class Users_crudController extends Controller
         ]);
         $data['role_id'] = 1;
         User::create($data);
-        return redirect('/dashboard/super_admin/crud_users')->with('tambah','berhasil menambah data');
+        return redirect('/dashboard/super_admin/crud_users')->with('berhasil','berhasil menambah data');
     }
 
     /**
@@ -117,7 +117,7 @@ class Users_crudController extends Controller
             $databaru['password'] = Hash::make($request->password);
         }
         User::where('id', '=',$id)->update($databaru);
-        return redirect()->route('crud_users.index')->with('edit','berhasil mengedit data');
+        return redirect()->route('crud_users.index')->with('berhasil','berhasil mengedit data');
     }
 
     /**
@@ -126,6 +126,6 @@ class Users_crudController extends Controller
     public function destroy($id)
     {
         User::destroy($id);
-        return redirect('/dashboard/super_admin/crud_users')->with('hapus','berhasil menghapus data user');
+        return redirect('/dashboard/super_admin/crud_users')->with('berhasil','berhasil menghapus data user');
     }
 }

@@ -229,7 +229,7 @@ public function store(Request $request)
     $transaksi->id_pembeli = $request->id_pembeli;
     $transaksi->keterangan = $request->keterangan;
     $transaksi->save();
-    return redirect()->route('crud_transaksi.index')->with('success','berhasil mengedit transaksi');
+    return redirect()->route('crud_transaksi.index')->with('berhasil','berhasil mengedit transaksi');
 
     }
 
@@ -239,6 +239,6 @@ public function store(Request $request)
     public function destroy($id)
     {
         transaksi::destroy($id);
-        return redirect(route('crud_transaksi.index'))->with('success','berhasil menghapus data');
+        return redirect(route('crud_transaksi.index'))->with('berhasil','berhasil menghapus data');
     }
 }

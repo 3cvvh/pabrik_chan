@@ -47,7 +47,7 @@ class Crud_pabrikController extends Controller
             $datavalid['gambar'] = $request->file('gambar')->store('pabriks-img');
         }
         pabrik::create($datavalid);
-        return redirect('/dashboard/super_admin/crud_pabrik')->with('tambah','berhasil menambahkan data');
+        return redirect('/dashboard/super_admin/crud_pabrik')->with('berhasil','berhasil menambahkan data');
     }
 
     /**

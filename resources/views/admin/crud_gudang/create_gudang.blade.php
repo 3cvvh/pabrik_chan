@@ -1,113 +1,106 @@
 @extends('layout.main')
 @section('content')
-<x-navbar></x-navbar>
 
-<div class="max-w-3xl mx-auto p-4">
-    <div class="bg-white border rounded-lg shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
-        <div class="border-b p-4 bg-gradient-to-r from-gray-50 to-white">
-            <h2 class="font-semibold text-xl bg-clip-text text-transparent bg-gradient-to-r from-gray-700 to-gray-900">
-                Tambah Gudang
-            </h2>
+<div class="min-h-screen bg-gray-100 py-8 px-2 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto animate-fadeIn">
+        <!-- Card Header with animation -->
+        <div class="mb-6 transform transition-all duration-500 animate-slideDown">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900">Tambah Gudang</h2>
+            <p class="mt-1 text-sm md:text-base text-gray-600">Silahkan isi data gudang dengan lengkap</p>
         </div>
-        <form action="/dashboard/admin/crud_gudang" method="POST" class="p-6">
-            @csrf
-            <div class="space-y-4">
-                <div class="group">
-                    <label for="id_pabrik" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Pabrik</label>
-                    <input name="id_pabrik" id="id_pabrik"
-                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"
-                        value="{{ $pabrik->name }}" readonly>
-        <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
-                </div>
-                <div class="group">
-                    <label for="nama" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Nama Gudang</label>
-                    <input type="text" name="nama" id="nama"
-                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400" required>
-                </div>
-                <div class="group">
-                    <label for="alamat" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Alamat</label>
-                    <input type="text" name="alamat" id="alamat"
-                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400" required>
-                </div>
-                <div class="group">
-                    <label for="no_telepon" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">No Telepon</label>
-                    <input type="text" name="no_telepon" id="no_telepon"
-                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400">
-                </div>
-                <div class="group">
-                    <label for="keterangan" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Keterangan</label>
-                    <textarea name="keterangan" id="keterangan" rows="2"
-                        class="w-full px-3 py-2 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"></textarea>
-                </div>
+
+        <!-- Main Card with hover effect and animation -->
+        <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
+            <div class="p-4 sm:p-8">
+                <form id="create-form" action="/dashboard/admin/crud_gudang" method="POST" class="space-y-8">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 100ms">
+                            <label for="id_pabrik" class="block text-sm md:text-base font-semibold text-gray-700">Pabrik</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input name="id_pabrik" id="id_pabrik" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" value="{{ $pabrik->name }}" readonly>
+                                <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
+                            </div>
+                        </div>
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 200ms">
+                            <label for="nama" class="block text-sm md:text-base font-semibold text-gray-700">Nama Gudang</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="text" name="nama" id="nama" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" required>
+                            </div>
+                            @error('nama')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 300ms">
+                            <label for="alamat" class="block text-sm md:text-base font-semibold text-gray-700">Alamat</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="text" name="alamat" id="alamat" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" required>
+                            </div>
+                            @error('alamat')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 400ms">
+                            <label for="no_telepon" class="block text-sm md:text-base font-semibold text-gray-700">No Telepon</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="text" name="no_telepon" id="no_telepon" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg">
+                            </div>
+                            @error('no_telepon')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2" style="animation-delay: 500ms">
+                            <label for="keterangan" class="block text-sm md:text-base font-semibold text-gray-700">Keterangan</label>
+                            <div class="mt-1">
+                                <textarea name="keterangan" id="keterangan" rows="3" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg"></textarea>
+                            </div>
+                            @error('keterangan')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 pt-6 border-t animate-fadeIn" style="animation-delay: 700ms">
+                        <a href="/dashboard/admin/crud_gudang" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm text-sm md:text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Kembali
+                        </a>
+                        <button onclick="confirm(this)" type="button" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm md:text-base font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Simpan Gudang
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <a href="/dashboard/admin/crud_gudang"
-                    class="group px-4 py-2 border rounded-lg hover:bg-gray-50 active:bg-gray-100
-                    transition-all duration-200 relative overflow-hidden">
-                    <span class="relative z-10 font-medium">Batal</span>
-                    <div class="absolute inset-0 h-full w-0 bg-gray-100 transition-all duration-300
-                        group-hover:w-full"></div>
-                </a>
-                <button type="button"
-                    onclick="confirm(this)"
-                    class="relative px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg
-                    transition-all duration-200 hover:shadow-lg hover:from-blue-600 hover:to-blue-700
-                    active:scale-95 disabled:opacity-75 disabled:cursor-wait"
-                    :disabled="loading">
-                    <span class="relative z-10 font-medium" x-show="!loading">Simpan</span>
-                    <span class="relative z-10 flex items-center" x-show="loading" x-cloak>
-                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Menyimpan...
-                    </span>
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <style>
-.animate-fade-in {
-    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-[x-cloak] { display: none !important; }
-
-input:focus, select:focus, textarea:focus {
-    animation: input-pop 0.2s ease-out;
-}
-
-@keyframes input-pop {
-    50% { transform: scale(1.02); }
-}
-
-input[type="checkbox"] {
-    transition: all 0.2s;
-}
-input[type="checkbox"]:checked {
-    animation: checkbox-pop 0.3s ease-out;
-}
-
-@keyframes checkbox-pop {
-    50% { transform: scale(1.2); }
-}
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideDown {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+    .animate-slideDown {
+        animation: slideDown 0.6s ease-out forwards;
+    }
+    .animate-slideUp {
+        animation: slideUp 0.6s ease-out forwards;
+    }
 </style>
 
-@push('scripts')
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-@endpush
 <script>
 function confirm(button) {
     Swal.fire({
@@ -115,13 +108,13 @@ function confirm(button) {
         text: "akan menambahkan data gudang",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
         confirmButtonText: 'Ya, tambah!',
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
-            button.closest('form').submit();
+            document.getElementById('create-form').submit();
         }
     });
 }

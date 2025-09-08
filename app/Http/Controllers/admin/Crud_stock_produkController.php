@@ -155,6 +155,6 @@ class Crud_stock_produkController extends Controller
     {
         $data = Stock_produk::findOrFail($id);
         $data->delete();
-        return redirect()->route('Stock_produk.index')->with('hapus','berhasil menghapus data');
+        return redirect()->route('Stock_produk.index')->with('berhasil','berhasil menghapus data');
     }
 }

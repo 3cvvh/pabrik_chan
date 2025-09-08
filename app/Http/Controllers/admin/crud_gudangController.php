@@ -69,7 +69,7 @@ class Crud_gudangController extends Controller
 
         gudang::create($validated);
 
-        return redirect('/dashboard/admin/crud_gudang')->with('tambah', 'Gudang berhasil ditambahkan');
+        return redirect('/dashboard/admin/crud_gudang')->with('berhasil', 'Gudang berhasil ditambahkan');
     }
 
     /**
@@ -113,7 +113,7 @@ class Crud_gudangController extends Controller
 
         gudang::where('id', $id)->update($validated);
 
-        return redirect('/dashboard/admin/crud_gudang')->with('edit', 'Gudang berhasil diupdate');
+        return redirect('/dashboard/admin/crud_gudang')->with('berhasil', 'Gudang berhasil diupdate');
     }
 
     /**
@@ -123,7 +123,7 @@ class Crud_gudangController extends Controller
     {
         $gudang = gudang::find($id);
         gudang::destroy($id);
-        return redirect('/dashboard/admin/crud_gudang')->with('hapus', 'Gudang berhasil dihapus');
+        return redirect('/dashboard/admin/crud_gudang')->with('berhasil', 'Gudang berhasil dihapus');
     }
 }
 

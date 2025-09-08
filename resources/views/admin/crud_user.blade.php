@@ -185,5 +185,8 @@ function confirmDelete(button) {
 
 @endif
 </script>
+<script>
+<x-alert></x-alert>
+</script>
 
 @endsection

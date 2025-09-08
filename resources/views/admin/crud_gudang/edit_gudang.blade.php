@@ -1,45 +1,138 @@
 @extends('layout.main')
 @section('content')
-<x-navbar></x-navbar>
 
-<div class="container mx-auto mt-8 px-4">
-    <h2 class="text-2xl font-bold mb-4">Edit Gudang</h2>
-    <form action="/dashboard/admin/crud_gudang/{{ $gudang->id }}" method="POST" class="bg-white p-6 rounded shadow-md max-w-lg">
-        @csrf
-        @method('PUT')
-        <div class="mb-4">
-                               <label for="id_pabrik" class="block mb-1 text-gray-700 group-hover:text-gray-900 transition-colors">Pabrik</label>
-                    <input name="id_pabrik" id="id_pabrik"
-                        class="w-full h-10 px-3 border rounded-md transition-all duration-200
-                        focus:ring-2 focus:ring-blue-100 focus:border-blue-400 hover:border-gray-400"
-                        value="{{ $pabrik->name }}" readonly>
-        <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
+
+<div class="min-h-screen bg-gray-100 py-8 px-2 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto animate-fadeIn">
+        <!-- Card Header with animation -->
+        <div class="mb-6 transform transition-all duration-500 animate-slideDown">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900">Edit Gudang</h2>
+            <p class="mt-1 text-sm md:text-base text-gray-600">Silahkan isi data gudang dengan lengkap</p>
         </div>
-        <div class="mb-4">
-            <label for="nama" class="block font-semibold mb-1">Nama Gudang</label>
-            <input type="text" name="nama" id="nama" class="w-full border border-gray-300 rounded px-3 py-2" value="{{ $gudang->nama }}" required>
+
+        <!-- Main Card with hover effect and animation -->
+        <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl animate-slideUp">
+            <div class="p-4 sm:p-8">
+                <form id="edit-form" action="/dashboard/admin/crud_gudang/{{ $gudang->id }}" method="POST" class="space-y-8">
+                    @csrf
+                    @method('PUT')
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 100ms">
+                            <label for="id_pabrik" class="block text-sm md:text-base font-semibold text-gray-700">Pabrik</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input name="id_pabrik" id="id_pabrik" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" value="{{ $pabrik->name }}" readonly>
+                                <input type="hidden" name="id_pabrik" value="{{ $pabrik->id }}">
+                            </div>
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 200ms">
+                            <label for="nama" class="block text-sm md:text-base font-semibold text-gray-700">Nama Gudang</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="text" name="nama" id="nama" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" value="{{ $gudang->nama }}" required>
+                            </div>
+                            @error('nama')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 300ms">
+                            <label for="alamat" class="block text-sm md:text-base font-semibold text-gray-700">Alamat</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="text" name="alamat" id="alamat" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" value="{{ $gudang->alamat }}" required>
+                            </div>
+                            @error('alamat')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 400ms">
+                            <label for="no_telepon" class="block text-sm md:text-base font-semibold text-gray-700">No Telepon</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="text" name="no_telepon" id="no_telepon" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" value="{{ $gudang->no_telepon }}">
+                            </div>
+                            @error('no_telepon')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2" style="animation-delay: 500ms">
+                            <label for="keterangan" class="block text-sm md:text-base font-semibold text-gray-700">Keterangan</label>
+                            <div class="mt-1">
+                                <textarea name="keterangan" id="keterangan" rows="3" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg">{{ $gudang->keterangan }}</textarea>
+                            </div>
+                            @error('keterangan')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
+                            <label for="status" class="block text-sm md:text-base font-semibold text-gray-700">Status</label>
+                            <div class="mt-1">
+                                <select name="status" id="status" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg">
+                                    <option value="aktif" {{ $gudang->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="nonaktif" {{ $gudang->status == 'nonaktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                </select>
+                            </div>
+                            @error('status')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 pt-6 border-t animate-fadeIn" style="animation-delay: 700ms">
+                        <a href="/dashboard/admin/crud_gudang" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm text-sm md:text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Kembali
+                        </a>
+                        <button onclick="confirmUpdate()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm md:text-base font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Update Gudang
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="mb-4">
-            <label for="alamat" class="block font-semibold mb-1">Alamat</label>
-            <input type="text" name="alamat" id="alamat" class="w-full border border-gray-300 rounded px-3 py-2" value="{{ $gudang->alamat }}" required>
-        </div>
-        <div class="mb-4">
-            <label for="no_telepon" class="block font-semibold mb-1">No Telepon</label>
-            <input type="text" name="no_telepon" id="no_telepon" class="w-full border border-gray-300 rounded px-3 py-2" value="{{ $gudang->no_telepon }}">
-        </div>
-        <div class="mb-4">
-            <label for="keterangan" class="block font-semibold mb-1">Keterangan</label>
-            <textarea name="keterangan" id="keterangan" class="w-full border border-gray-300 rounded px-3 py-2">{{ $gudang->keterangan }}</textarea>
-        </div>
-        <div class="mb-4">
-            <label for="status" class="block font-semibold mb-1">Status</label>
-            <select name="status" id="status" class="w-full border border-gray-300 rounded px-3 py-2">
-                <option value="aktif" {{ $gudang->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="nonaktif" {{ $gudang->status == 'nonaktif' ? 'selected' : '' }}>Tidak Aktif</option>
-            </select>
-        </div>
-       <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Update</button>
-        <a href="/dashboard/admin/crud_gudang" class="ml-2 text-gray-600 hover:underline">Batal</a>
-    </form>
+    </div>
 </div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideDown {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+    .animate-slideDown {
+        animation: slideDown 0.6s ease-out forwards;
+    }
+    .animate-slideUp {
+        animation: slideUp 0.6s ease-out forwards;
+    }
+</style>
+
+<script>
+function confirmUpdate() {
+    Swal.fire({
+        title: 'Apakah anda yakin?',
+        text: "Anda akan memperbarui data gudang",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Perbarui!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('edit-form').submit();
+        }
+    });
+}
+</script>
 @endsection

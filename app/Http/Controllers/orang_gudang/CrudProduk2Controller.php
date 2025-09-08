@@ -111,7 +111,7 @@ class CrudProduk2Controller extends Controller
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
         produk::where('id','=',$produk->id)->update($valid);
-        return redirect()->route('produk.index')->with('edit','berhasil mengedit data');
+        return redirect()->route('produk.index')->with('berhasil','berhasil mengedit data');
     }
 
     /**
@@ -124,7 +124,7 @@ class CrudProduk2Controller extends Controller
             Storage::delete($produk->gambar);
         }
         ModelsProduk::destroy($produk->id);
-        return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
+        return redirect()->route('produk.index')->with('berhasil','berhasil menghapus data');
     }
 
         public function scanner()
@@ -142,7 +142,7 @@ class CrudProduk2Controller extends Controller
 
     if ($produk) {
         return response()->json([
-            'status' => 'success',
+            'status' => 'berhasil',
             'data' => [
                 'id' => $produk->id,
 
@@ -150,7 +150,7 @@ class CrudProduk2Controller extends Controller
         ]);
     } else {
         return response()->json([
-            'status' => 'error',
+            'status' => 'gagal',
             'message' => 'Produk tidak ditemukan'
         ]);
     }

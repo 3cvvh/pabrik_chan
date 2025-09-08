@@ -123,7 +123,7 @@ class CrudProdukController extends Controller
         Storage::disk('public')->put($fileName, $qrCode);
         $produk->update(['qr_code' => $fileName]);
 
-        return redirect()->route('produk.index')->with('edit','berhasil mengedit data');
+        return redirect()->route('produk.index')->with('berhasil','berhasil mengedit data');
     }
 
     /**
@@ -138,7 +138,7 @@ class CrudProdukController extends Controller
             Storage::delete($produk->qr_code);
         }
         ModelsProduk::destroy($produk->id);
-        return redirect()->route('produk.index')->with('hapus','berhasil menghapus data');
+        return redirect()->route('produk.index')->with('berhasil','berhasil menghapus data');
     }
 
     /**
@@ -180,7 +180,7 @@ class CrudProdukController extends Controller
         $produk = produk::where('id', $kodeProduk)->first();
 
         if (!$produk) {
-            return redirect()->back()->with('error', 'Produk tidak ditemukan!');
+            return redirect()->back()->with('gagal', 'Produk tidak ditemukan!');
         }
 
         // Redirect ke halaman detail produk
@@ -200,7 +200,7 @@ class CrudProdukController extends Controller
     {
          $produk = Produk::find($produk->id);
          if (!$produk) {
-             return redirect()->route('produk.index')->with('error', 'Produk tidak ditemukan');
+             return redirect()->route('produk.index')->with('gagal', 'Produk tidak ditemukan');
          }
      if($produk->id_pabrik != Auth::user()->pabrik_id){
             abort(404);
