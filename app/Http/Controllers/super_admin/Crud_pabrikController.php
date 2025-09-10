@@ -12,10 +12,36 @@ class Crud_pabrikController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        
-        $pabrik = pabrik::all();
+        // build base query
+        $query = pabrik::query()->latest();
+
+        // apply search filter (name or alamat)
+        if ($request->filled('search')) {
+            $q = $request->input('search');
+            $query->where(function($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('alamat', 'like', "%{$q}%");
+            });
+        }
+
+        // if AJAX or JSON requested, return JSON array for frontend
+        if ($request->wantsJson() || $request->ajax()) {
+            $items = $query->get()->map(function($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'alamat' => $p->alamat,
+                    'gambar' => $p->gambar, // storage path (controller returns raw path)
+                ];
+            });
+
+            return response()->json($items);
+        }
+
+        // normal page render
+        $pabrik = $query->get();
         return view('super_admin.crud_pabrik.pabrik', [
             'judul' => 'Pabrik',
             'pabrik' => $pabrik
