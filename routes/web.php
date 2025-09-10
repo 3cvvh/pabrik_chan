@@ -65,6 +65,7 @@ Route::middleware(['owner'])->group(function () {
     Route::get('/dashboard/owner/generate/{transaksi:id}',[AdminController::class, 'generateReport'])->name('owner.laporan');
     Route::resource('/dashboard/owner/transaksi',crud_transaksiController::class)->except(['create','store','destroy','edit','update']);
     Route::get('/dashboard/owner/dawgboard',[OwnerController::class, 'dashboard'])->name('owner.dash');
+    Route::get('/dashboard/owner/laporanbos',[OwnerController::class, 'laporanbos'])->name('owner.laporanbos');
 });
 //daftar route jika user sudah login sebagai super admin
 Route::middleware(['beatricekawaii'])->group(function () {

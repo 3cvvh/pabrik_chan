@@ -15,12 +15,12 @@ class Crud_pembeliController extends Controller
      */
     public function index(Request $request)
     {
-          $query = pembeli::with('pabrik')->where('id_pabrik',Auth::user()->pabrik_id);
+          $data = pembeli::with('pabrik')->where('id_pabrik',Auth::user()->pabrik_id);
 
         // Filter by search keyword
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $data->where(function($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
                   ->orWhere('alamat', 'like', "%$search%")
                   ->orWhere('no_telepon', 'like', "%$search%");
@@ -29,15 +29,14 @@ class Crud_pembeliController extends Controller
 
         // Filter by pabrik
         if ($request->filled('pabrik_filter')) {
-            $query->where('id_pabrik', $request->pabrik_filter);
+            $data->where('id_pabrik', $request->pabrik_filter);
         }
-
-        $pembeli = $query->get();
 
         return view('admin.crud_pembeli.pembeli',[
             'judul' => 'pembeli|page',
-            'pembeli' => $pembeli,
+            'data'  => $data->latest()->paginate(3),
             'pabrik' => pabrik::all()
+
         ]);
     }
 

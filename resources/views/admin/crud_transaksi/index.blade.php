@@ -65,7 +65,7 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($data as $index => $transaksi)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $transaksi->judul }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $transaksi->pembeli->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -113,6 +113,11 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <br>
+        <!-- Pagination -->
+        <div>
+         {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
 </div>

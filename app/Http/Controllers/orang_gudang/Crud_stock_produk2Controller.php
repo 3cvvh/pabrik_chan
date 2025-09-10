@@ -23,7 +23,7 @@ class Crud_stock_produk2Controller extends Controller
 
         return view('orang_gudang.crud_stock.index', [
             'judul' => 'crud|stock_produk',
-            'data' => $stock->get(),
+            'data' => $stock->latest()->paginate(3),
         ]);
     }
 

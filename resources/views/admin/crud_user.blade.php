@@ -64,7 +64,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($data as $index => $user)
                     <tr class="hover:bg-gray-50 transition-all duration-200">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
@@ -108,6 +108,9 @@
                 </tbody>
             </table>
         </div>
+        <br>
+        <!-- Pagination -->
+        {{ $data->links('pagination::tailwind') }}
     </div>
 </div>
 

@@ -15,12 +15,12 @@ class Crud_gudangController extends Controller
      */
     public function index(Request $request)
     {
-        $query = gudang::with(['pabrik'])->where('id_pabrik',Auth::getUser()->pabrik_id);
+        $data = gudang::with(['pabrik'])->where('id_pabrik',Auth::getUser()->pabrik_id);
 
         // Filter berdasarkan search (nama/alamat/no_telepon/keterangan)
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $data->where(function($q) use ($search) {
                 $q->where('nama', 'like', "%$search%")
                   ->orWhere('alamat', 'like', "%$search%")
                   ->orWhere('no_telepon', 'like', "%$search%")
@@ -29,11 +29,11 @@ class Crud_gudangController extends Controller
         }
 
         // Optional: urutkan terbaru
-        $gudang = $query->orderBy('id', 'desc')->get();
+        $gudang = $data->orderBy('id', 'desc')->paginate(3);
 
         return view('admin.crud_gudang.gudang',[
             'judul' => 'gudang|page',
-            'gudang' => $gudang,
+            'data' => $gudang,
             'pabrik' => pabrik::all()
         ]);
     }
