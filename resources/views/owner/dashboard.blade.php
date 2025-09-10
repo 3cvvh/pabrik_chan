@@ -7,7 +7,7 @@
     <x-navbar></x-navbar>
     <!-- Welcome Card -->
     <div class="flex justify-center mt-10">
-        <div class="bg-white rounded-2xl shadow-xl p-10 w-full max-w-lg text-center border border-blue-200">
+        <div class="bg-white rou    nded-2xl shadow-xl p-10 w-full max-w-lg text-center border border-blue-200">
             <h2 class="text-2xl font-bold text-blue-700 mb-3 tracking-wide">Welcome To Factory</h2>
             <p class="text-gray-600 mb-6 leading-relaxed">Terimakasih telah bergabung di Factory<br>Anda login menggunakan akun <span class="text-blue-600 font-semibold">owner</span></p>
             <a href="#" class="bg-blue-50 text-blue-700 font-semibold px-6 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 hover:shadow transition-all duration-200">Dashboard Owner</a>
@@ -22,6 +22,9 @@
             <div>
                 <h2 class="text-3xl font-extrabold text-gray-800 mb-1">Halaman Dashboard Owner</h2>
                 <p class="text-gray-500 text-base">History Data Transaksi Barang</p>
+            </div>
+            <div>
+                <a href="{{ route("owner.laporanbos") }}" target="_blank" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-blue-600 transition">Generate Semua Laporan</a>
             </div>
         </div>
         {{-- ...existing code... --}}
