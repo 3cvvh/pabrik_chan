@@ -64,9 +64,9 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($gudang as $index => $g)
+                        @forelse($data as $index => $g)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $g->pabrik->name ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->nama }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $g->alamat }}</td>
@@ -114,6 +114,9 @@
                 </table>
             </div>
         </div>
+        <br>
+        <!-- Pagination -->
+        {{ $data->links('pagination::tailwind') }}
     </div>
 </div>
 

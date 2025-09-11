@@ -44,7 +44,7 @@ class User_crudController extends Controller
     }
         return view('admin.crud_user', [
             'judul' => 'crud user',
-            'data' => $data->get(),
+            'data' => $data->latest()->paginate(3),
             'role' => role::where('id','!=',4)->get(),
         ]);
     }
