@@ -8,6 +8,7 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Detail_transaksi;
 use Illuminate\Support\Facades\Auth;
 
 class OwnerController extends Controller
@@ -52,6 +53,12 @@ $productNets = DB::table('detail_transaksis')
             'productNets' => $productNets,
             'totalNet' => $totalNet,
         ]);
+}
+public function laporanbos(){
+    return view('owner.laporanbos',[
+        'judul' => 'owner|laporanbos',
+        'data' => Transaksi::where('id_pabrik',Auth::user()->pabrik_id)->get(),
+    ]);
 }
 }
 
