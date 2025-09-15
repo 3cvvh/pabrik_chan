@@ -106,16 +106,16 @@
 
             {{-- === Owner === --}}
             @if(auth()->user()->role_id === 3)
-                <a href="{{ route('owner.index') }}"
-                   class="flex items-center px-4 py-2 rounded-lg transition duration-200
-                   {{ request()->is('dashboard/owner') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
-                   <i class="fas fa-chart-bar mr-2"></i>Data Laporan
-                </a>
-                <a href="{{ route('owner.dash') }}"
-                   class="flex items-center px-4 py-2 rounded-lg transition duration-200
-                   {{ request()->is('dashboard/owner/dash*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
-                   <i class="fas fa-home mr-2"></i>Dashboard
-                </a>
+                  <a href="{{ route('owner.index') }}"
+                class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
+                {{ request()->is('dashboard/owner') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 d' }}">
+                <i class="fas fa-chart-bar w-5 h-5 mr-1"></i>data laporan
+            </a>
+            <a href='{{ route('owner.dash') }}'
+                class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
+                {{ request()->is('dashboard/owner/dawgboard') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 hover:text-white' }}">
+                <i class="fa fa-home w-5 h-5 mr-1"></i>dashboard
+            </a>
             @endif
 
             {{-- Logout --}}
@@ -222,16 +222,16 @@
 
                 {{-- === Owner === --}}
                 @if(auth()->user()->role_id === 3)
-                    <a href="{{ route('owner.index') }}"
-                        class="flex items-center px-4 py-2 rounded-lg transition duration-200
-                        {{ request()->is('dashboard/owner') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
-                        <i class="fas fa-chart-bar mr-2"></i>Data Laporan
-                    </a>
-                    <a href="{{ route('owner.dash') }}"
-                        class="flex items-center px-4 py-2 rounded-lg transition duration-200
-                        {{ request()->is('dashboard/owner/dash*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
-                        <i class="fas fa-home mr-2"></i>Dashboard
-                    </a>
+                       <a href="{{ route('owner.index') }}"
+                class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
+                {{ request()->is('dashboard/owner') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 d' }}">
+                <i class="fas fa-chart-bar w-5 h-5 mr-1"></i>data laporan
+            </a>
+            <a href='{{ route('owner.dash') }}'
+                class="flex items-center font-medium px-3 py-2 rounded-lg transition-all duration-200
+                {{ request()->is('dashboard/owner/dawgboard') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600 hover:text-white' }}">
+                <i class="fa fa-home w-5 h-5 mr-1"></i>dashboard
+            </a>
                 @endif
 
                 {{-- Logout Mobile --}}
