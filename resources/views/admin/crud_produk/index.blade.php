@@ -38,9 +38,9 @@
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <form onsubmit="return false" id="search-form" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Produk</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Produks</label>
                     <div class="relative">
                         <input autocomplete="off" name="search" id="search" type="text"
                             value="{{ request()->get('search') }}"
@@ -51,9 +51,6 @@
                         </svg>
                     </div>
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
-                    Cari
-                </button>
             </form>
         </div>
 
@@ -73,10 +70,10 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                         </tr>
                      </thead>
-                     <tbody class="bg-white divide-y divide-gray-200">
+                     <tbody id="produk" class="bg-white divide-y divide-gray-200">
                          @foreach ($data as $index => $produk)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
                             <td class="px-6 py-4 max-w-xs truncate whitespace-nowrap text-sm font-medium text-gray-800" title="{{ $produk->nama }}">{{ $produk->nama }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
                             @if($produk->gambar)
@@ -146,9 +143,6 @@
                 </table>
             </div>
         </div>
-        <br>
-        <!-- Pagination -->
-        {{ $data->links('pagination::tailwind') }}
     </div>
 </div>
 
@@ -175,7 +169,6 @@
         </div>
     </div>
 </div>
-
 <script>
 function confirmDelete(button) {
     Swal.fire({
@@ -192,6 +185,10 @@ function confirmDelete(button) {
             button.closest('form').submit();
         }
     });
+}
+
+function closeDetail() {
+    document.getElementById('detailModal').classList.add('hidden');
 }
 
 @if(session('hapus'))
@@ -213,61 +210,95 @@ function confirmDelete(button) {
         showConfirmButton: false
     });
 @endif
-
-function showDetail(id) {
-    // Fetch transaction details using AJAX
-    fetch(`/dashboard/admin/crud_produk/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            const content = document.getElementById('detailContent');
-            content.innerHTML = `
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div class="font-medium text-gray-500">Pabrik</div>
-                    <div>${data.pabrik.name}</div>
-                    <div class="font-medium text-gray-500">Pembeli</div>
-                    <div>${data.pembeli.name}</div>
-                    <div class="font-medium text-gray-500">Jumlah</div>
-                    <div>${data.jumlah}</div>
-                    <div class="font-medium text-gray-500">Total Harga</div>
-                    <div>Rp ${data.total_harga.toLocaleString('id-ID')}</div>
-                    <div class="font-medium text-gray-500">Status</div>
-                    <div>${data.status}</div>
-                    <div class="font-medium text-gray-500">Tanggal</div>
-                    <div>${new Date(data.created_at).toLocaleDateString('id-ID')}</div>
-                </div>
-            `;
-            document.getElementById('detailModal').classList.remove('hidden');
-        });
-}
-
-function closeDetail() {
-    document.getElementById('detailModal').classList.add('hidden');
-}
 </script>
-
-<style>
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes fade-in-up {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+<script>
+// Live search for produk — debounce, JSON headers, render rows
+let renderList = function(items) {
+    const tbody = document.getElementById('produk');
+    if (!items || items.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="px-6 py-4 text-sm text-gray-500 text-center">
+                    Data tidak ditemukan
+                </td>
+            </tr>`;
+        return;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-.animate-fade-in {
-    animation: fade-in 0.6s ease-out forwards;
-}
+    tbody.innerHTML = items.map((p, i) => `
+        <tr class="hover:bg-gray-50 transition-all duration-200">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${i + 1}</td>
+            <td class="px-6 py-4 max-w-xs truncate whitespace-nowrap text-sm font-medium text-gray-800" title="${p.nama}">${p.nama}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${p.pabrik.name}</td>
+            ${p.gambar ? `
+            <td class="px-4 py-4 whitespace-nowrap">
+                <img class="object-cover rounded-md w-20 h-20 border border-gray-100 shadow-sm" src="/storage/${p.gambar}" alt="${p.nama}">
+            </td>` : `
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">-</td>`}
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Rp ${new Intl.NumberFormat('id-ID').format(p.harga_jual || p.harga || 0)}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    Rp ${new Intl.NumberFormat('id-ID').format(p.harga_modal || 0)}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex flex-col items-center gap-2">
+                    <a href="${p.qr_view_url}"
+                        class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md text-xs font-medium transition-colors duration-200">
+                        Lihat QR
+                    </a>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex space-x-2">
+                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="${p.detail_url}">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        Details
+                    </a>
+                    ${p.can_edit ? `
+                    <a href="${p.edit_url}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit
+                    </a>` : ''}
+                    ${p.can_delete ? `
+                    <form action="${p.delete_url}" method="post" class="form">
+                        <input type="hidden" name="_token" value="${p.csrf_token}">
+                        <input type="hidden" name="_method" value="delete">
+                        <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Hapus
+                        </button>
+                    </form>` : ''}
+                </div>
+            </td>
+        </tr>
+    `).join('');
+};
 
-.animate-fade-in-up {
-    animation: fade-in-up 0.6s ease-out forwards;
-}
-</style>
+document.getElementById('search').addEventListener('input', function() {
+    const value = this.value;
+    clearTimeout(window.searchTimer);
+    window.searchTimer = setTimeout(() => {
+        fetch("{{ route('produk.index') }}?search=" + encodeURIComponent(value), {
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(items => {
+            renderList(items);
+        });
+    }, 300);
+});
+    </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endsection
