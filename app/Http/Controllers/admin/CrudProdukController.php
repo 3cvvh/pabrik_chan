@@ -28,7 +28,7 @@ class CrudProdukController extends Controller
         }
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  $data->get(),
+            'data' =>  $data->latest()->paginate(3),
         ]);
     }
 

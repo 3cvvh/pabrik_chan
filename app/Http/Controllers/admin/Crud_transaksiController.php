@@ -40,7 +40,7 @@ class Crud_transaksiController extends Controller
         $q->where('id_pembeli', $pembeliId);
     });
 
-    $data = $query->latest()->paginate(15)->appends($request->only(['search', 'pembelis_key']));
+    $data = $query->latest()->paginate(3)->appends($request->only(['search', 'pembelis_key']));    
 
     return view('admin.crud_transaksi.index', [
         'judul' => 'transaksi|page',

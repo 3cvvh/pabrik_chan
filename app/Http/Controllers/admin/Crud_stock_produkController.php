@@ -50,7 +50,7 @@ class Crud_stock_produkController extends Controller
 
         return view('admin.crud_stock_produk.index', [
             'judul' => 'crud|stock_produk',
-            'data' => $stock->get(),
+            'data' => $stock->latest()->paginate(3),
             'produks' => $produks,
             'gudangs' => $gudangs,
         ]);

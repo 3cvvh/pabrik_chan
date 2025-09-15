@@ -42,9 +42,23 @@ class User_crudController extends Controller
             ->with(['pabrik', 'role'])
             ->latest();
     }
+
+        // Jika request AJAX / live-search, kembalikan JSON (tanpa paginasi)
+        if ($request->wantsJson() || $request->ajax()) {
+            $users = $data->get()->map(function($u) {
+                return [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                    'email' => $u->email,
+                    'role_name' => $u->role->name ?? '',
+                ];
+            });
+            return response()->json($users);
+        }
+
         return view('admin.crud_user', [
             'judul' => 'crud user',
-            'data' => $data->get(),
+            'data' => $data->latest()->paginate(3),
             'role' => role::where('id','!=',4)->get(),
         ]);
     }
