@@ -41,7 +41,7 @@ class Crud_pabrikController extends Controller
         }
 
         // normal page render
-        $pabrik = $query->get();
+        $pabrik = $query->latest()->paginate(2);
         return view('super_admin.crud_pabrik.pabrik', [
             'judul' => 'Pabrik',
             'pabrik' => $pabrik

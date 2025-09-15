@@ -49,32 +49,32 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($pabrik as $index => $pabrik)
+                <tbody id="pabrik-tbody" class="bg-white divide-y divide-gray-200">
+                    @forelse($pabrik as $index => $pabrik1)
                     <tr class="hover:bg-gray-50 transition-all duration-200">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $pabrik->name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $pabrik->alamat }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index++ }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $pabrik1->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $pabrik1->alamat }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if ($pabrik->gambar)
-                                <img src="{{ asset('storage/' . $pabrik->gambar) }}" alt="Logo Pabrik" class="h-10 w-10 rounded-full object-cover">
+                            @if ($pabrik1->gambar)
+                                <img src="{{ asset('storage/' . $pabrik1->gambar) }}" alt="Logo Pabrik" class="h-10 w-10 rounded-full object-cover">
                             @else
                                 <span class="px-3 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">Tidak ada gambar</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex space-x-2">
-                                <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}/edit"
+                                <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik1->id }}/edit"
                                    class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                     Edit
                                 </a>
-                                <form action="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}" method="POST" class="inline delete-form">
+                                <form action="/dashboard/super_admin/crud_pabrik/{{ $pabrik1->id }}" method="POST" class="inline delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <input type="hidden" name="id" value="{{ $pabrik->id }}">
+                                    <input type="hidden" name="id" value="{{ $pabrik1->id }}">
                                     <button type="button" onclick="confirmDelete(this)"
                                             class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@
         </div>
         <br>
         {{-- pagination --}}
-        {{ $data->links('pagination::tailwind') }}
+        {{ $pabrik->links('pagination::tailwind') }}
     </div>
 </div>
 
