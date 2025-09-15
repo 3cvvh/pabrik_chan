@@ -1,34 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@yield('title', '404 - Page Not Found')</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative min-h-screen flex items-center justify-center 
+             bg-gradient-to-b from-blue-200 via-blue-50 to-gray-100 
+             text-gray-800 overflow-hidden">
 
-        <title>@yield('title')</title>
+  <!-- Background Factory Illustration -->
+  <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+    <img src="https://i.ibb.co/ygbLxrF/factory-illustration.png" 
+         alt="Factory Illustration"
+         class="w-full max-w-4xl object-contain">
+  </div>
 
-        <style>
-            /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}a{background-color:transparent}code{font-family:monospace,monospace;font-size:1em}[hidden]{display:none}html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;line-height:1.5}*,:after,:before{box-sizing:border-box;border:0 solid #e2e8f0}a{color:inherit;text-decoration:inherit}code{font-family:Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}svg,video{display:block;vertical-align:middle}video{max-width:100%;height:auto}.bg-white{--bg-opacity:1;background-color:#fff;background-color:rgba(255,255,255,var(--bg-opacity))}.bg-gray-100{--bg-opacity:1;background-color:#f7fafc;background-color:rgba(247,250,252,var(--bg-opacity))}.border-gray-200{--border-opacity:1;border-color:#edf2f7;border-color:rgba(237,242,247,var(--border-opacity))}.border-gray-400{--border-opacity:1;border-color:#cbd5e0;border-color:rgba(203,213,224,var(--border-opacity))}.border-t{border-top-width:1px}.border-r{border-right-width:1px}.flex{display:flex}.grid{display:grid}.hidden{display:none}.items-center{align-items:center}.justify-center{justify-content:center}.font-semibold{font-weight:600}.h-5{height:1.25rem}.h-8{height:2rem}.h-16{height:4rem}.text-sm{font-size:.875rem}.text-lg{font-size:1.125rem}.leading-7{line-height:1.75rem}.mx-auto{margin-left:auto;margin-right:auto}.ml-1{margin-left:.25rem}.mt-2{margin-top:.5rem}.mr-2{margin-right:.5rem}.ml-2{margin-left:.5rem}.mt-4{margin-top:1rem}.ml-4{margin-left:1rem}.mt-8{margin-top:2rem}.ml-12{margin-left:3rem}.-mt-px{margin-top:-1px}.max-w-xl{max-width:36rem}.max-w-6xl{max-width:72rem}.min-h-screen{min-height:100vh}.overflow-hidden{overflow:hidden}.p-6{padding:1.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.pt-8{padding-top:2rem}.fixed{position:fixed}.relative{position:relative}.top-0{top:0}.right-0{right:0}.shadow{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06)}.text-center{text-align:center}.text-gray-200{--text-opacity:1;color:#edf2f7;color:rgba(237,242,247,var(--text-opacity))}.text-gray-300{--text-opacity:1;color:#e2e8f0;color:rgba(226,232,240,var(--text-opacity))}.text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}.text-gray-500{--text-opacity:1;color:#a0aec0;color:rgba(160,174,192,var(--text-opacity))}.text-gray-600{--text-opacity:1;color:#718096;color:rgba(113,128,150,var(--text-opacity))}.text-gray-700{--text-opacity:1;color:#4a5568;color:rgba(74,85,104,var(--text-opacity))}.text-gray-900{--text-opacity:1;color:#1a202c;color:rgba(26,32,44,var(--text-opacity))}.uppercase{text-transform:uppercase}.underline{text-decoration:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.tracking-wider{letter-spacing:.05em}.w-5{width:1.25rem}.w-8{width:2rem}.w-auto{width:auto}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}@-webkit-keyframes spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@keyframes spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@-webkit-keyframes ping{0%{transform:scale(1);opacity:1}75%,to{transform:scale(2);opacity:0}}@keyframes ping{0%{transform:scale(1);opacity:1}75%,to{transform:scale(2);opacity:0}}@-webkit-keyframes pulse{0%,to{opacity:1}50%{opacity:.5}}@keyframes pulse{0%,to{opacity:1}50%{opacity:.5}}@-webkit-keyframes bounce{0%,to{transform:translateY(-25%);-webkit-animation-timing-function:cubic-bezier(.8,0,1,1);animation-timing-function:cubic-bezier(.8,0,1,1)}50%{transform:translateY(0);-webkit-animation-timing-function:cubic-bezier(0,0,.2,1);animation-timing-function:cubic-bezier(0,0,.2,1)}}@keyframes bounce{0%,to{transform:translateY(-25%);-webkit-animation-timing-function:cubic-bezier(.8,0,1,1);animation-timing-function:cubic-bezier(.8,0,1,1)}50%{transform:translateY(0);-webkit-animation-timing-function:cubic-bezier(0,0,.2,1);animation-timing-function:cubic-bezier(0,0,.2,1)}}@media (min-width:640px){.sm\:rounded-lg{border-radius:.5rem}.sm\:block{display:block}.sm\:items-center{align-items:center}.sm\:justify-start{justify-content:flex-start}.sm\:justify-between{justify-content:space-between}.sm\:h-20{height:5rem}.sm\:ml-0{margin-left:0}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:pt-0{padding-top:0}.sm\:text-left{text-align:left}.sm\:text-right{text-align:right}}@media (min-width:768px){.md\:border-t-0{border-top-width:0}.md\:border-l{border-left-width:1px}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\:px-8{padding-left:2rem;padding-right:2rem}}@media (prefers-color-scheme:dark){.dark\:bg-gray-800{--bg-opacity:1;background-color:#2d3748;background-color:rgba(45,55,72,var(--bg-opacity))}.dark\:bg-gray-900{--bg-opacity:1;background-color:#1a202c;background-color:rgba(26,32,44,var(--bg-opacity))}.dark\:border-gray-700{--border-opacity:1;border-color:#4a5568;border-color:rgba(74,85,104,var(--border-opacity))}.dark\:text-white{--text-opacity:1;color:#fff;color:rgba(255,255,255,var(--text-opacity))}.dark\:text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}}
-        </style>
+  <!-- Animated Smoke -->
+  <div class="absolute top-20 left-1/2 transform -translate-x-1/2 flex space-x-4">
+    <span class="w-5 h-5 bg-gray-400 rounded-full animate-smoke"></span>
+    <span class="w-4 h-4 bg-gray-300 rounded-full animate-smoke delay-200"></span>
+    <span class="w-3 h-3 bg-gray-200 rounded-full animate-smoke delay-400"></span>
+  </div>
 
-        <style>
-            body {
-                font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            }
-        </style>
-    </head>
-    <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
-            <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex items-center pt-8 sm:justify-start sm:pt-0">
-                    <div class="px-4 text-lg text-gray-500 border-r border-gray-400 tracking-wider">
-                        @yield('code')
-                    </div>
+  <!-- Main Content -->
+  <div class="relative z-10 text-center p-10 sm:p-14 max-w-lg 
+              bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl 
+              border border-gray-200">
 
-                    <div class="ml-4 text-lg text-gray-500 uppercase tracking-wider">
-                        @yield('message')
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
+    <!-- Logo Gear -->
+    <div class="flex justify-center mb-6 relative">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           class="w-24 h-24 text-blue-700 animate-gear-glow"
+           viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.14,12.94c0-.31.05-.61.08-.92l2.11-1.65a.5.5,0,0,0,.12-.64l-2-3.46a.5.5,0,0,0-.6-.22l-2.49,1
+        a6.73,6.73,0,0,0-1.6-.92l-.38-2.65A.5.5,0,0,0,13.83,3H10.17a.5.5,0,0,0-.49.42L9.3,6.07a6.59,6.59,0,0,0-1.6.92l-2.49-1
+        a.5.5,0,0,0-.6.22l-2,3.46a.5.5,0,0,0,.12.64l2.11,1.65c0,.31-.08.61-.08.92s.05.61.08.92L2.86,15.5a.5.5,0,0,0-.12.64l2,3.46a.5.5,0,0,0,.6.22l2.49-1a6.59,6.59,0,0,0,1.6.92l.38,2.65a.5.5,0,0,0,.49.42h3.66a.5.5,0,0,0,.49-.42l.38-2.65a6.73,6.73,0,0,0,1.6-.92l2.49,1a.5.5,0,0,0,.6-.22l2-3.46a.5.5,0,0,0-.12-.64l-2.11-1.65C19.09,13.55,19.14,13.25,19.14,12.94Z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    </div>
+
+    <!-- Error Code -->
+    <h1 class="text-6xl sm:text-7xl font-extrabold text-blue-800 tracking-tight drop-shadow-lg">
+      @yield('code', '404')
+    </h1>
+
+    <!-- Message -->
+    <p class="mt-4 text-lg sm:text-xl font-semibold tracking-wide text-gray-700">
+      @yield('message', 'Halaman tidak ditemukan. Mesin pabrik berhenti ⚙️')
+    </p>
+
+    <!-- Back Button -->
+    <div class="mt-10">
+      <a href="{{ url('/') }}"
+         class="px-8 py-3 rounded-lg font-bold border border-blue-400 
+                bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 
+                focus:ring-4 focus:ring-blue-300 
+                transition-all shadow-lg text-lg">
+        ⬅️ Kembali
+      </a>
+    </div>
+
+    <!-- Subtext -->
+    <p class="mt-6 text-sm text-gray-500 italic">
+      “Setiap mesin berhenti, tapi produksi akan berjalan lagi.”
+    </p>
+  </div>
+
+  <!-- Animations -->
+  <style>
+    @keyframes smoke {
+      0% { transform: translateY(0) scale(1); opacity: 0.6; }
+      50% { opacity: 0.4; }
+      100% { transform: translateY(-120px) scale(1.6); opacity: 0; }
+    }
+    .animate-smoke { animation: smoke 7s ease-in-out infinite; }
+    .delay-200 { animation-delay: 2s; }
+    .delay-400 { animation-delay: 4s; }
+
+    @keyframes gear-glow {
+      0%,100% { filter: drop-shadow(0 0 4px rgba(37,99,235,0.6)); }
+      50% { filter: drop-shadow(0 0 12px rgba(37,99,235,0.9)); }
+    }
+    .animate-gear-glow { animation: gear-glow 4s ease-in-out infinite; }
+  </style>
+</body>
 </html>
