@@ -116,7 +116,7 @@ class Crud_pabrikController extends Controller
         // Panggil metode update() pada instance model $pabrik yang sudah disediakan
         pabrik::where('id', $request->id)->update($dataedit);
 
-        return redirect('/dashboard/super_admin/crud_pabrik')->with('edit','berhasil mengedit data');
+        return redirect('/dashboard/super_admin/crud_pabrik')->with('berhasil','berhasil mengedit data');
     }
 
     /**
@@ -129,6 +129,6 @@ class Crud_pabrikController extends Controller
             Storage::delete($pabrik->gambar);
         }
        pabrik::destroy($request->id);
-        return redirect('/dashboard/super_admin/crud_pabrik')->with('hapus', 'Data berhasil dihapus');
+        return redirect('/dashboard/super_admin/crud_pabrik')->with('berhasil', 'Data berhasil dihapus');
 }
 }

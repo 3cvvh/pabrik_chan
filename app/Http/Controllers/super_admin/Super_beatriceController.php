@@ -11,7 +11,7 @@ class Super_beatriceController extends Controller
 {
     public function index(){
         return view('super_admin.dashboard',[
-            'judul' => 'hei',
+            'judul' => 'dashboard super admin',
             'pabrik' =>count(Pabrik::all()),
             'admin' => count(User::where('role_id',1)->get()),
             'owner' => count(User::where('role_id',3)->get()),
