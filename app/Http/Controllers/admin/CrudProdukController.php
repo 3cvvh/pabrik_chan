@@ -21,14 +21,43 @@ class CrudProdukController extends Controller
      */
     public function index(Request $request)
     {
-        $data = produk::where('id_pabrik','=',Auth::user()->pabrik_id);
+        $query = produk::with('pabrik')->where('id_pabrik', '=', Auth::user()->pabrik_id);
         if ($request->filled('search')) {
             $search = trim($request->search);
-            $data->where('nama', 'like', '%' . $search . '%');
+            $query->where('nama', 'like', '%' . $search . '%');
+        }
+        
+    
+
+    // if AJAX or JSON requested, return JSON array for frontend
+        if ($request->wantsJson() || $request->ajax()) {
+            $user = Auth::user();
+            $items = $query->get()->map(function($p) use ($user) {
+                return [
+                    'id' => $p->id,
+                    'nama' => $p->nama,
+                    'pabrik' => [
+                        'name' => $p->pabrik ? $p->pabrik->name : '',
+                    ],
+                    'gambar' => $p->gambar,
+                    'harga_jual' => $p->harga_jual,
+                    'harga' => $p->harga,
+                    'harga_modal' => $p->harga_modal,
+                    'qr_view_url' => $user->role_id == 1 ? route('produk.qrView', $p) : route('produk.qrViews', $p),
+                    'detail_url' => $user->role_id == 1 ? route('produk.show', $p->id) : route('crud_produk.show', $p->id),
+                    'edit_url' => $user->role_id == 1 ? route('produk.edit', $p->id) : route('crud_produk.edit', $p->id),
+                    'delete_url' => route('produk.destroy', $p->id),
+                    'can_edit' => $user->role_id == 1,
+                    'can_delete' => $user->role_id == 1,
+                    'csrf_token' => csrf_token(),
+                ];
+            });
+
+            return response()->json($items);
         }
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  $data->latest()->paginate(3),
+            'data' =>  $query->latest()->paginate(3),
         ]);
     }
 

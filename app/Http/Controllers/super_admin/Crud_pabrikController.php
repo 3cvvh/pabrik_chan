@@ -14,21 +14,39 @@ class Crud_pabrikController extends Controller
      */
     public function index(Request $request)
     {
-    $data = pabrik::query(); // kayak di produk, cuma ganti model
+        // build base query
+        $query = pabrik::query()->latest();
 
-    // kalau ada search
-    if ($request->filled('search')) {
-        $search = trim($request->search);
-        $data->where('name', 'LIKE', '%' . $search . '%')
-             ->orWhere('alamat', 'LIKE', '%' . $search . '%');
+        // apply search filter (name or alamat)
+        if ($request->filled('search')) {
+            $q = $request->input('search');
+            $query->where(function($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('alamat', 'like', "%{$q}%");
+            });
+        }
+
+        // if AJAX or JSON requested, return JSON array for frontend
+        if ($request->wantsJson() || $request->ajax()) {
+            $items = $query->get()->map(function($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'alamat' => $p->alamat,
+                    'gambar' => $p->gambar, // storage path (controller returns raw path)
+                ];
+            });
+
+            return response()->json($items);
+        }
+
+        // normal page render
+        $pabrik = $query->get();
+        return view('super_admin.crud_pabrik.pabrik', [
+            'judul' => 'Pabrik',
+            'pabrik' => $pabrik
+        ]);
     }
-
-    return view('super_admin.crud_pabrik.pabrik', [
-        'judul' => 'Pabrik',
-        'data' => $data->latest()->paginate(3), // sama kayak produk kamu (paginate)
-    ]);
-}
-
 
     /**
      * Show the form for creating a new resource.

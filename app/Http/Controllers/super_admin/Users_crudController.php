@@ -18,31 +18,48 @@ class Users_crudController extends Controller
      */
     public function index(Request $request)
 {
-    $data = User::with(['pabrik', 'role'])
-    ->where('id','!=',Auth::user()->id)
-    ->where('role_id',1)
-    ->latest();
+    $pabrikId = Auth::user()->pabrik_id;
 
-    if($request->has('search') || $request->has('roles_key')){
-        $data = User::query()
-            ->where('id', '!=', Auth::user()->id)
-            ->when($request->search, function($query) use ($request) {
-                $query->where(function($q) use ($request) {
-                    $q->where('name', 'like', '%'.$request->search.'%')
-                      ->orWhere('email', 'like', '%'.$request->search.'%');
-                });
-            })
-            ->when($request->roles_key, function($query) use ($request) {
-                $query->where('role_id', $request->roles_key);
-            })
-            ->with(['pabrik', 'role'])
-            ->latest();
+    $query = User::with(['pabrik', 'role'])
+        ->where('id','!=', Auth::id())
+        ->where('role_id', 1) // Hanya ambil user dengan role_id 1
+        ->when($pabrikId, function($q) use ($pabrikId) {
+            $q->where('pabrik_id', $pabrikId);
+        })
+        ->latest();
+
+    // tambahkan filter search / role pada query yang sama (jangan reset $query)
+    if ($request->filled('search') || $request->filled('roles_key')) {
+        $query->when($request->search, function($q) use ($request) {
+            $q->where(function($sub) use ($request) {
+                $sub->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%');
+            });
+        });
+
+        $query->when($request->roles_key, function($q) use ($request) {
+            $q->where('pabrik_id', $request->roles_key);
+        });
     }
+
+    if ($request->wantsJson() || $request->ajax()) {
+        $users = $query->get()->map(function($u){
+            return [
+                'id' => $u->id,
+                'name' => $u->name,
+                'email' => $u->email,
+                'role_name' => $u->role->name ?? '',
+                'pabrik_name' => $u->pabrik->name ?? '',
+            ];
+        });
+        return response()->json($users);
+    }
+
 
     return view('super_admin.crud_user.index',[
         'judul' => 'user|list',
-        'data' => $data->latest()->paginate(5),
-        'role' => role::where('id', '==', 1)->get(),
+        'data' => $query->latest()->paginate(5),
+        'role' => role::where('id', 1)->get(),
     ]);
 }
 

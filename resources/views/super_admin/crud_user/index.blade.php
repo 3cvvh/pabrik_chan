@@ -22,7 +22,7 @@
 
         <!-- Enhanced Search Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <form id="search-form" onsubmit="return false;" action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Pengguna</label>
                     <div class="relative">
@@ -34,9 +34,15 @@
                         </svg>
                     </div>
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
-                    Cari
-                </button>
+                <div class="w-64">
+                    <label for="roles_key" class="block text-sm font-medium text-gray-700 mb-1">Filter Pabrik</label>
+                    <select id="roles_key" name="roles_key" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
+                        <option value="">Semua Role</option>
+                        @foreach(\App\Models\pabrik::all() as $r)
+                            <option value="{{ $r->id }}">{{ $r->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </form>
         </div>
 
@@ -53,7 +59,7 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody id="users-tbody" class="bg-white divide-y divide-gray-200">
                     @foreach ($data as $index => $user)
                     <tr class="hover:bg-gray-50 transition-all duration-200">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index}}</td>
@@ -180,6 +186,105 @@ function confirmDelete(button) {
     });
 
 @endif
+</script>
+<script>
+// Live search (AJAX) — debounce and render JSON results (fixed)
+(function(){
+    const input = document.getElementById('search');
+    const roleSelect = document.getElementById('roles_key');
+    const tbody = document.getElementById('users-tbody');
+    let timer = null;
+
+    function renderList(users){
+        if (!users || users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-sm text-gray-500 text-center">Tidak ada hasil</td></tr>';
+            return;
+        }
+        tbody.innerHTML = users.map((u, i) => `
+            <tr class="hover:bg-gray-50 transition-all duration-200">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${i+1}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                <span class="text-indigo-700 font-medium text-sm">${(u.name||'').substr(0,2)}</span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <div class="text-sm font-medium text-gray-900">${u.name || ''}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${u.email || ''}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">
+                        ${u.role_name || ''}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${u.pabrik_name || ''}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex space-x-2">
+                        <a href="/dashboard/super_admin/crud_users/${u.id}/edit" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium">Edit</a>
+                        <form action="/dashboard/super_admin/crud_users/${u.id}" method="post" class="delete-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="_method" value="delete">
+                            <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-medium">Hapus</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function fetchList(url){
+        const res = await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error(res.status + ' ' + res.statusText + '\n' + text);
+        }
+        return res.json();
+    }
+
+    function doSearch(q, role){
+        const base = '{{ route("crud_users.index") }}';
+        const params = new URLSearchParams();
+        if (q && q.trim() !== '') params.append('search', q);
+        if (role && role !== '') params.append('roles_key', role);
+        const url = params.toString() ? `${base}?${params.toString()}` : base;
+        fetchList(url)
+            .then(data => renderList(data))
+            .catch(err => {
+                console.error('Live search error:', err);
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-sm text-red-500 text-center">Terjadi kesalahan saat mengambil data</td></tr>';
+            });
+    }
+
+    // debounce input
+    input.addEventListener('input', function(e){
+        clearTimeout(timer);
+        const q = e.target.value;
+        const role = roleSelect ? roleSelect.value : '';
+        timer = setTimeout(() => doSearch(q, role), 300);
+    });
+
+    // immediate search on role change
+    if (roleSelect) {
+        roleSelect.addEventListener('change', function(e){
+            clearTimeout(timer);
+            const q = input.value;
+            doSearch(q, this.value);
+        });
+    }
+
+    // Optional: load initial filtered list on page load
+    // doSearch('', roleSelect ? roleSelect.value : '');
+})();
 </script>
 <script>
 <x-alert></x-alert>
