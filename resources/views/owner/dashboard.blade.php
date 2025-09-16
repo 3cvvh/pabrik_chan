@@ -45,9 +45,9 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
-                    @forelse ($transaksi as $index => $transaksi)
+                    @forelse ($data as $index => $transaksi)
                     <tr class="border-b hover:bg-blue-50 transition">
-                        <td class="py-3 px-4">{{ $index+1 }}</td>
+                        <td class="py-3 px-4">{{ $data->firstItem() + $index }}</td>
                         <td class="py-3 px-4 font-medium">{{ $transaksi->judul }}</td>
                         <td class="py-3 px-4">{{ $transaksi->pembeli->name }}</td>
                         <td class="py-3 px-4">
@@ -69,6 +69,8 @@
                 </tbody>
             </table>
         </div>
+                {{-- pagination --}}
+        {{ $data->links('pagination::tailwind') }}
     </div>
 </div>
 @endsection

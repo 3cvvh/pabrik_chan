@@ -12,15 +12,23 @@ class Crud_pabrikController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        
-        $pabrik = pabrik::all();
-        return view('super_admin.crud_pabrik.pabrik', [
-            'judul' => 'Pabrik',
-            'pabrik' => $pabrik
-        ]);
+    $data = pabrik::query(); // kayak di produk, cuma ganti model
+
+    // kalau ada search
+    if ($request->filled('search')) {
+        $search = trim($request->search);
+        $data->where('name', 'LIKE', '%' . $search . '%')
+             ->orWhere('alamat', 'LIKE', '%' . $search . '%');
     }
+
+    return view('super_admin.crud_pabrik.pabrik', [
+        'judul' => 'Pabrik',
+        'data' => $data->latest()->paginate(3), // sama kayak produk kamu (paginate)
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
