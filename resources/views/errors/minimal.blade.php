@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title', '404 - Page Not Found')</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/logopabrik.png') }}">
 </head>
 <body class="relative min-h-screen flex items-center justify-center 
              bg-gradient-to-b from-blue-200 via-blue-50 to-gray-100 
