@@ -22,7 +22,7 @@
 
         <!-- Search Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form onsubmit="return false" id="search-form" action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Pabrik</label>
                     <div class="relative">
@@ -34,6 +34,9 @@
                         </svg>
                     </div>
                 </div>
+                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
+                    Cari
+                </button>
             </form>
         </div>
 
@@ -50,7 +53,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($pabrik as $index => $pabrik)
+                    @forelse($data as $index => $pabrik)
                     <tr class="hover:bg-gray-50 transition-all duration-200">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $pabrik->name }}</td>
@@ -64,7 +67,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex space-x-2">
-                                <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}/edit"
+                                <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}/edit" 
                                    class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -75,7 +78,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <input type="hidden" name="id" value="{{ $pabrik->id }}">
-                                    <button type="button" onclick="confirmDelete(this)"
+                                    <button type="button" onclick="confirmDelete(this)" 
                                             class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -177,77 +180,5 @@ function confirmDelete(button) {
 </script>
 <script>
     <x-alert></x-alert>
-</script>
-<script>
-// Live search for pabrik — debounce, JSON headers, render rows
-(function(){
-    const input = document.getElementById('search');
-    const tbody = document.getElementById('pabrik-tbody');
-    let timer = null;
-
-    function renderList(items){
-        if (!items || items.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-sm text-gray-500 text-center">Data tidak ditemukan</td></tr>';
-            return;
-        }
-        tbody.innerHTML = items.map((p, i) => `
-            <tr class="hover:bg-gray-50 transition-all duration-200">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${i+1}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${p.name || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${p.alamat || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap">${p.gambar ? `<img src="${p.gambar_url}" class="h-10 w-10 rounded-full object-cover">` : `<span class="px-3 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">Tidak ada gambar</span>`}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex space-x-2">
-                        <a href="/dashboard/super_admin/crud_pabrik/${p.id}/edit" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium">Edit</a>
-                        <form action="/dashboard/super_admin/crud_pabrik/${p.id}" method="POST" class="inline delete-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-medium">Hapus</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    async function fetchList(url){
-        const res = await fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            credentials: 'same-origin'
-        });
-        if (!res.ok) {
-            const text = await res.text();
-            throw new Error(res.status + ' ' + res.statusText + '\n' + text);
-        }
-        return res.json();
-    }
-
-    function doSearch(q){
-        const base = '{{ route("crud_pabrik.index") }}';
-        const url = (q && q.trim() !== '') ? `${base}?search=${encodeURIComponent(q)}` : base;
-        fetchList(url)
-            .then(data => {
-                // normalize gambar url if storage path provided by controller
-                const normalized = data.map(item => ({
-                    ...item,
-                    gambar_url: item.gambar ? ('/storage/' + item.gambar) : null
-                }));
-                renderList(normalized);
-            })
-            .catch(err => {
-                console.error('Pabrik live search error:', err);
-                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-sm text-red-500 text-center">Terjadi kesalahan saat mengambil data</td></tr>';
-            });
-    }
-
-    input.addEventListener('input', function(e){
-        clearTimeout(timer);
-        const q = e.target.value;
-        timer = setTimeout(() => doSearch(q), 300);
-    });
-})();
 </script>
 @endsection

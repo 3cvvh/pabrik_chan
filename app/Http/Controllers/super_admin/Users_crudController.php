@@ -58,7 +58,7 @@ class Users_crudController extends Controller
 
     return view('super_admin.crud_user.index',[
         'judul' => 'user|list',
-        'data' => $query->latest()->paginate(5),
+        'data' => $query->latest()->paginate(2),
         'role' => role::where('id', 1)->get(),
     ]);
 }
