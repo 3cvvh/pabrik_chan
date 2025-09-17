@@ -61,7 +61,7 @@
                 <tbody class="text-gray-700">
                     @forelse ($transaksi as $index => $item)
                         <tr class="border-b hover:bg-blue-50 transition">
-                            <td class="py-3 px-4">{{ $index + 1 }}</td>
+                            <td class="py-3 px-4">{{ $transaksi->firstItem() + $index}}</td>
                             <td class="py-3 px-4 font-medium">{{ $item->judul }}</td>
                             <td class="py-3 px-4">{{ $item->pembeli->name }}</td>
                             <td class="py-3 px-4">
@@ -79,20 +79,6 @@
                                 </a>
                             </td>
                         </tr>
-                    @forelse ($data as $index => $transaksi)
-                    <tr class="border-b hover:bg-blue-50 transition">
-                        <td class="py-3 px-4">{{ $data->firstItem() + $index }}</td>
-                        <td class="py-3 px-4 font-medium">{{ $transaksi->judul }}</td>
-                        <td class="py-3 px-4">{{ $transaksi->pembeli->name }}</td>
-                        <td class="py-3 px-4">
-                            <span class="{{ $transaksi->status == 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'  }} px-4 py-1 rounded-full text-xs font-bold border border-gray-200 shadow-sm">
-                                {{ ucfirst($transaksi->status) }}
-                            </span>
-                        </td>
-                        <td class="py-3 px-4">
-                            <a href="{{ route('transaksi.show',$transaksi->id) }}" class="bg-blue-500 text-white px-5 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-600 shadow transition">Detail</a>
-                        </td>
-                    </tr>
                     @empty
                         <tr>
                             <td colspan="5" class="py-6 text-center text-lg text-gray-400">
@@ -103,6 +89,8 @@
                 </tbody>
             </table>
         </div>
+        <br>
+        {{ $transaksi->links('pagination::tailwind') }} 
 
         <!-- ==========================
              CARD (mobile)
@@ -111,7 +99,7 @@
             @forelse ($transaksi as $index => $item)
                 <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-gray-500">#{{ $index + 1 }}</span>
+                        <span class="text-xs text-gray-500">#{{ $transaksi->firstItem() + $index}}</span>
                         <span class="text-sm font-semibold {{ $item->status == 'completed' ? 'text-green-600' : 'text-amber-600' }}">
                             {{ ucfirst($item->status) }}
                         </span>
@@ -131,8 +119,6 @@
                 </div>
             @endforelse
         </div>
-                {{-- pagination --}}
-        {{ $data->links('pagination::tailwind') }}
     </div>
 </div>
 

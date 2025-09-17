@@ -22,7 +22,7 @@ class OwnerController extends Controller
          }
         return view('owner.dashboard',[
             'judul' => 'owner|dashboard',
-            'data' => $data->latest()->paginate(3)
+            'transaksi' => $data->latest()->paginate(5)
         ]);
     }
     public function generateLaporan() {
@@ -57,7 +57,7 @@ $productNets = DB::table('detail_transaksis')
 public function laporanbos(){
     return view('owner.laporanbos',[
         'judul' => 'owner|laporanbos',
-        'data' => Transaksi::where('id_pabrik',Auth::user()->pabrik_id)->latest()->pagination(5),
+        'data' => Transaksi::where('id_pabrik',Auth::user()->pabrik_id)->latest()->paginate(5),
     ]);
 }
 }
