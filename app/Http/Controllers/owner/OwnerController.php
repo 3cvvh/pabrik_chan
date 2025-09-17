@@ -23,6 +23,7 @@ class OwnerController extends Controller
         }
         return view('owner.dashboard',[
             'judul' => 'owner|dashboard',
+            'pembelis' => Pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
             'transaksi' => $data->latest()->paginate(3)
         ]);
     }
