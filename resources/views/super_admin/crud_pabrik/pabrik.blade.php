@@ -52,10 +52,10 @@
                     </tr>
                 </thead>
                 <tbody id="pabrik-tbody" class="bg-white divide-y divide-gray-200">
-                    @forelse($pabrik as $index => $pabrik1)
+                    @forelse($data as $index => $pabrik1)
 
                     <tr class="hover:bg-gray-50 transition-all duration-200">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $pabrik1->name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $pabrik1->alamat }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -67,11 +67,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex space-x-2">
-<<<<<<< HEAD
-                                <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik->id }}/edit" 
-=======
                                 <a href="/dashboard/super_admin/crud_pabrik/{{ $pabrik1->id }}/edit"
->>>>>>> ee58d9fc580ab791302b6deb8d3bd45e2ccc1f57
                                    class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -81,12 +77,8 @@
                                 <form action="/dashboard/super_admin/crud_pabrik/{{ $pabrik1->id }}" method="POST" class="inline delete-form">
                                     @csrf
                                     @method('DELETE')
-<<<<<<< HEAD
-                                    <input type="hidden" name="id" value="{{ $pabrik->id }}">
-                                    <button type="button" onclick="confirmDelete(this)" 
-=======
+
                                     <button type="button" onclick="confirmDelete(this)"
->>>>>>> ee58d9fc580ab791302b6deb8d3bd45e2ccc1f57
                                             class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -108,10 +100,10 @@
 
         <!-- Card (Mobile) -->
         <div id="pabrik-cards" class="sm:hidden space-y-4 mt-6">
-            @forelse($pabrik as $index => $pabrik1)
+            @forelse($data as $index => $pabrik1)
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs text-gray-500">#{{ $index+1 }}</span>
+                    <span class="text-xs text-gray-500">{{ $data->firstItem() + $index }}</span>
                     <div>
                         @if ($pabrik1->gambar)
                             <img src="{{ asset('storage/' . $pabrik1->gambar) }}" alt="Logo Pabrik" class="h-8 w-8 rounded-full object-cover">
@@ -149,7 +141,7 @@
         </div>
         <br>
         {{-- pagination --}}
-        {{ $pabrik->links('pagination::tailwind') }}
+        {{ $data->links('pagination::tailwind') }}
     </div>
 </div>
 
@@ -190,11 +182,7 @@ function confirmDelete(button) {
 <x-alert></x-alert>
 </script>
 <script>
-<<<<<<< HEAD
-    <x-alert></x-alert>
-</script>
-@endsection
-=======
+
 (function(){
     const input = document.getElementById('search');
     const tbody = document.getElementById('pabrik-tbody');
@@ -326,4 +314,3 @@ function confirmDelete(button) {
 })();
 </script>
 @endsection
->>>>>>> ee58d9fc580ab791302b6deb8d3bd45e2ccc1f57
