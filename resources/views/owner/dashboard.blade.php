@@ -81,12 +81,11 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-6 text-center text-lg text-gray-400">
+                            <td colspan="5" class="py-6 text-center text-gray-400">
                                 Tidak ada data transaksi tersedia.
                             </td>
                         </tr>
                     @endforelse
-                </tbody>
             </table>
         </div>
         <br>
@@ -119,6 +118,9 @@
                 </div>
             @endforelse
         </div>
+
+                {{-- pagination --}}
+        {{ $transaksi->links('pagination::tailwind') }}
     </div>
 </div>
 

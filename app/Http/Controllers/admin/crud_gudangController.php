@@ -28,12 +28,10 @@ class Crud_gudangController extends Controller
             });
         }
 
-        // Optional: urutkan terbaru
-        $gudang = $data->orderBy('id', 'desc')->paginate(3);
 
         return view('admin.crud_gudang.gudang',[
             'judul' => 'gudang|page',
-            'data' => $gudang,
+            'data' => $data->latest()->paginate(3),
             'pabrik' => pabrik::all()
         ]);
     }

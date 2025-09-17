@@ -23,7 +23,7 @@
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <form id="liveFilterForm" action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Pembeli</label>
                     <div class="relative">
@@ -36,14 +36,11 @@
                         </svg>
                     </div>
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
-                    Cari
-                </button>
             </form>
         </div>
 
         <!-- Enhanced Table Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+        <div id="tableContainer" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -72,7 +69,7 @@
                                         </svg>
                                         Edit
                                     </a>
-                                    <form action="/dashboard/admin/crud_pembeli/{{ $pembeli->id }}" method="POST" class="inline delete-form">
+                                    <form  action="/dashboard/admin/crud_pembeli/{{ $pembeli->id }}" method="POST" class="inline delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <input type="hidden" name="id" value="{{ $pembeli->id }}">
@@ -97,11 +94,17 @@
         </div>
         <br>
         <!-- Pagination -->
+        <div id="paginationContainer" class="mt-4 flex justify-end animate-fade-in-up" style="animation-delay: 0.3s">
         {{ $data->links('pagination::tailwind') }}
+        </div>
     </div>
 </div>
 
+<!-- tampilkan alert di luar tag <script> -->
+
+
 <script>
+    <x-alert></x-alert>
 function confirmDelete(button) {
     Swal.fire({
         title: 'Apakah anda yakin?',
@@ -142,7 +145,114 @@ function confirmDelete(button) {
     animation: fade-in-up 0.6s ease-out forwards;
 }
 </style>
+
+<!-- Replaced broken script: cleaned live-search (no rolesSelect), removed irrelevant functions -->
 <script>
-    <x-alert></x-alert>
+//livesearch
+(function () {
+    //taruh id di form search
+    const form = document.getElementById('liveFilterForm');
+    //name di input search harus search
+    const searchInput = document.getElementById('search');
+    //div awal table id
+    const tableContainer = document.getElementById('tableContainer');
+    //div awal pagination id
+    const paginationContainer = document.getElementById('paginationContainer');
+
+    if (!form || !searchInput || !tableContainer || !paginationContainer) {
+        return;
+    }
+
+    // debounce helper
+    function debounce(fn, delay = 300) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    function buildUrl(page) {
+        const params = new URLSearchParams();
+        const s = searchInput.value.trim();
+        if (s.length) params.set('search', s);
+        if (page) params.set('page', page);
+        const base = window.location.pathname;
+        const qs = params.toString();
+        return qs ? `${base}?${qs}` : base;
+    }
+
+    async function fetchAndReplace(url, push = true) {
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const text = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+
+            const newTable = doc.getElementById('tableContainer');
+            const newPagination = doc.getElementById('paginationContainer');
+
+            if (newTable) {
+                tableContainer.innerHTML = newTable.innerHTML;
+            }
+            if (newPagination) {
+                paginationContainer.innerHTML = newPagination.innerHTML;
+            }
+
+            if (push) {
+                history.pushState(null, '', url);
+            }
+
+            // Re-bind pagination links after replacing markup
+            rebindPaginationLinks();
+        } catch (err) {
+            console.error('Live fetch error', err);
+        }
+    }
+
+    const performSearch = debounce(() => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    }, 350);
+    searchInput.addEventListener('input', performSearch);
+
+    // prevent full form submit (enter key)
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+
+    // handle browser back/forward: update input and fetch content
+    window.addEventListener('popstate', function () {
+        const full = window.location.pathname + window.location.search;
+        fetchAndReplace(full, false);
+        const qs = new URLSearchParams(window.location.search);
+        searchInput.value = qs.get('search') || '';
+    });
+
+    function rebindPaginationLinks() {
+        const links = paginationContainer.querySelectorAll('a');
+        links.forEach(link => {
+            // remove previous handlers to avoid duplicates
+            link.replaceWith(link.cloneNode(true));
+        });
+        // re-select after clone
+        const newLinks = paginationContainer.querySelectorAll('a');
+        newLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+                e.preventDefault();
+                fetchAndReplace(href);
+            });
+        });
+    }
+
+    // initial bind for existing pagination
+    rebindPaginationLinks();
+
+})();
 </script>
+
 @endsection
