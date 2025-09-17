@@ -9,20 +9,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Detail_transaksi;
+use App\Models\Pembeli;
 use Illuminate\Support\Facades\Auth;
 
 class OwnerController extends Controller
 {
 
-    public function index(){
-         $data = Transaksi::with(['pabrik','pembeli'])->where('id_pabrik',Auth::user()->pabrik_id);
-         if(request()->filled('search')){
-            $key =  trim(request()->search);
-            $data->where('judul','LIKE','%'.$key.'%');
-         }
+    public function index(Request $request){
+          $query = transaksi::with(['pabrik','pembeli'])->where('id_pabrik', '=', Auth::user()->pabrik_id);
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where('judul', 'customer', 'status_order', '%' . $search . '%');
+        }
         return view('owner.dashboard',[
             'judul' => 'owner|dashboard',
-            'transaksi' => $data->get()
+            'transaksi' => $query->get(),
+            'pembelis' => Pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
         ]);
     }
     public function generateLaporan() {
@@ -57,6 +59,7 @@ $productNets = DB::table('detail_transaksis')
 public function laporanbos(){
     return view('owner.laporanbos',[
         'judul' => 'owner|laporanbos',
+        'pembelis' => Pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
         'data' => Transaksi::where('id_pabrik',Auth::user()->pabrik_id)->get(),
     ]);
 }
