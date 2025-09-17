@@ -66,7 +66,7 @@
                 <tbody id="transaksiTbody" class="text-gray-700">
                     @forelse ($transaksi as $index => $item)
                         <tr class="border-b hover:bg-blue-50 transition">
-                            <td class="py-3 px-4">{{ $index + 1 }}</td>
+                            <td class="py-3 px-4">{{ $transaksi->firstItem() + $index}}</td>
                             <td class="py-3 px-4 font-medium">{{ $item->judul }}</td>
                             <td class="py-3 px-4">{{ $item->pembeli->name }}</td>
                             <td class="py-3 px-4">
@@ -93,6 +93,8 @@
                     @endforelse
             </table>
         </div>
+        <br>
+        {{ $transaksi->links('pagination::tailwind') }} 
 
         <!-- ==========================
              CARD (mobile)
@@ -101,7 +103,7 @@
             @forelse ($transaksi as $index => $item)
                 <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-gray-500">#{{ $index + 1 }}</span>
+                        <span class="text-xs text-gray-500">#{{ $transaksi->firstItem() + $index}}</span>
                         <span class="text-sm font-semibold {{ $item->status == 'completed' ? 'text-green-600' : 'text-amber-600' }}">
                             {{ ucfirst($item->status) }}
                         </span>
@@ -121,6 +123,7 @@
                 </div>
             @endforelse
         </div>
+
                 {{-- pagination --}}
         {{ $transaksi->links('pagination::tailwind') }}
     </div>
@@ -187,7 +190,6 @@
             </tr>
         `).join('');
     }
-
     // Debounce helper
     function debounce(fn, delay) {
         let timer = null;
@@ -252,3 +254,4 @@
     // fetchTransaksi();
 </script>
 @endsection
+
