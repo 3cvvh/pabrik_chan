@@ -94,7 +94,6 @@
             </table>
         </div>
         <br>
-        {{ $transaksi->links('pagination::tailwind') }} 
 
         <!-- ==========================
              CARD (mobile)
