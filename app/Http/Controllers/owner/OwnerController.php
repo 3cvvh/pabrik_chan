@@ -16,15 +16,14 @@ class OwnerController extends Controller
 {
 
     public function index(Request $request){
-          $query = transaksi::with(['pabrik','pembeli'])->where('id_pabrik', '=', Auth::user()->pabrik_id);
+          $data = transaksi::with(['pabrik','pembeli'])->where('id_pabrik', '=', Auth::user()->pabrik_id);
         if ($request->filled('search')) {
             $search = trim($request->search);
-            $query->where('judul', 'customer', 'status_order', '%' . $search . '%');
+            $data->where('judul', 'customer', 'status_order', '%' . $search . '%');
         }
         return view('owner.dashboard',[
             'judul' => 'owner|dashboard',
-            'transaksi' => $query->get(),
-            'pembelis' => Pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
+            'transaksi' => $data->latest()->paginate(3)
         ]);
     }
     public function generateLaporan() {
@@ -64,4 +63,3 @@ public function laporanbos(){
     ]);
 }
 }
-

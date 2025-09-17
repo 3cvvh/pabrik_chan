@@ -73,7 +73,7 @@
                                 <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"/>
                             </svg>
                         </button>
-                        @if(session('percobaan', 0) >= 3)
+                        @if(session('percobaan', 0) >= 1)
                         <div class="mt-4 text-center">
                             <div class="p-4 bg-white border border-blue-100 rounded-lg shadow-sm">
                                 <div class="flex flex-col items-center space-y-2">

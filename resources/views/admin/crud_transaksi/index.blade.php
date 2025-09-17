@@ -22,10 +22,12 @@
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <!-- added id="liveFilterForm" -->
+            <form action="" method="get" id="liveFilterForm" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Transaksi</label>
                     <div class="relative">
+                        <!-- existing input kept, id="search" already present -->
                         <input autocomplete="off" name="search" id="search" type="text"
                             placeholder="Cari transaksi..."
                             class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
@@ -43,14 +45,12 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
-                    Cari
-                </button>
             </form>
         </div>
 
         <!-- Enhanced Table Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+        <!-- added id="tableContainer" so we can replace only this block -->
+        <div id="tableContainer" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -116,7 +116,8 @@
         </div>
         <br>
         <!-- Pagination -->
-        <div>
+        <!-- added id="paginationContainer" so we can replace only pagination block -->
+        <div id="paginationContainer">
          {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
@@ -147,6 +148,9 @@
 </div>
 
 <script>
+/* Replaced script: keep existing confirmDelete and session Swal, add live search/filter logic */
+
+// confirmDelete unchanged
 function confirmDelete(button) {
     Swal.fire({
         title: 'Apakah anda yakin?',
@@ -204,6 +208,114 @@ function showDetail(id) {
 function closeDetail() {
     document.getElementById('detailModal').classList.add('hidden');
 }
+
+/* --- Live search / live filter implementation --- */
+(function () {
+    const form = document.getElementById('liveFilterForm');
+    const searchInput = document.getElementById('search');
+    const rolesSelect = document.getElementById('roles_key');
+    const tableContainer = document.getElementById('tableContainer');
+    const paginationContainer = document.getElementById('paginationContainer');
+
+    if (!form || !searchInput || !rolesSelect || !tableContainer || !paginationContainer) {
+        return;
+    }
+
+    // simple debounce
+    function debounce(fn, delay = 300) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    function buildUrl(page) {
+        const params = new URLSearchParams();
+        const s = searchInput.value.trim();
+        const r = rolesSelect.value;
+        if (s.length) params.set('search', s);
+        if (r && r !== '0') params.set('roles_key', r);
+        if (page) params.set('page', page);
+        const base = window.location.pathname;
+        const qs = params.toString();
+        return qs ? `${base}?${qs}` : base;
+    }
+
+    async function fetchAndReplace(url, push = true) {
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const text = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+
+            const newTable = doc.getElementById('tableContainer');
+            const newPagination = doc.getElementById('paginationContainer');
+
+            if (newTable) {
+                tableContainer.innerHTML = newTable.innerHTML;
+            }
+            if (newPagination) {
+                paginationContainer.innerHTML = newPagination.innerHTML;
+            }
+
+            if (push) {
+                history.pushState(null, '', url);
+            }
+
+            // Re-attach click listeners for pagination links inside paginationContainer
+            rebindPaginationLinks();
+        } catch (err) {
+            console.error('Live fetch error', err);
+        }
+    }
+
+    const performSearch = debounce(() => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    }, 350);
+
+    searchInput.addEventListener('input', performSearch);
+    rolesSelect.addEventListener('change', () => {
+        // when filter changed, reset to first page
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+
+    // prevent full form submit (enter key)
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+
+    // handle browser back/forward
+    window.addEventListener('popstate', function () {
+        // when navigating history, fetch current URL and replace content without pushing state
+        fetchAndReplace(window.location.pathname + window.location.search, false);
+        // also update input/select values from URL
+        const qs = new URLSearchParams(window.location.search);
+        searchInput.value = qs.get('search') || '';
+        rolesSelect.value = qs.get('roles_key') || '0';
+    });
+
+    function rebindPaginationLinks() {
+        // pagination links typically have hrefs; intercept them to perform AJAX fetch
+        const links = paginationContainer.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+                e.preventDefault();
+                fetchAndReplace(href);
+            });
+        });
+    }
+
+    // initial bind for existing pagination
+    rebindPaginationLinks();
+
+})();
 </script>
 
 <style>
