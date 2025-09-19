@@ -153,7 +153,7 @@ function confirmDelete(button) {
 
 function showDetail(id) {
     // Fetch transaction details using AJAX
-    fetch(`/dashboard/admin/crud_produk/${id}`)
+    fetch(/dashboard/admin/crud_produk/${id})
         .then(response => response.json())
         .then(data => {
             const content = document.getElementById('detailContent');
