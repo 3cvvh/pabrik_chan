@@ -85,7 +85,7 @@
         </div>
 
         <!-- Cards (Mobile) -->
-        <div class="sm:hidden space-y-4 mt-6">
+        <div id="tableContainerMobile" class="sm:hidden space-y-4 mt-6">
             @forelse($data as $index => $pembeli)
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                 <div class="flex justify-between mb-2">
@@ -177,8 +177,8 @@ function confirmDelete(button) {
     const tableContainer = document.getElementById('tableContainer');
     //div awal pagination id
     const paginationContainer = document.getElementById('paginationContainer');
-
-    if (!form || !searchInput || !tableContainer || !paginationContainer) {
+    const tableContainerMobile = document.getElementById('tableContainerMobile'); // mobile
+    if (!form || !searchInput || !tableContainer && !tableContainerMobile || !paginationContainer) {
         return;
     }
 
@@ -210,9 +210,13 @@ function confirmDelete(button) {
 
             const newTable = doc.getElementById('tableContainer');
             const newPagination = doc.getElementById('paginationContainer');
+            const newMobile = doc.getElementById('tableContainerMobile');
 
             if (newTable) {
                 tableContainer.innerHTML = newTable.innerHTML;
+            }
+            if( newMobile && tableContainer) {
+                tableContainerMobile.innerHTML = newMobile.innerHTML;
             }
             if (newPagination) {
                 paginationContainer.innerHTML = newPagination.innerHTML;
