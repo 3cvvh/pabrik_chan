@@ -8,7 +8,7 @@
         <div class="flex justify-between items-center mb-8 animate-fade-in">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar produk</h1>
-                <p class="text-gray-600">Kelola semua produk dalam satu tempat</p>
+                <p class="text-gray-600">Kelola semuas produk dalam satu tempat</p>
             </div>
 
             <div class="flex flex-wrap gap-3">
