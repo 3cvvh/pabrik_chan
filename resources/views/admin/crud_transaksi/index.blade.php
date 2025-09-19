@@ -175,16 +175,13 @@
         </div>
 
         <!-- Pagination -->
-        <div id="paginationContainer" class="mt-4">
+        <div id="paginationContainer">
             {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
 </div>
 
 <script>
-/* Replaced script: keep existing confirmDelete and session Swal, add live search/filter logic */
-
-// confirmDelete unchanged
 function confirmDelete(button) {
     Swal.fire({
         title: 'Apakah anda yakin?',
@@ -213,37 +210,7 @@ function confirmDelete(button) {
 @endif
 <x-alert></x-alert>
 
-function showDetail(id) {
-    // Fetch transaction details using AJAX
-    fetch(/dashboard/admin/crud_transaksi/${id})
-        .then(response => response.json())
-        .then(data => {
-            const content = document.getElementById('detailContent');
-            content.innerHTML = `
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div class="font-medium text-gray-500">Pabrik</div>
-                    <div>${data.pabrik.name}</div>
-                    <div class="font-medium text-gray-500">Pembeli</div>
-                    <div>${data.pembeli.name}</div>
-                    <div class="font-medium text-gray-500">Jumlah</div>
-                    <div>${data.jumlah}</div>
-                    <div class="font-medium text-gray-500">Total Harga</div>
-                    <div>Rp ${data.total_harga.toLocaleString('id-ID')}</div>
-                    <div class="font-medium text-gray-500">Status</div>
-                    <div>${data.status}</div>
-                    <div class="font-medium text-gray-500">Tanggal</div>
-                    <div>${new Date(data.created_at).toLocaleDateString('id-ID')}</div>
-                </div>
-            `;
-            document.getElementById('detailModal').classList.remove('hidden');
-        });
-}
-
-function closeDetail() {
-    document.getElementById('detailModal').classList.add('hidden');
-}
-
-/* --- Live search / live filter implementation --- */
+// --- Live Search & Filter Logic (No Animation) ---
 (function () {
     const form = document.getElementById('liveFilterForm');
     const searchInput = document.getElementById('search');
@@ -251,11 +218,8 @@ function closeDetail() {
     const tableContainer = document.getElementById('tableContainer');
     const paginationContainer = document.getElementById('paginationContainer');
 
-    if (!form || !searchInput || !rolesSelect || !tableContainer || !paginationContainer) {
-        return;
-    }
+    if (!form || !searchInput || !rolesSelect || !tableContainer || !paginationContainer) return;
 
-    // simple debounce
     function debounce(fn, delay = 300) {
         let t;
         return (...args) => {
@@ -273,7 +237,7 @@ function closeDetail() {
         if (page) params.set('page', page);
         const base = window.location.pathname;
         const qs = params.toString();
-        return qs ? ${base}?${qs} : base;
+        return qs ? `${base}?${qs}` : base;
     }
 
     async function fetchAndReplace(url, push = true) {
@@ -282,23 +246,12 @@ function closeDetail() {
             const text = await res.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(text, 'text/html');
-
             const newTable = doc.getElementById('tableContainer');
             const newPagination = doc.getElementById('paginationContainer');
-
-            if (newTable) {
-                tableContainer.innerHTML = newTable.innerHTML;
-            }
-            if (newPagination) {
-                paginationContainer.innerHTML = newPagination.innerHTML;
-            }
-
-            if (push) {
-                history.pushState(null, '', url);
-            }
-
-            // Re-attach click listeners for pagination links inside paginationContainer
-            rebindPaginationLinks();
+            if (newTable) tableContainer.innerHTML = newTable.innerHTML;
+            if (newPagination) paginationContainer.innerHTML = newPagination.innerHTML;
+            if (push) history.pushState(null, '', url);
+            rebindAll();
         } catch (err) {
             console.error('Live fetch error', err);
         }
@@ -311,32 +264,25 @@ function closeDetail() {
 
     searchInput.addEventListener('input', performSearch);
     rolesSelect.addEventListener('change', () => {
-        // when filter changed, reset to first page
         const url = buildUrl();
         fetchAndReplace(url);
     });
-
-    // prevent full form submit (enter key)
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         const url = buildUrl();
         fetchAndReplace(url);
     });
 
-    // handle browser back/forward
     window.addEventListener('popstate', function () {
-        // when navigating history, fetch current URL and replace content without pushing state
         fetchAndReplace(window.location.pathname + window.location.search, false);
-        // also update input/select values from URL
         const qs = new URLSearchParams(window.location.search);
         searchInput.value = qs.get('search') || '';
         rolesSelect.value = qs.get('roles_key') || '0';
     });
 
-    function rebindPaginationLinks() {
-        // pagination links typically have hrefs; intercept them to perform AJAX fetch
-        const links = paginationContainer.querySelectorAll('a');
-        links.forEach(link => {
+    function rebindAll() {
+        // Pagination links
+        paginationContainer.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
                 if (!href) return;
@@ -344,11 +290,14 @@ function closeDetail() {
                 fetchAndReplace(href);
             });
         });
+        // Delete buttons
+        tableContainer.querySelectorAll('button[onclick^="confirmDelete"]').forEach(btn => {
+            btn.onclick = function () { confirmDelete(this); };
+        });
     }
 
-    // initial bind for existing pagination
-    rebindPaginationLinks();
-
+    // Initial bind
+    rebindAll();
 })();
 </script>
 
@@ -370,11 +319,11 @@ function closeDetail() {
 }
 
 .animate-fade-in {
-    animation: fade-in 0.6s ease-out forwards;
+    /* animation: fade-in 0.6s ease-out forwards; */
 }
 
 .animate-fade-in-up {
-    animation: fade-in-up 0.6s ease-out forwards;
+    /* animation: fade-in-up 0.6s ease-out forwards; */
 }
 </style>
 @endsection
