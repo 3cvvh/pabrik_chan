@@ -20,19 +20,18 @@ class CrudProduk2Controller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+       public function index(Request $request)
     {
-        $data = produk::where('id_pabrik','=',Auth::user()->pabrik_id);
-        if($request->filled('search')){
+        $query = produk::with('pabrik')->where('id_pabrik', '=', Auth::user()->pabrik_id);
+        if ($request->filled('search')) {
             $search = trim($request->search);
-            $data->where('nama','LIKE','%'.$search.'%');
+            $query->where('nama', 'like', '%' . $search . '%');
         }
         return view('admin.crud_produk.index',[
             'judul' => 'crud|produk',
-            'data' =>  $data->latest()->paginate(3),
+            'data' =>  $query->latest()->paginate(3),
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */

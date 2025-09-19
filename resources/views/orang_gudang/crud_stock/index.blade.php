@@ -22,11 +22,12 @@
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <form id="form-s" action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Stok</label>
                     <div class="relative">
                         <input autocomplete="off" name="search" id="search" type="text"
+                            value="{{ request()->get('search') }}"
                             placeholder="Cari stok..."
                             class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
                         <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,9 +35,36 @@
                         </svg>
                     </div>
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
-                    Cari
-                </button>
+
+                <!-- NEW: Produk filter -->
+                <div class="min-w-[200px]">
+                    <label for="produk" class="block text-sm font-medium text-gray-700 mb-1">Produk</label>
+                    <select name="produk" id="produk" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                        <option value="">Semua Produk</option>
+                        @if(isset($produks))
+                            @foreach($produks as $p)
+                                <option value="{{ $p->id }}" {{ (string)request()->get('produk') === (string)$p->id ? 'selected' : '' }}>
+                                    {{ $p->nama }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
+                <!-- NEW: Gudang filter -->
+                <div class="min-w-[200px]">
+                    <label for="gudang" class="block text-sm font-medium text-gray-700 mb-1">Gudang</label>
+                    <select name="gudang" id="gudang" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                        <option value="">Semua Gudang</option>
+                        @if(isset($gudang))
+                            @foreach($gudang as $g)
+                                <option value="{{ $g->id }}" {{ (string)request()->get('gudang') === (string)$g->id ? 'selected' : '' }}>
+                                    {{ $g->nama }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
             </form>
         </div>
 
@@ -68,8 +96,9 @@
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
-                                        Edit
+                                        Edits
                                     </a>
+                                    <form action="{{ route('crud_stocks.destroy',$stock_produk->id) }}" method="post" class="form">
                                     <form action="{{ route('crud_stocks.destroy',$stock_produk->id) }}" method="post" class="form">
                                         @csrf
                                         @method('delete')
@@ -130,7 +159,9 @@
 
         <br>
         <!-- Pagination -->
+        <div id="paginate" class="mt-4 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">
         {{ $data->links('pagination::tailwind') }}
+        </div>
     </div>
 </div>
 
@@ -174,7 +205,25 @@ function confirmDelete(button) {
     });
 }
 
+@if(session('hapus'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('hapus') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+@endif
 <x-alert></x-alert>
+@if(session('edit'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('edit') }}',
+        timer: 1500,
+        showConfirmButton: false
+    });
+@endif
 
 function showDetail(id) {
     fetch(`/dashboard/org_gudang/crud_produk/${id}`)
@@ -204,6 +253,131 @@ function showDetail(id) {
 function closeDetail() {
     document.getElementById('detailModal').classList.add('hidden');
 }
+(function () {
+    //taruh id di form search
+    const form = document.getElementById('form-s');
+    //name di input search harus search
+    const searchInput = document.getElementById('search');
+    // select filters
+    const produkSelect = document.getElementById('produk');
+    const gudangSelect = document.getElementById('gudang');
+    //div awal table id
+    const tableContainer = document.getElementById('div-container');
+    //div awal pagination id
+    const paginationContainer = document.getElementById('paginate');
+
+    if (!form || !searchInput || !tableContainer || !paginationContainer) {
+        return;
+    }
+
+    // debounce helper
+    function debounce(fn, delay = 300) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    function buildUrl(page) {
+        const params = new URLSearchParams();
+        const s = searchInput.value.trim();
+        const p = produkSelect ? produkSelect.value : '';
+        const g = gudangSelect ? gudangSelect.value : '';
+
+        if (s.length) params.set('search', s);
+        if (p) params.set('produk', p);
+        if (g) params.set('gudang', g);
+        if (page) params.set('page', page);
+
+        const base = window.location.pathname;
+        const qs = params.toString();
+        return qs ? `${base}?${qs}` : base;
+    }
+
+    async function fetchAndReplace(url, push = true) {
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const text = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            //ganti juga sesuai id diatas
+            const newTable = doc.getElementById('div-container');
+            const newPagination = doc.getElementById('paginate');
+
+            if (newTable) {
+                tableContainer.innerHTML = newTable.innerHTML;
+            }
+            if (newPagination) {
+                paginationContainer.innerHTML = newPagination.innerHTML;
+            }
+
+            if (push) {
+                history.pushState(null, '', url);
+            }
+
+            // after replacing content, update selects/inputs from URL (in case server normalizes)
+            const qs = new URL(url, window.location.origin).searchParams;
+            if (searchInput) searchInput.value = qs.get('search') || '';
+            if (produkSelect) produkSelect.value = qs.get('produk') || '';
+            if (gudangSelect) gudangSelect.value = qs.get('gudang') || '';
+
+            // Re-bind pagination links after replacing markup
+            rebindPaginationLinks();
+        } catch (err) {
+            console.error('Live fetch error', err);
+        }
+    }
+
+    const performSearch = debounce(() => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    }, 350);
+
+    // events: search input and selects
+    searchInput.addEventListener('input', performSearch);
+    if (produkSelect) produkSelect.addEventListener('change', () => { fetchAndReplace(buildUrl()); });
+    if (gudangSelect) gudangSelect.addEventListener('change', () => { fetchAndReplace(buildUrl()); });
+
+    // prevent full form submit (enter key)
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+
+    // handle browser back/forward: update input and fetch content
+    window.addEventListener('popstate', function () {
+        const full = window.location.pathname + window.location.search;
+        fetchAndReplace(full, false);
+        const qs = new URLSearchParams(window.location.search);
+        searchInput.value = qs.get('search') || '';
+        if (produkSelect) produkSelect.value = qs.get('produk') || '';
+        if (gudangSelect) gudangSelect.value = qs.get('gudang') || '';
+    });
+
+    function rebindPaginationLinks() {
+        const links = paginationContainer.querySelectorAll('a');
+        links.forEach(link => {
+            // remove previous handlers to avoid duplicates
+            link.replaceWith(link.cloneNode(true));
+        });
+        // re-select after clone
+        const newLinks = paginationContainer.querySelectorAll('a');
+        newLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+                e.preventDefault();
+                fetchAndReplace(href);
+            });
+        });
+    }
+
+    // initial bind for existing pagination
+    rebindPaginationLinks();
+
+})();
 </script>
 
 <style>
