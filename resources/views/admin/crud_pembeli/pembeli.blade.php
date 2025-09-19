@@ -113,7 +113,7 @@
         </div>
 
         <br>
-        <div id="paginationContainer" class="mt-4 flex justify-end animate-fade-in-up" style="animation-delay: 0.3s">
+        <div id="paginationContainer">
             {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
