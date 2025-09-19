@@ -4,13 +4,14 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8 animate-fade-in">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 animate-fade-in">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Data Pabrik</h1>
                 <p class="text-gray-600">Kelola semua pabrik dalam sistem</p>
             </div>
-            <a href="/dashboard/super_admin/crud_pabrik/create">
-                <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
+            <a href="/dashboard/super_admin/crud_pabrik/create"
+               class="mt-4 sm:mt-0 w-full sm:w-auto">
+                <button class="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
