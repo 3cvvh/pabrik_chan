@@ -8,11 +8,10 @@
         <div class="flex justify-between items-center mb-8 animate-fade-in">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftars produk</h1>
-                <p class="text-gray-600"></p>
             </div>
         </div>
 
-        <!-- Enhanced Search/Filter Section -->
+        <!-- Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
             <form id="form-search" action="" method="get" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
@@ -32,8 +31,8 @@
             </form>
         </div>
 
-        <!-- Enhanced Table Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+        <!-- TABEL - hanya tampil di desktop -->
+        <div class="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -49,18 +48,20 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($data as $index => $produk)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $produk->nama }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
-                            @if($produk->gambar)
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><img class="mask-auto w-20 h-20" src="{{ asset('storage/' . $produk->gambar) }}" alt=""></td>
-                            @else
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Tidak ada gambar</td>
-                            @endif
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $produk->nama }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                @if($produk->gambar)
+                                    <img class="mask-auto w-20 h-20" src="{{ asset('storage/' . $produk->gambar) }}" alt="">
+                                @else
+                                    Tidak ada gambar
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
                                 Rp {{ number_format($produk->harga, 0, ',', '.') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-4">
                                 <div class="flex space-x-2">
                                     <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="{{ route('produk.show',$produk->id) }}">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,8 +79,33 @@
             </div>
             {{ $data->links('pagination::tailwind') }}
         </div>
+
+        <!-- CARD VIEW - hanya tampil di HP -->
+        <div class="sm:hidden space-y-4">
+            @foreach ($data as $index => $produk)
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-gray-500">#{{ $data->firstItem() + $index }}</span>
+                        <span class="text-sm font-semibold text-indigo-600">{{ $produk->pabrik->name }}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">{{ $produk->nama }}</h3>
+                    <p class="text-sm text-gray-700">Harga: Rp {{ number_format($produk->harga, 0, ',', '.') }}</p>
+                    @if($produk->gambar)
+                        <img class="mt-2 rounded-lg w-full h-40 object-cover" src="{{ asset('storage/' . $produk->gambar) }}" alt="">
+                    @endif
+                    <div class="mt-3 flex justify-end">
+                        <a href="{{ route('produk.show',$produk->id) }}" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-200 transition">
+                            Detail
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+            {{ $data->links('pagination::tailwind') }}
+        </div>
+
     </div>
 </div>
+
 
 <!-- Detail Modal -->
 <div id="detailModal" class="fixed inset-0 z-50 hidden overflow-y-auto">

@@ -10,13 +10,13 @@
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar User</h1>
                 <p class="text-gray-600">Kelola semua User dalam sistem</p>
             </div>
-            <a href="{{ route('crud_user.create') }}">
-                <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah User Baru
-                </button>
+           <a href="{{ route('crud_user.create') }}"
+            class="px-3 py-1.5 text-sm gap-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center
+                    sm:px-5 sm:py-2.5 sm:text-base sm:gap-2">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Stok Baru
             </a>
         </div>
 
