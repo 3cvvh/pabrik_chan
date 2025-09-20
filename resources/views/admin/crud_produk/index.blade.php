@@ -289,21 +289,18 @@ function closeDetail() {
 @endif
 </script>
 <script>
-(function () {
-    //taruh id di form search
-    const form = document.getElementById('form-s');
-    //name di input search harus search
+// Live search for produk — debounce, JSON headers, render rows
+    (function () {
+    const form = document.getElementById('search-form');
     const searchInput = document.getElementById('search');
-    //div awal table id
-    const tableContainer = document.getElementById('div-container');
-    //div awal pagination id
+    const tableContainer = document.getElementById('table-awal');
     const paginationContainer = document.getElementById('paginate');
 
     if (!form || !searchInput || !tableContainer || !paginationContainer) {
         return;
     }
 
-    // debounce helper
+    // simple debounce
     function debounce(fn, delay = 300) {
         let t;
         return (...args) => {
@@ -328,8 +325,8 @@ function closeDetail() {
             const text = await res.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(text, 'text/html');
-            //ganti juga sesuai id diatas
-            const newTable = doc.getElementById('div-container');
+
+            const newTable = doc.getElementById('table-awal');
             const newPagination = doc.getElementById('paginate');
 
             if (newTable) {
@@ -343,7 +340,7 @@ function closeDetail() {
                 history.pushState(null, '', url);
             }
 
-            // Re-bind pagination links after replacing markup
+            // Re-attach click listeners for pagination links inside paginationContainer
             rebindPaginationLinks();
         } catch (err) {
             console.error('Live fetch error', err);
@@ -354,6 +351,7 @@ function closeDetail() {
         const url = buildUrl();
         fetchAndReplace(url);
     }, 350);
+
     searchInput.addEventListener('input', performSearch);
 
     // prevent full form submit (enter key)
@@ -363,10 +361,9 @@ function closeDetail() {
         fetchAndReplace(url);
     });
 
-    // handle browser back/forward: update input and fetch content
+    // handle browser back/forward
     window.addEventListener('popstate', function () {
-        const full = window.location.pathname + window.location.search;
-        fetchAndReplace(full, false);
+        fetchAndReplace(window.location.pathname + window.location.search, false);
         const qs = new URLSearchParams(window.location.search);
         searchInput.value = qs.get('search') || '';
     });
@@ -374,12 +371,6 @@ function closeDetail() {
     function rebindPaginationLinks() {
         const links = paginationContainer.querySelectorAll('a');
         links.forEach(link => {
-            // remove previous handlers to avoid duplicates
-            link.replaceWith(link.cloneNode(true));
-        });
-        // re-select after clone
-        const newLinks = paginationContainer.querySelectorAll('a');
-        newLinks.forEach(link => {
             link.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
                 if (!href) return;
@@ -389,10 +380,9 @@ function closeDetail() {
         });
     }
 
-    // initial bind for existing pagination
     rebindPaginationLinks();
 
 })();
-</script>
+    </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endsection
