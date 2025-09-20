@@ -27,9 +27,10 @@
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Transaksi</label>
                     <div class="relative">
-                        <!-- existing input kept, id="search" already present -->
+                        <!-- set nilai awal dari request -->
                         <input autocomplete="off" name="search" id="search" type="text"
                             placeholder="Cari transaksi..."
+                            value="{{ request('search') }}"
                             class="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
                         <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -41,7 +42,8 @@
                     <select name="roles_key" id="roles_key" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
                         <option value="0">Semua Pembeli</option>
                         @foreach ($pembeli as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        <!-- set selected jika sama dengan request -->
+                        <option value="{{ $item->id }}" {{ (string)request('roles_key') === (string)$item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                         @endforeach
                     </select>
                 </div>

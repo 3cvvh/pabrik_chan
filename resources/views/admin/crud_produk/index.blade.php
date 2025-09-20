@@ -212,93 +212,110 @@ function closeDetail() {
 @endif
 </script>
 <script>
-// Live search for produk — debounce, JSON headers, render rows
-let renderList = function(items) {
-    const tbody = document.getElementById('produk');
-    if (!items || items.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8" class="px-6 py-4 text-sm text-gray-500 text-center">
-                    Data tidak ditemukan
-                </td>
-            </tr>`;
+(function () {
+    //taruh id di form search
+    const form = document.getElementById('form-s');
+    //name di input search harus search
+    const searchInput = document.getElementById('search');
+    //div awal table id
+    const tableContainer = document.getElementById('div-container');
+    //div awal pagination id
+    const paginationContainer = document.getElementById('paginate');
+
+    if (!form || !searchInput || !tableContainer || !paginationContainer) {
         return;
     }
 
-    tbody.innerHTML = items.map((p, i) => `
-        <tr class="hover:bg-gray-50 transition-all duration-200">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${i + 1}</td>
-            <td class="px-6 py-4 max-w-xs truncate whitespace-nowrap text-sm font-medium text-gray-800" title="${p.nama}">${p.nama}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${p.pabrik.name}</td>
-            ${p.gambar ? `
-            <td class="px-4 py-4 whitespace-nowrap">
-                <img class="object-cover rounded-md w-20 h-20 border border-gray-100 shadow-sm" src="/storage/${p.gambar}" alt="${p.nama}">
-            </td>` : `
-            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">-</td>`}
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Rp ${new Intl.NumberFormat('id-ID').format(p.harga_jual || p.harga || 0)}
-                </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    Rp ${new Intl.NumberFormat('id-ID').format(p.harga_modal || 0)}
-                </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex flex-col items-center gap-2">
-                    <a href="${p.qr_view_url}"
-                        class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md text-xs font-medium transition-colors duration-200">
-                        Lihat QR
-                    </a>
-                </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex space-x-2">
-                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200" href="${p.detail_url}">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                        Details
-                    </a>
-                    ${p.can_edit ? `
-                    <a href="${p.edit_url}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </svg>
-                        Edit
-                    </a>` : ''}
-                    ${p.can_delete ? `
-                    <form action="${p.delete_url}" method="post" class="form">
-                        <input type="hidden" name="_token" value="${p.csrf_token}">
-                        <input type="hidden" name="_method" value="delete">
-                        <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                            Hapus
-                        </button>
-                    </form>` : ''}
-                </div>
-            </td>
-        </tr>
-    `).join('');
-};
+    // debounce helper
+    function debounce(fn, delay = 300) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
 
-document.getElementById('search').addEventListener('input', function() {
-    const value = this.value;
-    clearTimeout(window.searchTimer);
-    window.searchTimer = setTimeout(() => {
-        fetch("{{ route('produk.index') }}?search=" + encodeURIComponent(value), {
-            headers: { 'Accept': 'application/json' }
-        })
-        .then(res => res.json())
-        .then(items => {
-            renderList(items);
+    function buildUrl(page) {
+        const params = new URLSearchParams();
+        const s = searchInput.value.trim();
+        if (s.length) params.set('search', s);
+        if (page) params.set('page', page);
+        const base = window.location.pathname;
+        const qs = params.toString();
+        return qs ? `${base}?${qs}` : base;
+    }
+
+    async function fetchAndReplace(url, push = true) {
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const text = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            //ganti juga sesuai id diatas
+            const newTable = doc.getElementById('div-container');
+            const newPagination = doc.getElementById('paginate');
+
+            if (newTable) {
+                tableContainer.innerHTML = newTable.innerHTML;
+            }
+            if (newPagination) {
+                paginationContainer.innerHTML = newPagination.innerHTML;
+            }
+
+            if (push) {
+                history.pushState(null, '', url);
+            }
+
+            // Re-bind pagination links after replacing markup
+            rebindPaginationLinks();
+        } catch (err) {
+            console.error('Live fetch error', err);
+        }
+    }
+
+    const performSearch = debounce(() => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    }, 350);
+    searchInput.addEventListener('input', performSearch);
+
+    // prevent full form submit (enter key)
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+
+    // handle browser back/forward: update input and fetch content
+    window.addEventListener('popstate', function () {
+        const full = window.location.pathname + window.location.search;
+        fetchAndReplace(full, false);
+        const qs = new URLSearchParams(window.location.search);
+        searchInput.value = qs.get('search') || '';
+    });
+
+    function rebindPaginationLinks() {
+        const links = paginationContainer.querySelectorAll('a');
+        links.forEach(link => {
+            // remove previous handlers to avoid duplicates
+            link.replaceWith(link.cloneNode(true));
         });
-    }, 300);
-});
-    </script>
+        // re-select after clone
+        const newLinks = paginationContainer.querySelectorAll('a');
+        newLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+                e.preventDefault();
+                fetchAndReplace(href);
+            });
+        });
+    }
+
+    // initial bind for existing pagination
+    rebindPaginationLinks();
+
+})();
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endsection
