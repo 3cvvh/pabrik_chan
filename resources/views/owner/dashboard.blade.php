@@ -39,12 +39,14 @@
             <input id="search" name="search" type="text" placeholder="Cari transaksi..."
                    class="flex-1 px-4 py-2 border border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
         </form>
-        <!-- Tambahkan container untuk pagination -->
-        <div id="paginationContainer"></div>
+
+        <!-- Container pagination -->
+
+
         <!-- ==========================
              TABEL (desktop)
         =========================== -->
-        <div id="tableContainer" class="hidden sm:block overflow-x-auto border border-gray-200 rounded-xl shadow">
+        <div id="tableContainerDesktop" class="hidden sm:block overflow-x-auto border border-gray-200 rounded-xl shadow">
             <table class="min-w-full bg-white rounded-xl">
                 <thead>
                     <tr class="bg-gradient-to-r from-blue-500 to-blue-400 text-black">
@@ -90,7 +92,7 @@
         <!-- ==========================
              CARD (mobile)
         =========================== -->
-        <div id="tableContainer" class="sm:hidden space-y-4 mt-6">
+        <div id="tableContainerMobile" class="sm:hidden space-y-4 mt-6">
             @forelse ($transaksi as $index => $item)
                 <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-2">
@@ -113,25 +115,25 @@
                     Tidak ada data transaksi tersedia.
                 </div>
             @endforelse
-         
         </div>
-        {{ $transaksi->links() }}
+                <div id="paginationContainer">
+            {{ $transaksi->links() }}
+        </div>
     </div>
-       
 </div>
 
 <script>
-    (function () {
+(function () {
     const form = document.getElementById('liveFilterForm');
     const searchInput = document.getElementById('search');
-    const tableContainer = document.getElementById('tableContainer');
+    const tableContainerDesktop = document.getElementById('tableContainerDesktop');
+    const tableContainerMobile = document.getElementById('tableContainerMobile');
     const paginationContainer = document.getElementById('paginationContainer');
 
-    if (!form || !searchInput || !tableContainer || !paginationContainer) {
+    if (!form || !searchInput || !tableContainerDesktop || !tableContainerMobile || !paginationContainer) {
         return;
     }
 
-    // simple debounce
     function debounce(fn, delay = 300) {
         let t;
         return (...args) => {
@@ -157,21 +159,28 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(text, 'text/html');
 
-            const newTable = doc.getElementById('tableContainer');
-            const newPagination = doc.getElementById('paginationContainer');
+            const newTableDesktop = doc.getElementById('tableContainerDesktop');
+            const newTableMobile = doc.getElementById('tableContainerMobile');
+            const newPagination = doc.querySelector('.pagination') || doc.getElementById('paginationContainer');
 
-            if (newTable) {
-                tableContainer.innerHTML = newTable.innerHTML;
+            if (newTableDesktop) {
+                tableContainerDesktop.innerHTML = newTableDesktop.innerHTML;
             }
-            if (newPagination) {
-                paginationContainer.innerHTML = newPagination.innerHTML;
+            if (newTableMobile) {
+                tableContainerMobile.innerHTML = newTableMobile.innerHTML;
+            }
+
+            // Pagination hilang saat search, muncul lagi kalau kosong
+            if (searchInput.value.trim().length > 0) {
+                paginationContainer.innerHTML = '';
+            } else {
+                paginationContainer.innerHTML = newPagination ? newPagination.innerHTML : '';
             }
 
             if (push) {
                 history.pushState(null, '', url);
             }
 
-            // Re-attach click listeners for pagination links inside paginationContainer
             rebindPaginationLinks();
         } catch (err) {
             console.error('Live fetch error', err);
@@ -185,14 +194,12 @@
 
     searchInput.addEventListener('input', performSearch);
 
-    // prevent full form submit (enter key)
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         const url = buildUrl();
         fetchAndReplace(url);
     });
 
-    // handle browser back/forward
     window.addEventListener('popstate', function () {
         fetchAndReplace(window.location.pathname + window.location.search, false);
         const qs = new URLSearchParams(window.location.search);
@@ -212,7 +219,6 @@
     }
 
     rebindPaginationLinks();
-
 })();
 </script>
 @endsection
