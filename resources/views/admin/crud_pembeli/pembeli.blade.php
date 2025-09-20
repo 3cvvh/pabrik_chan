@@ -4,26 +4,25 @@
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
     <div class="container mx-auto px-4 py-8">
-        <!-- Enhanced Header Section -->
+        <!-- Header -->
         <div class="flex justify-between items-center mb-8 animate-fade-in">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar Pembeli</h1>
                 <p class="text-gray-600">Kelola semua pembeli dalam satu tempat</p>
             </div>
-
-            <a href="/dashboard/admin/crud_pembeli/create">
-                <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah Pembeli
-                </button>
+            <a href="{{ route('crud_stocks.create') }}"
+            class="px-3 py-1.5 text-sm gap-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center
+                    sm:px-5 sm:py-2.5 sm:text-base sm:gap-2">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Stok Baru
             </a>
         </div>
 
-        <!-- Enhanced Search/Filter Section -->
+        <!-- Search -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form id="liveFilterForm" action="" method="get" class="flex flex-wrap gap-4 items-end">
+            <form id="liveFilterForm" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Pembeli</label>
                     <div class="relative">
@@ -39,8 +38,8 @@
             </form>
         </div>
 
-        <!-- Enhanced Table Section -->
-        <div id="tableContainer" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+        <!-- Tabel (Desktop) -->
+        <div id="tableContainer" class="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -63,20 +62,14 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $pembeli->no_telepon }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
-                                    <a href="/dashboard/admin/crud_pembeli/{{ $pembeli->id }}/edit" class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-lg text-sm font-medium transition-colors duration-200">
-                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                        </svg>
+                                    <a href="{{ route('crud_pembeli.edit',$pembeli->id) }}" class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         Edit
                                     </a>
-                                    <form  action="/dashboard/admin/crud_pembeli/{{ $pembeli->id }}" method="POST" class="inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="hidden" name="id" value="{{ $pembeli->id }}">
+                                    <form action="{{ route('crud_pembeli.destroy',$pembeli->id) }}" method="POST" class="delete-form">
+                                        @csrf @method('DELETE')
                                         <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
-                                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
+                                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                             Hapus
                                         </button>
                                     </form>
@@ -84,18 +77,48 @@
                             </td>
                         </tr>
                         @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-gray-500">Data tidak ditemukan</td>
-                        </tr>
+                        <tr><td colspan="6" class="text-center py-4 text-gray-500">Data tidak ditemukan</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Cards (Mobile) -->
+
+        <div id="tableContainerMobile" class="sm:hidden space-y-4 mt-6">
+
+            @forelse($data as $index => $pembeli)
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
+                <div class="flex justify-between mb-2">
+                    <span class="text-xs text-gray-500">#{{ $data->firstItem() + $index }}</span>
+                    <span class="text-xs font-medium text-indigo-600">{{ $pembeli->pabrik->name ?? '-' }}</span>
+                </div>
+                <p class="text-base font-bold text-gray-800">{{ $pembeli->name }}</p>
+                <p class="text-sm text-gray-600">{{ $pembeli->alamat }}</p>
+                <p class="text-sm text-gray-500 mb-3">{{ $pembeli->no_telepon }}</p>
+                <div class="flex justify-end space-x-2">
+                    <a href="{{ route('crud_pembeli.edit',$pembeli->id) }}" class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        Edit
+                    </a>
+                    <form action="{{ route('crud_pembeli.destroy',$pembeli->id) }}" method="POST" class="delete-form">
+                        @csrf @method('DELETE')
+                        <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            Hapus
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @empty
+            <p class="text-center text-gray-500">Data tidak ditemukan</p>
+            @endforelse
+        </div>
         <br>
-        <!-- Pagination -->
-        <div id="paginationContainer" class="mt-4 flex justify-end animate-fade-in-up" style="animation-delay: 0.3s">
-        {{ $data->links('pagination::tailwind') }}
+
+        <div id="paginationContainer">
+            {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
 </div>
@@ -150,20 +173,17 @@ function confirmDelete(button) {
 <script>
 //livesearch
 (function () {
-    //taruh id di form search
     const form = document.getElementById('liveFilterForm');
-    //name di input search harus search
     const searchInput = document.getElementById('search');
-    //div awal table id
     const tableContainer = document.getElementById('tableContainer');
-    //div awal pagination id
+    const cardsContainer = document.getElementById('cardsContainer'); // tambahkan ini
     const paginationContainer = document.getElementById('paginationContainer');
 
-    if (!form || !searchInput || !tableContainer || !paginationContainer) {
+    const tableContainerMobile = document.getElementById('tableContainerMobile'); // mobile
+    if (!form || !searchInput || !tableContainer && !tableContainerMobile || !paginationContainer) {
         return;
     }
 
-    // debounce helper
     function debounce(fn, delay = 300) {
         let t;
         return (...args) => {
@@ -190,10 +210,16 @@ function confirmDelete(button) {
             const doc = parser.parseFromString(text, 'text/html');
 
             const newTable = doc.getElementById('tableContainer');
+            const newCards = doc.getElementById('cardsContainer'); // ambil cards baru
             const newPagination = doc.getElementById('paginationContainer');
+            const newMobile = doc.getElementById('tableContainerMobile');
 
             if (newTable) {
                 tableContainer.innerHTML = newTable.innerHTML;
+            }
+
+            if( newMobile && tableContainer) {
+                tableContainerMobile.innerHTML = newMobile.innerHTML;
             }
             if (newPagination) {
                 paginationContainer.innerHTML = newPagination.innerHTML;
@@ -203,7 +229,6 @@ function confirmDelete(button) {
                 history.pushState(null, '', url);
             }
 
-            // Re-bind pagination links after replacing markup
             rebindPaginationLinks();
         } catch (err) {
             console.error('Live fetch error', err);
@@ -216,14 +241,12 @@ function confirmDelete(button) {
     }, 350);
     searchInput.addEventListener('input', performSearch);
 
-    // prevent full form submit (enter key)
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         const url = buildUrl();
         fetchAndReplace(url);
     });
 
-    // handle browser back/forward: update input and fetch content
     window.addEventListener('popstate', function () {
         const full = window.location.pathname + window.location.search;
         fetchAndReplace(full, false);
@@ -234,10 +257,8 @@ function confirmDelete(button) {
     function rebindPaginationLinks() {
         const links = paginationContainer.querySelectorAll('a');
         links.forEach(link => {
-            // remove previous handlers to avoid duplicates
             link.replaceWith(link.cloneNode(true));
         });
-        // re-select after clone
         const newLinks = paginationContainer.querySelectorAll('a');
         newLinks.forEach(link => {
             link.addEventListener('click', function (e) {
@@ -249,7 +270,6 @@ function confirmDelete(button) {
         });
     }
 
-    // initial bind for existing pagination
     rebindPaginationLinks();
 
 })();

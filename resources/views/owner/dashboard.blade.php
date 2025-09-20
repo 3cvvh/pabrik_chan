@@ -113,9 +113,13 @@
                     Tidak ada data transaksi tersedia.
                 </div>
             @endforelse
+         
         </div>
+        {{ $transaksi->links() }}
     </div>
+       
 </div>
+
 <script>
     (function () {
     const form = document.getElementById('liveFilterForm');

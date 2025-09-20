@@ -34,7 +34,7 @@ class Crud_pembeliController extends Controller
 
         return view('admin.crud_pembeli.pembeli',[
             'judul' => 'pembeli|page',
-            'data'  => $data->latest()->paginate(3),
+            'data'  => $data->latest()->paginate(1),
             'pabrik' => pabrik::all()
 
         ]);

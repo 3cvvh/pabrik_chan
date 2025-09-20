@@ -9,13 +9,13 @@
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar Gudang</h1>
                 <p class="text-gray-600">Kelola semua gudang pabrik di sini</p>
             </div>
-            <a href="/dashboard/admin/crud_gudang/create">
-                <button class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah Gudang
-                </button>
+            <a href="{{ route('crud_stocks.create') }}"
+            class="px-3 py-1.5 text-sm gap-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center
+                    sm:px-5 sm:py-2.5 sm:text-base sm:gap-2">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Stok Baru
             </a>
         </div>
 
@@ -45,7 +45,7 @@
             </form>
         </div>
 
-        <div id="div-container" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+         <div class="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -111,6 +111,76 @@
                 </table>
             </div>
         </div>
+        
+        <!-- MOBILE VERSION (Card View) -->
+        <div class="sm:hidden space-y-4 mt-6">
+            @foreach ($data as $index => $g)
+                <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
+                    
+                    <!-- Nomor urut -->
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">#{{ $data->firstItem() + $index }}</span>
+                        @php
+                            $statusClasses = [
+                                'aktif' => 'bg-green-100 text-green-700',
+                                'nonaktif' => 'bg-red-100 text-red-700',
+                            ];
+                            $statusClass = $statusClasses[$g->status] ?? 'bg-gray-100 text-gray-700';
+                        @endphp
+                        <span class="px-2 py-1 text-xs rounded-full {{ $statusClass }}">
+                            {{ ucfirst($g->status) }}
+                        </span>
+                    </div>
+        
+                    <!-- Pabrik & Nama -->
+                    <p class="text-sm font-medium text-gray-700">
+                        <span class="font-semibold">Pabrik:</span> {{ $g->pabrik->name ?? '-' }}
+                    </p>
+                    <p class="text-sm font-medium text-gray-700">
+                        <span class="font-semibold">Nama:</span> {{ $g->nama }}
+                    </p>
+        
+                    <!-- Alamat -->
+                    <p class="text-sm text-gray-600 mt-1">Alamat:{{ $g->alamat }}
+                    </p>
+        
+                    <!-- No Telepon -->
+                    <p class="text-sm text-gray-600">Telepon{{ $g->no_telepon }}
+                    </p>
+        
+                    <!-- Keterangan -->
+                    @if($g->keterangan)
+                        <p class="text-sm text-gray-500 italic">Keterangan{{ $g->keterangan }}
+                        </p>
+                    @endif
+        
+                    <!-- Tombol Aksi -->
+                    <div class="flex justify-end space-x-2 mt-3">
+                        <a href="/dashboard/admin/crud_gudang/{{ $g->id }}/edit"
+                           class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 rounded-lg text-sm font-medium transition transform hover:scale-105">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                            Edit
+                        </a>
+        
+                        <form action="/dashboard/admin/crud_gudang/{{ $g->id }}" method="POST" class="inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" onclick="confirmDelete(this)"
+                                    class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition transform hover:scale-105">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                Hapus
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div> 
         <br>
         <!-- Pagination -->
         <div id="paginate" class="mt-4 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">

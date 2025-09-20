@@ -19,7 +19,7 @@ class OwnerController extends Controller
           $data = transaksi::with(['pabrik','pembeli'])->where('id_pabrik', '=', Auth::user()->pabrik_id);
         if ($request->filled('search')) {
             $search = trim($request->search);
-            $data->where('judul', 'customer', 'status_order', '%' . $search . '%');
+            $data->where('judul','LIKE', '%' . $search . '%');
         }
         return view('owner.dashboard',[
             'judul' => 'owner|dashboard',

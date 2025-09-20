@@ -8,7 +8,7 @@
         <div class="flex justify-between items-center mb-8 animate-fade-in">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar produk</h1>
-                <p class="text-gray-600">Kelola semuas produk dalam satu tempat</p>
+                <p class="text-gray-600">Kelola semua produk dalam satu tempat</p>
             </div>
 
             <div class="flex flex-wrap gap-3">
@@ -24,13 +24,13 @@
                 </a>
 
                 @if(Auth::user()->role_id == 1)
-                    <a href="{{ route('produk.create') }}">
-                        <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            Tambah produk Baru
-                        </button>
+                    <a href="{{ route('crud_stocks.create') }}"
+                    class="px-3 py-1.5 text-sm gap-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center
+                            sm:px-5 sm:py-2.5 sm:text-base sm:gap-2">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Tambah Stok Baru
                     </a>
                 @endif
             </div>
@@ -38,7 +38,7 @@
 
         <!-- Enhanced Search/Filter Section -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form onsubmit="return false" id="search-form" class="flex flex-wrap gap-4 items-end">
+            <form id="search-form" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Produks</label>
                     <div class="relative">
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Enhanced Table Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+        <div id="table-awal" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -73,7 +73,7 @@
                      <tbody id="produk" class="bg-white divide-y divide-gray-200">
                          @foreach ($data as $index => $produk)
                         <tr class="hover:bg-gray-50 transition-all duration-200">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $index+1 }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                             <td class="px-6 py-4 max-w-xs truncate whitespace-nowrap text-sm font-medium text-gray-800" title="{{ $produk->nama }}">{{ $produk->nama }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
                             @if($produk->gambar)
@@ -142,6 +142,83 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        {{-- Mobile Cards (hanya muncul di HP) --}}
+        <div id="cardsContainer" class="sm:hidden space-y-4 mt-6 animate-fade-in-up">
+            @forelse($data as $index => $produk)
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
+                <!-- Nomor dan Pabrik -->
+                <div class="flex justify-between mb-2">
+                    <span class="text-xs text-gray-500">#{{ $data->firstItem() + $index }}</span>
+                    <span class="text-xs font-medium text-indigo-600">{{ $produk->pabrik->name ?? '-' }}</span>
+                </div>
+
+                <!-- Nama Produk -->
+                <p class="text-base font-bold text-gray-800">{{ $produk->nama }}</p>
+
+                <!-- Gambar Produk -->
+                @if($produk->gambar)
+                <img src="{{ asset('storage/' . $produk->gambar) }}" alt="{{ $produk->nama }}"
+                    class="w-full h-32 object-cover rounded-md my-2">
+                @endif
+
+                <!-- Harga -->
+                <p class="text-sm text-gray-600">
+                    Harga Jual: Rp {{ number_format($produk->harga_jual ?? $produk->harga ?? 0, 0, ',', '.') }}
+                </p>
+                <p class="text-sm text-gray-500 mb-3">
+                    Harga Modal: Rp {{ number_format($produk->harga_modal ?? 0, 0, ',', '.') }}
+                </p>
+
+                <!-- QR Code -->
+                <div class="flex justify-center my-2">
+                    {!! QrCode::size(60)->generate(route('produk.show', $produk->id)) !!}
+                </div>
+
+                <!-- Tombol Aksi (Copy dari Table) -->
+                <div class="flex justify-end space-x-2 mt-2">
+                    <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors duration-200"
+                       href="{{ Auth::user()->role_id == 1 ? route('produk.show',$produk->id) : route('crud_produk.show',$produk->id) }}">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        Details
+                    </a>
+
+                    @if(Auth::check() && Auth::user()->role_id == 1)
+                    <a href="{{ Auth::user()->role_id == 1 ? route('produk.edit',$produk->id) : route('crud_produk.edit',$produk->id) }}"
+                       class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit
+                    </a>
+
+                    <form action="{{ route('produk.destroy',$produk->id) }}" method="post" class="form">
+                        @csrf
+                        @method('delete')
+                        <button type="button" onclick="confirmDelete(this)"
+                            class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Hapus
+                        </button>
+                    </form>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <p class="text-center text-gray-500">Data tidak ditemukan</p>
+            @endforelse
+        </div>
+        <br>
+        {{-- pagination --}}
+        <div id="paginate" class="mt-4 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">
+        {{ $data->links() }}
         </div>
     </div>
 </div>
