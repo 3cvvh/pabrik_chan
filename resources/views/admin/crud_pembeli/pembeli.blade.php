@@ -85,7 +85,9 @@
         </div>
 
         <!-- Cards (Mobile) -->
-        <div id="cardsContainer" class="sm:hidden space-y-4 mt-6">
+
+        <div id="tableContainerMobile" class="sm:hidden space-y-4 mt-6">
+
             @forelse($data as $index => $pembeli)
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                 <div class="flex justify-between mb-2">
@@ -114,7 +116,8 @@
             @endforelse
         </div>
         <br>
-        <div id="paginationContainer" class="mt-4 flex justify-center">
+
+        <div id="paginationContainer">
             {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
@@ -176,7 +179,8 @@ function confirmDelete(button) {
     const cardsContainer = document.getElementById('cardsContainer'); // tambahkan ini
     const paginationContainer = document.getElementById('paginationContainer');
 
-    if (!form || !searchInput || !tableContainer || !paginationContainer || !cardsContainer) {
+    const tableContainerMobile = document.getElementById('tableContainerMobile'); // mobile
+    if (!form || !searchInput || !tableContainer && !tableContainerMobile || !paginationContainer) {
         return;
     }
 
@@ -208,12 +212,14 @@ function confirmDelete(button) {
             const newTable = doc.getElementById('tableContainer');
             const newCards = doc.getElementById('cardsContainer'); // ambil cards baru
             const newPagination = doc.getElementById('paginationContainer');
+            const newMobile = doc.getElementById('tableContainerMobile');
 
             if (newTable) {
                 tableContainer.innerHTML = newTable.innerHTML;
             }
-            if (newCards) {
-                cardsContainer.innerHTML = newCards.innerHTML;
+
+            if( newMobile && tableContainer) {
+                tableContainerMobile.innerHTML = newMobile.innerHTML;
             }
             if (newPagination) {
                 paginationContainer.innerHTML = newPagination.innerHTML;
