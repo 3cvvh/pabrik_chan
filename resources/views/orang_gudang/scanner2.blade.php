@@ -7,12 +7,12 @@
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-blue-100 flex justify-center items-center min-h-screen p-4">
 
-    <div class="bg-white shadow-2xl rounded-2xl p-6 md:p-8 text-center w-full max-w-lg animate-fadeIn">
+    <div class="bg-white shadow-2xl rounded-2xl p-4 sm:p-6 md:p-8 text-center w-full max-w-xs sm:max-w-lg animate-fadeIn">
         <!-- Judul -->
-        <h1 class="text-2xl md:text-3xl font-extrabold mb-4 text-gray-800">📷 Scan Barcode</h1>
+        <h1 class="text-2xl sm:text-2xl md:text-3xl font-extrabold mb-4 text-gray-800">📷 Scan Barcode</h1>
 
         <!-- Scanner Wrapper -->
-        <div class="mx-auto w-full max-w-[360px] aspect-square">
+        <div class="mx-auto w-full max-w-[250px] sm:max-w-[360px] aspect-square">
             <div id="reader" class="rounded-xl overflow-hidden border border-gray-200 shadow"></div>
         </div>
 
@@ -22,9 +22,9 @@
         </p>
 
         <!-- Tombol Aksi -->
-        <div class="mt-6 flex justify-center">
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <a href="{{ route('produk.index') }}" 
-               class="px-6 py-2.5 bg-blue-500 text-white text-sm md:text-base rounded-lg shadow hover:bg-blue-600 hover:shadow-lg transition duration-200">
+               class="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white text-base rounded-lg shadow hover:bg-blue-600 hover:shadow-lg transition duration-200 font-semibold">
                 ⬅️ Kembali
             </a>
         </div>

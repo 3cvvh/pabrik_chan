@@ -23,24 +23,26 @@ class Crud_transaksiController extends Controller
      */
   public function index(Request $request)
 {
+    // gunakan nama param yang sesuai dengan view/js: 'search' dan 'roles_key'
     $query = transaksi::with('pembeli')
         ->where('id', '!=', Auth::id())
         ->where('id_pabrik', Auth::user()->pabrik_id);
 
     // search di judul atau status
-    $query->when($request->search, function ($q, $search) {
+    $query->when($request->get('search'), function ($q, $search) {
         $q->where(function ($q2) use ($search) {
             $q2->where('judul', 'like', '%'.$search.'%')
                ->orWhere('status', 'like', '%'.$search.'%');
         });
     });
 
-    // filter by pembeli
-    $query->when($request->pembelis_key, function ($q, $pembeliId) {
+    // filter by pembeli menggunakan 'roles_key' dari view
+    $query->when($request->get('roles_key'), function ($q, $pembeliId) {
         $q->where('id_pembeli', $pembeliId);
     });
 
-    $data = $query->latest()->paginate(3)->appends($request->only(['search', 'pembelis_key']));    
+    // paginate dan append query params yang benar
+    $data = $query->latest()->paginate(3)->appends($request->only(['search', 'roles_key']));
 
     return view('admin.crud_transaksi.index', [
         'judul' => 'transaksi|page',

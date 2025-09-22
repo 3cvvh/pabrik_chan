@@ -10,13 +10,25 @@
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar Stok</h1>
                 <p class="text-gray-600">Kelola semua stok dalam satu tempat</p>
             </div>
-            <a href="{{ route('crud_stocks.create') }}"
-            class="px-3 py-1.5 text-sm gap-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center
-                    sm:px-5 sm:py-2.5 sm:text-base sm:gap-2">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Stok Baru
+            <!-- Desktop Button -->
+            <a href="{{ route('Stock_produk.create') }}"
+            class="hidden sm:flex px-5 py-2.5 text-base gap-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow items-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Stok Baru
+            </a>
+        </div>
+
+        <!-- Mobile Button -->
+        <div class="sm:hidden mb-4">
+            <a href="{{ route('Stock_produk.create') }}">
+                <button class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center justify-center gap-2 font-semibold text-base">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Tambah Stok Baru
+                </button>
             </a>
         </div>
 
@@ -114,6 +126,9 @@
                                 </td>
                             </tr>
                             @endforeach
+                             @if($data->count() == 0)
+                    <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Data tidak ditemukan</td></tr>
+                    @endif
                         </tbody>
                     </table>
                 </div>
@@ -162,8 +177,11 @@
                     </div>
                 </div>
             @endforeach
-        </div>
         <br>
+        </div>
+         @if($data->count() == 0)
+            <div class="p-4 text-center text-gray-500">Data tidak ditemukan</div>
+            @endif
         <!-- Pagination -->
         <div id="paginate" class="mt-4 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">
         {{ $data->links('pagination::tailwind') }}

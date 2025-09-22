@@ -10,13 +10,25 @@
                 <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Daftar Stok</h1>
                 <p class="text-gray-600">Kelola semua stok dalam satu tempat</p>
             </div>
+            <!-- Desktop Button -->
             <a href="{{ route('crud_stocks.create') }}"
-            class="px-3 py-1.5 text-sm gap-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center
-                    sm:px-5 sm:py-2.5 sm:text-base sm:gap-2">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Stok Baru
+            class="hidden sm:flex px-5 py-2.5 text-base gap-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow items-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Stok Baru
+            </a>
+        </div>
+
+        <!-- Mobile Button -->
+        <div class="sm:hidden mb-4">
+            <a href="{{ route('crud_stocks.create') }}">
+                <button class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow flex items-center justify-center gap-2 font-semibold text-base">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Tambah Stok Baru
+                </button>
             </a>
         </div>
 
@@ -113,7 +125,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-400">Tidak ada data stok.</td>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-400">Data tidak ditemukan.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -125,11 +137,25 @@
         <div id="div-container-mobile" class="block sm:hidden space-y-4 mt-4">
             @forelse ($data as $index => $stock_produk)
             <div class="p-4 bg-white rounded-lg shadow border animate-fade-in-up">
-                <div class="text-sm text-gray-500 mb-2">#{{ $data->firstItem() + $index }}</div>
-                <div class="font-medium text-gray-800">Jumlah: {{ $stock_produk->jumlah }}</div>
-                <div class="text-gray-600">Produk: {{ $stock_produk->produk->nama }}</div>
-                <div class="text-gray-600">Gudang: {{ $stock_produk->gudang->nama }}</div>
-                <div class="text-gray-800 font-medium">Status: {{ $stock_produk->status }}</div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-gray-500 font-medium">#{{ $data->firstItem() + $index }}</span>
+                    <!-- Status -->
+                    <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-700">{{ $stock_produk->status }}</span>
+                </div>
+                <div class="mb-1 flex flex-col gap-1">
+                    <div>
+                        <span class="block text-xs text-gray-500">Jumlah</span>
+                        <span class="block text-sm font-semibold text-gray-800">{{ $stock_produk->jumlah }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-gray-500">Produk</span>
+                        <span class="block text-sm text-gray-700">{{ $stock_produk->produk->nama }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-gray-500">Gudang</span>
+                        <span class="block text-sm text-gray-700">{{ $stock_produk->gudang->nama }}</span>
+                    </div>
+                </div>
                 <div class="mt-3 flex space-x-2">
                     <a href="{{ route('crud_stocks.edit',$stock_produk->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-colors duration-200">
                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +177,7 @@
             </div>
             @empty
             <div class="p-4 bg-white rounded-lg shadow border text-center text-gray-400 animate-fade-in-up">
-                Tidak ada data stok.
+                Data tidak ditemukan.
             </div>
             @endforelse
         </div>
