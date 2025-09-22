@@ -120,7 +120,9 @@
             </div>
         </div>
         <!-- MOBILE CARD VIEW -->
-        <div id="mobile-cards" class="sm:hidden space-y-4 mt-6">
+
+        <div id="tableContainerMobile" class="sm:hidden space-y-4 mt-6">
+
             @foreach ($data as $index => $stock_produk)
                 <div class="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
                     <!-- Nomor urut di kiri -->
@@ -275,7 +277,9 @@ function closeDetail() {
     //div awal pagination id
     const paginationContainer = document.getElementById('paginate');
 
-    if (!form || !searchInput || !tableContainer || !paginationContainer) {
+    const tableContainerMobile = document.getElementById('tableContainerMobile');
+
+    if (!form || !searchInput || !tableContainer && !tableContainerMobile || !paginationContainer) {
         return;
     }
 
@@ -313,9 +317,13 @@ function closeDetail() {
             //ganti juga sesuai id diatas
             const newTable = doc.getElementById('div-container');
             const newPagination = doc.getElementById('paginate');
+            const newMobile = doc.getElementById('tableContainerMobile');
 
             if (newTable) {
                 tableContainer.innerHTML = newTable.innerHTML;
+            }
+            if (newMobile) {
+                tableContainerMobile.innerHTML = newMobile.innerHTML;
             }
             if (newPagination) {
                 paginationContainer.innerHTML = newPagination.innerHTML;
