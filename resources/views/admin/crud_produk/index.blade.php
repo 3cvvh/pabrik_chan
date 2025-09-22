@@ -101,7 +101,7 @@
                                 @if($produk->gambar)
                                 <img class="object-cover rounded-md w-20 h-20 border border-gray-100 shadow-sm" src="{{ asset('storage/' . $produk->gambar) }}" alt="{{ $produk->nama }}">
                                 @else
-                                <span class="text-sm text-gray-500">-</span>
+                                <span class="px-3 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">Tidak ada gambar</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-sm">

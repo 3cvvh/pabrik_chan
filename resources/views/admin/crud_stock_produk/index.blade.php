@@ -178,10 +178,11 @@
                 </div>
             @endforeach
         <br>
-        </div>
-         @if($data->count() == 0)
+                 @if($data->count() == 0)
             <div class="p-4 text-center text-gray-500">Data tidak ditemukan</div>
             @endif
+        </div>
+
         <!-- Pagination -->
         <div id="paginate" class="mt-4 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">
         {{ $data->links('pagination::tailwind') }}

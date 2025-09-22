@@ -115,7 +115,7 @@ class Crud_pembeliController extends Controller
     public function destroy($id,Request $request)
     {
         $pabrik =  pembeli::find($id);
-        pembeli::destroy($request->id);
+        pembeli::destroy($pabrik->id);
         return redirect('/dashboard/admin/crud_pembeli')->with('berhasil', 'Data berhasil dihapus');
     }
 }
