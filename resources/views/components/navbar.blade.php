@@ -15,13 +15,13 @@
         <div class="text-white font-bold text-xl tracking-wide drop-shadow">
             Welcome
             @if (Auth::user()->role_id === 1)
-                admin
+                Admin
             @elseif (Auth::user()->role_id === 2)
-                orang gudang
+                Orang gudang
             @elseif (Auth::user()->role_id === 3)
-                owner
+                Owner
             @else
-                super admin
+                Super admin
             @endif
         </div>
 
