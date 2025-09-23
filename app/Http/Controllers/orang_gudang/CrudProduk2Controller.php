@@ -22,7 +22,9 @@ class CrudProduk2Controller extends Controller
      */
        public function index(Request $request)
     {
-        $query = produk::with('pabrik')->where('id_pabrik', '=', Auth::user()->pabrik_id);
+        $query = produk::with('pabrik')->where('id_pabrik', '=', Auth::user()->pabrik_id)
+        ->where('id_gudang','=',Auth::user()->gudang_id)
+        ;
         if ($request->filled('search')) {
             $search = trim($request->search);
             $query->where('nama', 'like', '%' . $search . '%');

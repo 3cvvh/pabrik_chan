@@ -97,21 +97,23 @@ class DatabaseSeeder extends Seeder
             'role_id' => 4,
             'password' => Hash::make('password'),
             'email' => 'killua@gmail.com',
-            'alamat' => 'Shiranai'
+            'alamat' => 'Shiranai',
         ]);
         produk::factory()->create([
             'nama' => 'deterjen',
             'deskripsi' => 'deterjen yang sangat wangi',
             'harga_modal' => 5000,
             'harga_jual' => 7000,
-            'id_pabrik' => 1
+            'id_pabrik' => 1,
+            'id_gudang' => 1
         ]);
         produk::factory()->create([
             'nama' => 'tasnim',
             'deskripsi' => 'tasnim yang sangat wangi',
             'harga_modal' => 8000,
             'harga_jual' => 12000,
-            'id_pabrik' => 1
+            'id_pabrik' => 1,
+            'id_gudang' => 1
         ]);
     }
 }

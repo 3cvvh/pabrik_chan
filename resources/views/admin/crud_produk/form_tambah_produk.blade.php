@@ -60,24 +60,6 @@
                             @enderror
                         </div>
 
-                        <!-- Script khusus input harga -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const hargaInput = document.getElementById('harga');
-
-        if (hargaInput) {
-            hargaInput.addEventListener('input', function () {
-                let value = this.value.replace(/\D/g, ''); // hanya angka
-                this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
-            });
-
-            hargaInput.form.addEventListener('submit', function () {
-                hargaInput.value = hargaInput.value.replace(/\./g, '');
-            });
-        }
-    });
-</script>
-
                         <!-- Deskripsi Input -->
                         <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2" style="animation-delay: 300ms">
                             <label for="deskripsi" class="block text-sm md:text-base font-semibold text-gray-700">Deskripsi</label>
@@ -105,6 +87,32 @@
                             <input type="hidden" name="id_pabrik" value="{{ $id->id }}">
                             @endforeach
                         </div>
+
+                        <!-- Gudang Select -->
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 650ms">
+                            <label for="gudang" class="block text-sm md:text-base font-semibold text-gray-700">Pilih Gudang</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <select name="id_gudang" id="gudang" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 pl-3 pr-10 text-sm md:text-base border-gray-300 rounded-lg appearance-none">
+                                    <option value="">{{ __('Pilih gudang...') }}</option>
+                                    @if(isset($gudangs) && $gudangs->count())
+                                        @foreach($gudangs as $g)
+                                            <option value="{{ $g->id }}" {{ (string)old('id_gudang') === (string)$g->id ? 'selected' : '' }}>
+                                                {{ $g->nama }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('id_gudang')
+                            <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                     </div>
 
                     <!-- Action Buttons with enhanced animations -->

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->text('deskripsi')->nullable();
+            $table->unsignedBigInteger('id_gudang');
+            $table->foreign('id_gudang')->references('id')->on('gudangs')->onDelete('cascade');
             $table->unsignedBigInteger('id_pabrik');
             $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');
             $table->decimal('harga_modal',12,2);

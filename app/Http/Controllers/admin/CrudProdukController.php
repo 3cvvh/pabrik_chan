@@ -40,6 +40,7 @@ class CrudProdukController extends Controller
         return view('admin.crud_produk.form_tambah_produk',[
             'judul' => 'form tambah|produk',
             'pabrik' => pabrik::where('id',Auth::user()->pabrik_id)->get(),
+            'gudangs' => Auth::user()->pabrik->gudang
         ]);
     }
 
@@ -54,7 +55,8 @@ class CrudProdukController extends Controller
             'gambar' => ['image','nullable'],
             'id_pabrik' => 'integer',
             'harga_jual' => ['required'],
-            'harga_modal' => ['required']
+            'harga_modal' => ['required'],
+            'id_gudang' => 'required'
         ]);
         if($request->file('gambar')){
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
@@ -195,7 +197,7 @@ class CrudProdukController extends Controller
             'Content-Disposition' => 'attachment; filename="QR_'.$produk->id.'.svg"'
         ]);
     }
-    
+
     public function qrView(produk $produk)
     {
          $produk = Produk::find($produk->id);
