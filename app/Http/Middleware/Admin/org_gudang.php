@@ -17,6 +17,9 @@ class org_gudang
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
         if(Auth::user()->role_id != 1 && Auth::user()->role_id != 2){
             abort(403,'autorisasi gagal');
         }

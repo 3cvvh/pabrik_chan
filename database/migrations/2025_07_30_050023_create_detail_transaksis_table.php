@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('id_transaksi')->references('id')->on('transaksis')->onDelete('cascade');
             $table->unsignedBigInteger('id_produk');
             $table->foreign('id_produk')->references('id')->on('produks')->onDelete('cascade');
-            $table->decimal('harga_modal');
-            $table->decimal('harga_satuan');
+            $table->bigInteger('harga_modal');
+            $table->bigInteger('harga_satuan');
             $table->integer('jumlah');
             $table->integer('total_harga');
             $table->timestamps();
