@@ -198,6 +198,7 @@ function confirmCreate() {
         showConfirmButton: false
     });
 @endif
+<x-alert></x-alert>
 </script>
 
 <script>

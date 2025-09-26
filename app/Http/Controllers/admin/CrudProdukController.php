@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Models\pabrik;
 use App\Models\produk;
 use App\Models\Stock_produk;
+use App\Models\Gudang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,21 @@ class CrudProdukController extends Controller
             'harga_modal' => ['required'],
             'id_gudang' => 'required'
         ]);
+        $gudang = Gudang::where('id', $valid['id_gudang'])
+            ->where('id_pabrik', Auth::user()->pabrik_id)
+            ->first();
+
+        if (!$gudang) {
+            return redirect()->back()->with('gagal', 'Gudang tidak ditemukan untuk pabrik ini.');
+        }
+
+        // cek apakah gudang aktif (menangani beberapa kemungkinan kolom status)
+        if (
+            (isset($gudang->is_active) && !$gudang->is_active) ||
+            (isset($gudang->status) && !in_array(strtolower((string)$gudang->status), ['aktif','active','1','true','on']))
+        ) {
+            return redirect()->back()->with('gagal', 'Gudang tidak aktif. Tidak dapat menambahkan produk ke gudang ini.');
+        }
         $valid['id_pabrik'] = Auth::user()->pabrik_id;
         if($request->file('gambar')){
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
