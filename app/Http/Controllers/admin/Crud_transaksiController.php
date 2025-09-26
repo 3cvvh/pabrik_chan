@@ -185,7 +185,12 @@ public function store(Request $request)
         }
         return view('admin.crud_transaksi.show',[
             'judul' => transaksi::find($id)->judul,
-            'data_detail' => Detail_transaksi::with(['transaksi','produk'])->where('id_transaksi','=',$id)->get(),
+            'data_detail' => Detail_transaksi::with(['transaksi','produk'])
+            ->where('id_transaksi', $id)
+            ->whereHas('produk.stock', function ($q) {
+                $q->where('jumlah', '>', 0);
+            })
+            ->get(),
             'data_transaksi' => $data,
             'dataproduk' => produk::where('id_pabrik',Auth::getUser()->pabrik_id)->get(),
         ]);
