@@ -69,6 +69,7 @@ class AdminController extends Controller
 
             $stock = Stock_produk::where('id_produk', $produk_id)
                 ->where('id_pabrik', Auth::user()->pabrik_id)
+                ->where('jumlah', '>', 0)
                 ->first();
 
             // Pastikan stok valid

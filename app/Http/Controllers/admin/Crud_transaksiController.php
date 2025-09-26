@@ -68,6 +68,7 @@ class Crud_transaksiController extends Controller
      */
 public function store(Request $request)
 {
+
     // Validasi request
     $request->validate([
         'judul' => 'required',
@@ -75,11 +76,11 @@ public function store(Request $request)
         'keterangan' => 'nullable',
     ],[
         'id_pembeli.required' => 'Pembeli tidak dipilih',
-        'judul.required' => 'Tolong nama transaksi diisi!', 
+        'judul.required' => 'Tolong nama transaksi diisi!',
     ]);
 
     // kumpulkan permintaan produk -> jumlah (pastikan key exists)
-    
+
             // buat transaksi
             $transaksi = transaksi::create([
                 'judul' => $request->judul,
@@ -90,7 +91,7 @@ public function store(Request $request)
                 'keterangan' => $request->keterangan,
             ]);
 
-            
+
     return redirect()->route('crud_transaksi.show', $transaksi->id)
         ->with('success', 'Transaksi berhasil ditambahkan!');
 }
@@ -98,19 +99,24 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-    public function show($id)
+public function show($id)
     {
-        $data =  transaksi::find($id);
+        $data = transaksi::find($id);
         if(Auth::user()->pabrik_id !== $data->id_pabrik ){
             abort(404);
         }
+
+        // ambil total stock per produk untuk pabrik saat ini (sum across semua gudang)
+        $dataproduk = produk::withSum(['stock as total_stock' => function($q){
+                $q->where('id_pabrik', Auth::user()->pabrik_id);
+            }], 'jumlah')
+            ->where('id_pabrik', Auth::user()->pabrik_id)
+            ->get();
         return view('admin.crud_transaksi.show',[
-            'judul' => transaksi::find($id)->judul,
+            'judul' => $data->judul,
             'data_detail' => Detail_transaksi::with(['transaksi','produk'])->where('id_transaksi','=',$id)->get(),
             'data_transaksi' => $data,
-            'dataproduk' => produk::with(['stock' => function($q){
-            $q->where('id_pabrik', Auth::user()->pabrik_id);
-            }])->where('id_pabrik', Auth::user()->pabrik_id)->get(),
+            'dataproduk' => $dataproduk,
         ]);
     }
 
