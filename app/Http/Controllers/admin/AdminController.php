@@ -44,7 +44,7 @@ class AdminController extends Controller
         return redirect()->route('crud_transaksi.show',$transaksi->id)->with('berhasil', 'Tanggal berhasil diperbarui');
 
     }
-    public function produk(Request $request){
+    public function produk(Request $request, $id_transaksi){
         $request->validate([
             'id_produk' => 'required'
         ]);
@@ -52,18 +52,18 @@ class AdminController extends Controller
         foreach($request->id_produk as $produk_id) {
             $jumlah = isset($request->jumlah[$produk_id]) ? (int)$request->jumlah[$produk_id] : 0;
             if ($jumlah <= 0) {
-                return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','harap jumlah diisi');
+                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','harap jumlah diisi');
             }
             $produk = Produk::find($produk_id);
             if(!$produk){
-                return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','produk tidak ditemukan');
+                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','produk tidak ditemukan');
             }
             $harga_total_produk = $produk->harga_jual * $jumlah;
             $total_harga += $harga_total_produk;
 
             // Cek apakah produk sudah ada di detail_transaksi
             $detail = DB::table('detail_transaksis')
-                ->where('id_transaksi', $request->id_tran)
+                ->where('id_transaksi', $id_transaksi)
                 ->where('id_produk', $produk_id)
                 ->first();
 
@@ -73,7 +73,7 @@ class AdminController extends Controller
 
             // Pastikan stok valid
             if (!$stock || is_null($stock->jumlah)) {
-                return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak ditemukan');
+                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak ditemukan');
             }
 
             if ($detail) {
@@ -81,13 +81,13 @@ class AdminController extends Controller
                 $new_jumlah = $detail->jumlah + $jumlah;
                 // Pastikan stok cukup untuk jumlah tambahan
                 if ($stock->jumlah < $jumlah) {
-                    return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak mencukupi');
+                    return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak mencukupi');
                 }
                 if($new_jumlah <= 0) {
-                    return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','jumlah tidak boleh kurang dari 1');
+                    return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','jumlah tidak boleh kurang dari 1');
                 }
                 DB::table('detail_transaksis')
-                    ->where('id_transaksi', $request->id_tran)
+                    ->where('id_transaksi', $id_transaksi)
                     ->where('id_produk', $produk_id)
                     ->update([
                         'jumlah' => $new_jumlah,
@@ -97,11 +97,11 @@ class AdminController extends Controller
                 $stock->save();
             } else {
                 if ($stock->jumlah < $jumlah) {
-                    return redirect(route('crud_transaksi.show',$request->id_tran))->with('gagal','stok tidak mencukupi');
+                    return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak mencukupi');
                 }
 
                 DB::table('detail_transaksis')->insert([
-                    'id_transaksi' => $request->id_tran,
+                    'id_transaksi' => $id_transaksi,
                     'id_produk' => $produk_id,
                     'jumlah' => $jumlah ,
                     'total_harga' => $harga_total_produk,
@@ -113,7 +113,7 @@ class AdminController extends Controller
             }
         }
         // Update total_harga di transaksi (jika perlu)
-        return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil di tambahkan');
+        return redirect(route('crud_transaksi.show',$id_transaksi))->with('berhasil','berhasil di tambahkan');
     }
     public function hapus_produk(Request $request, $id){
         $detail = Detail_transaksi::find($id);
@@ -125,7 +125,7 @@ class AdminController extends Controller
             }
         }
         Detail_transaksi::destroy($id);
-        return redirect(route('crud_transaksi.show',$request->id_tran))->with('berhasil','berhasil menghapus produk');
+        return redirect(route('crud_transaksi.show',$detail->id_transaksi))->with('berhasil','berhasil menghapus produk');
     }
     public function generateReport(Transaksi $transaksi){
         if($transaksi->id_pabrik != Auth::user()->pabrik_id){

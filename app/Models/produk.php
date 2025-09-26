@@ -12,9 +12,9 @@ class Produk extends Model
     /** @use HasFactory<\Database\Factories\ProdukFactory> */
     use HasFactory;
     protected $guarded = ['id'];
-    public function stock():HasMany
-    {
-        return $this->hasMany(stock_produk::class,'id_produk');
+    
+    public function stock() {
+    return $this->hasOne(Stock_produk::class, 'id_produk', 'id');
     }
     public function detail_tr():HasMany
     {
