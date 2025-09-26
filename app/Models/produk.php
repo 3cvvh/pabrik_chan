@@ -12,9 +12,14 @@ class Produk extends Model
     /** @use HasFactory<\Database\Factories\ProdukFactory> */
     use HasFactory;
     protected $guarded = ['id'];
-    
-    public function stock() {
-    return $this->hasOne(Stock_produk::class, 'id_produk', 'id');
+
+    public function gudang():BelongsTo
+    {
+        return $this->belongsTo(gudang::class,'id_gudang');
+    }
+    public function stock():HasMany
+    {
+        return $this->hasMany(stock_produk::class,'id_produk');
     }
     public function detail_tr():HasMany
     {

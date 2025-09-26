@@ -104,10 +104,10 @@ class AdminController extends Controller
                     'id_transaksi' => $id_transaksi,
                     'id_produk' => $produk_id,
                     'jumlah' => $jumlah ,
+                    'harga_modal' => $produk->harga_modal,
                     'total_harga' => $harga_total_produk,
                     'harga_satuan' => $produk->harga_jual
                 ]);
-                $detail_id = DB::getPdo()->lastInsertId();
                 $stock->jumlah -= $jumlah;
                 $stock->save();
             }

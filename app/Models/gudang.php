@@ -12,6 +12,11 @@ class Gudang extends Model
     /** @use HasFactory<\Database\Factories\GudangFactory> */
     use HasFactory;
     protected $guarded = ['id'];
+    public function produk():HasMany
+    {
+        return $this->hasMany(produk::class,'id_gudang');
+    }
+
     public function stock():HasMany
     {
         return $this->hasMany(stock_produk::class,'id_gudang');

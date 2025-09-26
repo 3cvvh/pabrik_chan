@@ -95,7 +95,7 @@
                             <select name="gudang_id" id="" class="block w-full py-3 px-4 text-sm md:text-base border rounded-lg">
                                 <option value="">pilih gudang</option>
                                 @foreach ( $gudang as $item )
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                <option value="{{ $item->id }}" {{ old('gudang_id',$user->gudang->id ?? '') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
