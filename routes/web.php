@@ -32,7 +32,7 @@ Route::middleware(['beatrice'])->group(function(){
 Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
     Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
-    Route::resource('/dashboard/admin/crud_transaksi',crud_transaksiController::class);
+    Route::resource('/dashboard/admin/crud_transaksi', Crud_transaksiController::class);
     Route::resource('/dashboard/admin/crud_user', user_crudController::class);
     Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show');
     Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');

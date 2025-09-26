@@ -27,7 +27,7 @@
     </div>
 
     <div class="mt-12">
-        <h2 class="text-xl font-bold text-blue-700 mb-4 text-center">Data Transaksi Terbaru</h2>
+        <h2 class="text-xl font-bold text-blue-700 mb-4 text-center">Produk Dan Stok</h2>
         <div class="overflow-x-auto rounded-lg shadow">
             <table class="min-w-full bg-white border border-gray-200">
                 <thead>
