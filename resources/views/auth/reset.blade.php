@@ -7,7 +7,7 @@
         <input type="hidden" name="token" value="{{ $token }}">
         <div class="mb-4">
             <label for="email" class="block mb-1">Email</label>
-            <input id="email" type="email" name="email" required class="w-full border rounded px-3 py-2">
+            <input readonly id="email" value="{{ $_GET["email"] }}" type="email" name="email" required class="w-full border rounded px-3 py-2">
             @error('email')
                 <div class="text-red-600 text-sm">{{ $message }}</div>
             @enderror

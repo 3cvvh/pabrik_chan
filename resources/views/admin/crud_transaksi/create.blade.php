@@ -47,36 +47,6 @@
                             <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
                             @enderror
                         </div>
-                        @if(!isset($transaksi))
-                        @if(isset($produk))
-                        <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2"
-                            style="animation-delay: 300ms">
-                            <label class="block text-sm md:text-base font-semibold text-gray-700">Produk</label>
-                            <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors">
-                                @foreach ($produk as $item)
-                                <div class="flex flex-col sm:flex-row items-start sm:items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
-                                    <div class="flex items-center gap-2">
-                                        <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
-                                            class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
-                                        <span class="ml-2 select-none">{{ $item->nama }}</span>
-                                    </div>
-                                    <input type="number" min="0" name="jumlah[{{ $item->id }}]"
-                                        class="w-20 text-center border rounded ml-0 sm:ml-auto mt-2 sm:mt-0"
-                                        placeholder="0">
-                                </div>
-                                @endforeach
-                            </div>
-                            @error('id_produk')
-                            <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
-                            @enderror
-                            @error('jumlah.' . $item->id)
-                            <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        @elseif(!isset($Produk))
-                        <h1>produk belum ditambahkan</h1>
-                        @endif
-                        @endif
                         <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2"
                             style="animation-delay: 400ms">
                             <label class="block text-sm md:text-base font-semibold text-gray-700">Keterangan</label>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
@@ -30,8 +31,19 @@ class ForgotPasswordController extends Controller
             : back()->withErrors(['email' => __($status)]);
     }
 
-    public function showResetForm($token)
+    public function showResetForm($token = null, Request $request)
     {
+        $email = $request->query('email');
+
+    // Cek token dan email
+    $tokenData = DB::table('password_reset_tokens')
+        ->where('email', $email)
+        ->first();
+
+    if (!$tokenData || !Hash::check($token, $tokenData->token)) {
+        return redirect()->route('login')
+            ->with('gagal', 'Link reset password tidak valid atau sudah kadaluarsa');
+    }
         return view('auth.reset', ['token' => $token,'judul' => 'reset|password']);
     }
 
@@ -50,6 +62,7 @@ class ForgotPasswordController extends Controller
             function ($user, $password) {
                 $user->password = Hash::make($password);
                 $user->save();
+                session()->flash('berhasil','berhasil mengubah password');
             }
         );
 

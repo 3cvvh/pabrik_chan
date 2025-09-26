@@ -153,6 +153,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     btnText.textContent = 'Signing in...';
     submitBtn.disabled = true;
 });
+<x-alert></x-alert>
 @if(session()->has('out'))
     Swal.fire({
         icon: 'success',

@@ -53,11 +53,11 @@ class CrudProdukController extends Controller
             'nama' => 'required',
             'deskripsi' => 'nullable',
             'gambar' => ['image','nullable'],
-            'id_pabrik' => 'integer',
             'harga_jual' => ['required'],
             'harga_modal' => ['required'],
             'id_gudang' => 'required'
         ]);
+        $valid['id_pabrik'] = Auth::user()->pabrik_id;
         if($request->file('gambar')){
             $valid['gambar'] = $request->file('gambar')->store('produk-img');
         }
@@ -95,6 +95,7 @@ class CrudProdukController extends Controller
             return view('admin.crud_produk.edit', [
             'judul' => $produk->judul,
             'data' => $produk,
+            'gudangs' => Auth::user()->pabrik->gudang,
         ]);
     }
 
@@ -105,11 +106,11 @@ class CrudProdukController extends Controller
     {
         $valid = $request->validate([
             'nama' => ['required'],
-            'harga' => ['required'],
             'deskripsi' => 'nullable',
             'gambar' => ['nullable','image'],
             'harga_jual' => ['required'],
-            'harga_modal' => ['required']
+            'harga_modal' => ['required'],
+            'id_gudang' => 'required'
         ]);
         if($request->file('gambar')){
             if($produk->gambar){
