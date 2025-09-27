@@ -45,88 +45,95 @@ class AdminController extends Controller
 
     }
     public function produk(Request $request, $id_transaksi){
-        $request->validate([
-            'id_produk' => 'required'
-        ]);
-        $total_harga = 0;
+    $request->validate(['id_produk' => 'required']);
+    DB::beginTransaction();
+    try {
         foreach($request->id_produk as $produk_id) {
             $jumlah = isset($request->jumlah[$produk_id]) ? (int)$request->jumlah[$produk_id] : 0;
-            if ($jumlah <= 0) {
-                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','harap jumlah diisi');
-            }
-            $produk = Produk::find($produk_id);
-            if(!$produk){
-                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','produk tidak ditemukan');
-            }
-            $harga_total_produk = $produk->harga_jual * $jumlah;
-            $total_harga += $harga_total_produk;
+            if ($jumlah <= 0) return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','harap jumlah diisi');
 
-            // Cek apakah produk sudah ada di detail_transaksi
-            $detail = DB::table('detail_transaksis')
-                ->where('id_transaksi', $id_transaksi)
+            $produk = Produk::find($produk_id);
+            if(!$produk) return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','produk tidak ditemukan');
+
+            // pilih stock yang memberikan (misal stock di pabrik/gudang user dengan jumlah cukup)
+            $stock = Stock_produk::where('id_produk', $produk_id)
+                ->where('id_pabrik', Auth::user()->pabrik_id)
+                ->where('jumlah', '>=', $jumlah)
+                ->first();
+
+            if (!$stock) return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak mencukupi');
+
+            // cek apakah sudah ada detail untuk produk ini pada transaksi
+            $detail = Detail_transaksi::where('id_transaksi', $id_transaksi)
                 ->where('id_produk', $produk_id)
                 ->first();
 
-            $stock = Stock_produk::where('id_produk', $produk_id)
-                ->where('id_pabrik', Auth::user()->pabrik_id)
-                ->where('jumlah', '>', 0)
-                ->first();
-
-            // Pastikan stok valid
-            if (!$stock || is_null($stock->jumlah)) {
-                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak ditemukan');
-            }
-
             if ($detail) {
-                // Jika sudah ada, update jumlah dan total_harga
-                $new_jumlah = $detail->jumlah + $jumlah;
-                // Pastikan stok cukup untuk jumlah tambahan
-                if ($stock->jumlah < $jumlah) {
-                    return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak mencukupi');
-                }
-                if($new_jumlah <= 0) {
-                    return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','jumlah tidak boleh kurang dari 1');
-                }
-                DB::table('detail_transaksis')
-                    ->where('id_transaksi', $id_transaksi)
-                    ->where('id_produk', $produk_id)
-                    ->update([
-                        'jumlah' => $new_jumlah,
-                        'total_harga' => $produk->harga_jual * $new_jumlah,
-                    ]);
-                $stock->jumlah -= $jumlah;
-                $stock->save();
+            $detail->jumlah += $jumlah;
+             $detail->total_harga = $detail->jumlah * $produk->harga_jual;
+            if (!$detail->id_stock) $detail->id_stock = $stock->id;
+            if (!$detail->harga_modal) $detail->harga_modal = $produk->harga_modal;
+            $detail->save();
             } else {
-                if ($stock->jumlah < $jumlah) {
-                    return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak mencukupi');
-                }
-
-                DB::table('detail_transaksis')->insert([
-                    'id_transaksi' => $id_transaksi,
-                    'id_produk' => $produk_id,
-                    'jumlah' => $jumlah ,
-                    'harga_modal' => $produk->harga_modal,
-                    'total_harga' => $harga_total_produk,
-                    'harga_satuan' => $produk->harga_jual
-                ]);
-                $stock->jumlah -= $jumlah;
-                $stock->save();
+            Detail_transaksi::create([
+            'id_transaksi' => $id_transaksi,
+            'id_produk'    => $produk_id,
+            'id_stock'     => $stock->id,
+            'harga_modal'  => $produk->harga_modal,
+            'harga_satuan' => $produk->harga_jual,
+            'jumlah'       => $jumlah,
+            'total_harga'  => $produk->harga_jual * $jumlah,
+]);
             }
+
+            // kurangi stock
+            $stock->jumlah -= $jumlah;
+            $stock->save();
         }
-        // Update total_harga di transaksi (jika perlu)
-        return redirect(route('crud_transaksi.show',$id_transaksi))->with('berhasil','berhasil di tambahkan');
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','Terjadi kesalahan: '.$e->getMessage());
     }
+
+    return redirect(route('crud_transaksi.show',$id_transaksi))->with('berhasil','berhasil di tambahkan');
+}
     public function hapus_produk(Request $request, $id){
         $detail = Detail_transaksi::find($id);
-        $stock = Stock_produk::where('id_produk','=',$detail->id_produk)->get();
-        foreach($stock as $item){
-            if($item){
-                $item->jumlah += $detail->jumlah;
-                $item->save();
+    if (!$detail) return redirect()->back()->with('gagal','Detail transaksi tidak ditemukan');
+
+    DB::beginTransaction();
+    try {
+        // jika ada id_stock pada detail, gunakan itu
+        if ($detail->id_stock) {
+            $stock = Stock_produk::find($detail->id_stock);
+            if ($stock) {
+                $stock->jumlah += $detail->jumlah;
+                $stock->save();
+            }
+        } else {
+            // fallback: cari stock berdasarkan id_produk dan id_pabrik/gudang
+            $stocks = Stock_produk::where('id_produk', $detail->id_produk)
+                ->where('id_pabrik', Auth::user()->pabrik_id)
+                ->orderBy('id','asc')
+                ->get();
+            if ($stocks->isNotEmpty()) {
+                // tambahkan ke stock pertama (atau logic lain sesuai kebutuhan)
+                $s = $stocks->first();
+                $s->jumlah += $detail->jumlah;
+                $s->save();
             }
         }
-        Detail_transaksi::destroy($id);
-        return redirect(route('crud_transaksi.show',$detail->id_transaksi))->with('berhasil','berhasil menghapus produk');
+
+        $transaksiId = $detail->id_transaksi;
+        $detail->delete();
+
+        DB::commit();
+        return redirect(route('crud_transaksi.show',$transaksiId))->with('berhasil','berhasil menghapus produk');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('gagal','Gagal menghapus produk: '.$e->getMessage());
+    }
     }
     public function generateReport(Transaksi $transaksi){
         if($transaksi->id_pabrik != Auth::user()->pabrik_id){

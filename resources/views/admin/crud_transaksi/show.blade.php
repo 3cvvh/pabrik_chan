@@ -147,11 +147,11 @@
         </p>
 
         {{-- Form tambah produk langsung --}}
-        <form action="{{ route('admin.produk', $data_transaksi->id) }}" 
-              method="post" 
-              id="form-tambah-product" 
+        <form action="{{ route('admin.produk', $data_transaksi->id) }}"
+              method="post"
+              id="form-tambah-product"
               class="w-full max-w-md">
-            
+
             @csrf
             <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
             <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors bg-white">
@@ -166,8 +166,8 @@
                     @foreach ($dataproduk as $item)
                         @if($item->stock && $item->stock->sum('jumlah') > 0)
                             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
-                                <input type="checkbox" 
-                                       name="id_produk[]" 
+                                <input type="checkbox"
+                                       name="id_produk[]"
                                        value="{{ $item->id }}"
                                        class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
                                 <span class="ml-2 select-none">
@@ -178,10 +178,10 @@
                                         Stok: {{ $item->total_stock  ?? 0 }}
                                     </span>
                                 </span>
-                                <input type="number" 
+                                <input type="number"
                                        name="jumlah[{{ $item->id }}]"
-                                       min="0" 
-                                       max="{{ $item->stock->sum('jumlah') }}" 
+                                       min="0"
+                                       max="{{ $item->stock->sum('jumlah') }}"
                                        value="0"
                                        class="w-14 text-center border rounded ml-auto">
                             </div>
@@ -192,8 +192,8 @@
 
             {{-- Tombol Simpan Produk --}}
             <div class="flex justify-center mt-6">
-                <button type="button" 
-                        onclick="confirmTambahProduk(this)" 
+                <button type="button"
+                        onclick="confirmTambahProduk(this)"
                         class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
