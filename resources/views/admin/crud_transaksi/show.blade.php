@@ -114,7 +114,6 @@
             </h3>
 
             @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed')
-                {{-- TOMBOL BUKA MODAL (tampil hanya jika ada data_detail pada versi original) --}}
                 @if(!$data_detail->isEmpty())
                     <button type="button" onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,88 +126,77 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {{-- Jika tidak ada produk di transaksi --}}
-           {{-- Jika detail transaksi kosong --}}
-@if($data_detail->isEmpty())
-    <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
+            @if($data_detail->isEmpty())
+                <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
+                    <div class="mb-4">
+                        <svg class="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                            <circle cx="24" cy="24" r="20" stroke-width="2" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 24h16M24 16v16" />
+                        </svg>
+                    </div>
+                    <p class="text-lg text-gray-600 mb-2 font-semibold">
+                        Belum ada produk dalam transaksi ini
+                    </p>
+                    <p class="text-gray-500 mb-6">
+                        Silakan tambahkan produk ke transaksi dengan memilih produk di bawah ini.
+                    </p>
+                    <form action="{{ route('admin.produk', $data_transaksi->id) }}"
+                          method="post"
+                          id="form-tambah-product"
+                          class="w-full max-w-md">
+                        @csrf
+                        <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
+                        <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors bg-white">
+                            @if($dataproduk->isEmpty() || $dataproduk->where('stock','!=',null)->sum(fn($p)=>$p->stock->sum('jumlah')) <= 0)
+                                <h1 class="text-red-500 font-semibold text-center">
+                                    Stok produk tidak tersedia
+                                </h1>
+                            @else
+                                @foreach ($dataproduk as $item)
+                                    @if($item->stock && $item->stock->sum('jumlah') > 0)
+                                        <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
+                                            <input type="checkbox"
+                                                   name="id_produk[]"
+                                                   value="{{ $item->id }}"
+                                                   class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
+                                            <span class="ml-2 select-none">
+                                                {{ $item->nama }}
+                                            </span>
+                                            <span class="ml-2">
+                                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                                    Stok: {{ $item->total_stock  ?? 0 }}
+                                                </span>
+                                            </span>
+                                            <input type="number"
+                                                   name="jumlah[{{ $item->id }}]"
+                                                   min="0"
+                                                   max="{{ $item->stock->sum('jumlah') }}"
+                                                   value="0"
+                                                   class="w-14 text-center border rounded ml-auto">
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
+                        <div class="flex justify-center mt-6">
+                            <button type="button"
+                                    onclick="confirmTambahProduk(this)"
+                                    class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                                </svg>
+                                Simpan Produk
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @endif
 
-        {{-- Icon + Pesan --}}
-        <div class="mb-4">
-            <svg class="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <circle cx="24" cy="24" r="20" stroke-width="2" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 24h16M24 16v16" />
-            </svg>
-        </div>
-        <p class="text-lg text-gray-600 mb-2 font-semibold">
-            Belum ada produk dalam transaksi ini
-        </p>
-        <p class="text-gray-500 mb-6">
-            Silakan tambahkan produk ke transaksi dengan memilih produk di bawah ini.
-        </p>
-
-        {{-- Form tambah produk langsung --}}
-        <form action="{{ route('admin.produk', $data_transaksi->id) }}"
-              method="post"
-              id="form-tambah-product"
-              class="w-full max-w-md">
-
-            @csrf
-            <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
-            <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors bg-white">
-
-                {{-- Jika semua produk kosong --}}
-                @if($dataproduk->isEmpty() || $dataproduk->where('stock','!=',null)->sum(fn($p)=>$p->stock->sum('jumlah')) <= 0)
-                    <h1 class="text-red-500 font-semibold text-center">
-                        Stok produk tidak tersedia
-                    </h1>
-                @else
-                    {{-- List produk dengan stok --}}
-                    @foreach ($dataproduk as $item)
-                        @if($item->stock && $item->stock->sum('jumlah') > 0)
-                            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
-                                <input type="checkbox"
-                                       name="id_produk[]"
-                                       value="{{ $item->id }}"
-                                       class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
-                                <span class="ml-2 select-none">
-                                    {{ $item->nama }}
-                                </span>
-                                <span class="ml-2">
-                                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-                                        Stok: {{ $item->total_stock  ?? 0 }}
-                                    </span>
-                                </span>
-                                <input type="number"
-                                       name="jumlah[{{ $item->id }}]"
-                                       min="0"
-                                       max="{{ $item->stock->sum('jumlah') }}"
-                                       value="0"
-                                       class="w-14 text-center border rounded ml-auto">
-                            </div>
-                        @endif
-                    @endforeach
-                @endif
-            </div>
-
-            {{-- Tombol Simpan Produk --}}
-            <div class="flex justify-center mt-6">
-                <button type="button"
-                        onclick="confirmTambahProduk(this)"
-                        class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
-                    </svg>
-                    Simpan Produk
-                </button>
-            </div>
-        </form>
-    </div>
-@endif
-
-            {{-- Loop detail produk (tampilkan hanya jika produk relasi ada dan stok > 0) --}}
+            {{-- Loop detail produk (tampilkan semua produk relasi, stok berapapun) --}}
             @foreach ($data_detail as $data)
-                @if($data->produk && $data->produk->stock && $data->produk->stock->sum('jumlah') > 0)
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
+                @if($data->produk)
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative
+                        @if($data->produk->stock->sum('jumlah') <= 0) border-2 border-red-400 @endif">
                         @if($data->produk->gambar == null)
                             <div class="bg-gray-200 h-48 flex items-center justify-center">
                                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,6 +233,23 @@
                                     <p class="font-bold text-lg text-blue-600">Rp {{ number_format($data->total_harga, 0, ',', '.') }}</p>
                                 </div>
                             </div>
+                            {{-- Peringatan stok habis --}}
+                            @if($data->produk->stock->sum('jumlah') <= 0)
+                                <div class="mt-4 p-2 bg-red-100 rounded text-red-700 text-sm font-semibold flex items-center gap-2">
+                            <!-- Ikon silang -->
+                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                                Stok produk ini sudah habis!
+                            </div>
+                            @else
+                                <div class="mt-4 p-2 bg-green-100 rounded text-green-700 text-sm font-semibold flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+                                    </svg>
+                                    Stok tersedia: {{ $data->produk->stock->sum('jumlah') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -266,7 +271,6 @@
                         <h4 class="font-bold mb-4">Tambah Produk ke Transaksi</h4>
                         <div class="border rounded-md p-3 space-y-1 max-h-60 overflow-y-auto">
                             @foreach ($dataproduk as $item)
-                                {{-- TAMPILKAN HANYA YANG STOCK > 0 --}}
                                 @if( $item->stock && $item->stock->sum('jumlah') > 0 )
                                     <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
                                         <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"

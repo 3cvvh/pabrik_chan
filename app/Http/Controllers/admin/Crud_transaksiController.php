@@ -116,9 +116,6 @@ public function show($id)
             'judul' => transaksi::find($id)->judul,
             'data_detail' => Detail_transaksi::with(['transaksi','produk'])
             ->where('id_transaksi', $id)
-            ->whereHas('produk.stock', function ($q) {
-                $q->where('jumlah', '>', 0);
-            })
             ->get(),
             'data_transaksi' => $data,
             'dataproduk' => $dataproduk,
@@ -178,3 +175,4 @@ public function show($id)
         return redirect(route('crud_transaksi.index'))->with('berhasil','berhasil menghapus data');
     }
 }
+       
