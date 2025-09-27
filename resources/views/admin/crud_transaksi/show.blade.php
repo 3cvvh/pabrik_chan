@@ -119,7 +119,7 @@
                         return $item->stock && $item->stock->sum('jumlah') > 0;
                     })->count();
                 @endphp
-                @if(!$data_detail->isEmpty() && $produk_stok_ada > 0)
+                @if($produk_stok_ada > 0)
                     <button type="button" onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
@@ -130,182 +130,229 @@
             @endif
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @if($data_detail->isEmpty())
-                <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
-                    <div class="mb-4">
-                        <svg class="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                            <circle cx="24" cy="24" r="20" stroke-width="2" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 24h16M24 16v16" />
-                        </svg>
-                    </div>
-                    <p class="text-lg text-gray-600 mb-2 font-semibold">
-                        Belum ada produk dalam transaksi ini
-                    </p>
-                    <p class="text-gray-500 mb-6">
-                        Silakan tambahkan produk ke transaksi dengan memilih produk di bawah ini.
-                    </p>
-                    <form action="{{ route('admin.produk', $data_transaksi->id) }}"
-                          method="post"
-                          id="form-tambah-product"
-                          class="w-full max-w-md">
-                        @csrf
-                        <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
-                        <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors bg-white">
-                            @if($dataproduk->isEmpty() || $dataproduk->where('stock','!=',null)->sum(fn($p)=>$p->stock->sum('jumlah')) <= 0)
-                                <h1 class="text-red-500 font-semibold text-center">
-                                    Stok produk tidak tersedia
-                                </h1>
-                            @else
-                                @foreach ($dataproduk as $item)
-                                    @if($item->stock && $item->stock->sum('jumlah') > 0)
-                                        <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
-                                            <input type="checkbox"
-                                                   name="id_produk[]"
-                                                   value="{{ $item->id }}"
-                                                   class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
-                                            <span class="ml-2 select-none">
-                                                {{ $item->nama }}
-                                            </span>
-                                            <span class="ml-2">
-                                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-                                                    Stok: {{ $item->total_stock  ?? 0 }}
-                                                </span>
-                                            </span>
-                                            <input type="number"
-                                                   name="jumlah[{{ $item->id }}]"
-                                                   min="0"
-                                                   max="{{ $item->stock->sum('jumlah') }}"
-                                                   value="0"
-                                                   class="w-14 text-center border rounded ml-auto">
-                                        </div>
-                                    @endif
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="flex justify-center mt-6">
-                            <button type="button"
-                                    onclick="confirmTambahProduk(this)"
-                                    class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
-                                </svg>
-                                Simpan Produk
-                            </button>
-                        </div>
-                    </form>
+        {{-- Jika tidak ada produk, tampilkan card kosong --}}
+        @if($data_detail->isEmpty())
+            <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                        <circle cx="24" cy="24" r="20" stroke-width="2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 24h16M24 16v16" />
+                    </svg>
                 </div>
-            @endif
+                <p class="text-lg text-gray-600 mb-2 font-semibold">
+                    Belum ada produk dalam transaksi ini
+                </p>
+                <p class="text-gray-500 mb-6">
+                    Silakan tambahkan produk ke transaksi dengan memilih produk di bawah ini.
+                </p>
 
-            {{-- Loop detail produk (tampilkan semua produk relasi, stok berapapun) --}}
-            @foreach ($data_detail as $data)
-                @if($data->produk)
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative
-                        @if($data->produk->stock->sum('jumlah') <= 0) border-2 border-red-400 @endif">
-                        @if($data->produk->gambar == null)
-                            <div class="bg-gray-200 h-48 flex items-center justify-center">
-                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
+                <form action="{{ route('admin.produk', $data_transaksi->id) }}"
+                      method="post"
+                      id="form-tambah-product"
+                      class="w-full max-w-md">
+                    @csrf
+                    <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
+                    <div class="border rounded-md p-3 space-y-1 hover:border-gray-400 transition-colors bg-white">
+                        @if($dataproduk->isEmpty() || $dataproduk->where('stock','!=',null)->sum(fn($p)=>$p->stock->sum('jumlah')) <= 0)
+                            <h1 class="text-red-500 font-semibold text-center">
+                                Stok produk tidak tersedia
+                            </h1>
                         @else
-                            <img src="{{ asset('storage/'. $data->produk->gambar ) }}"
-                                 alt="{{ $data->produk->nama }}"
-                                 class="w-full h-48 object-cover">
-                        @endif
-
-                        @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed')
-                            <form action="{{ route('admin-hapus',$data->id) }}" method="POST" class="absolute top-2 right-2" onsubmit="return confirmHapusProduk(event, this)">
-                                @csrf
-                                <input type="hidden" name="id_tran" value="{{ $data->transaksi->id }}">
-                                <button type="submit" class="p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600" title="Hapus Produk">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                    </svg>
-                                </button>
-                            </form>
-                        @endif
-
-                        <div class="p-6">
-                            <h4 class="font-semibold text-lg text-gray-800 mb-2">{{ $data->produk->nama }}</h4>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="text-gray-600">Jumlah</p>
-                                    <p class="font-semibold text-lg">{{ $data->jumlah }}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-gray-600">Total</p>
-                                    <p class="font-bold text-lg text-blue-600">Rp {{ number_format($data->total_harga, 0, ',', '.') }}</p>
-                                </div>
-                            </div>
-                            {{-- Peringatan stok habis --}}
-                            @if($data->produk->stock->sum('jumlah') <= 0)
-                                <div class="mt-4 p-2 bg-red-100 rounded text-red-700 text-sm font-semibold flex items-center gap-2">
-                            <!-- Ikon silang -->
-                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                                Stok produk ini sudah habis!
-                            </div>
-                            @else
-                                <div class="mt-4 p-2 bg-green-100 rounded text-green-700 text-sm font-semibold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
-                                    </svg>
-                                    Stok tersedia: {{ $data->produk->stock->sum('jumlah') }}
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-            @endforeach
-        </div>
-
-        {{-- Modal/Form Tambah Produk (hidden by default) --}}
-        @if(Auth::user()->role_id == 1)
-            <div id="form-tambah-produk" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-                    <button type="button" onclick="document.getElementById('form-tambah-produk').classList.add('hidden')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                    <form action="{{ route('admin.produk', $data_transaksi->id) }}" method="post">
-                        @csrf
-                        <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
-                        <h4 class="font-bold mb-4">Tambah Produk ke Transaksi</h4>
-                        <div class="border rounded-md p-3 space-y-1 max-h-60 overflow-y-auto">
                             @foreach ($dataproduk as $item)
-                                @if( $item->stock && $item->stock->sum('jumlah') > 0 )
+                                @if($item->stock && $item->stock->sum('jumlah') > 0)
                                     <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
-                                        <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
-                                            class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
-                                        <span class="ml-2 select-none">{{ $item->nama }}</span>
+                                        <input type="checkbox"
+                                               name="id_produk[]"
+                                               value="{{ $item->id }}"
+                                               class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
+                                        <span class="ml-2 select-none">
+                                            {{ $item->nama }}
+                                        </span>
                                         <span class="ml-2">
                                             <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
                                                 Stok: {{ $item->total_stock  ?? 0 }}
                                             </span>
                                         </span>
-                                        <input type="number" min="0" name="jumlah[{{ $item->id }}]"
-                                            class="w-14 text-center border rounded ml-auto"
-                                            placeholder="0">
+                                        <input type="number"
+                                               name="jumlah[{{ $item->id }}]"
+                                               min="0"
+                                               max="{{ $item->stock->sum('jumlah') }}"
+                                               value="0"
+                                               class="w-14 text-center border rounded ml-auto">
                                     </div>
                                 @endif
                             @endforeach
+                        @endif
+                    </div>
+
+                    <div class="flex justify-center mt-6">
+                        <button type="button"
+                                onclick="confirmTambahProduk(this)"
+                                class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                            </svg>
+                            Simpan Produk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        @else
+            {{-- Tabel produk --}}
+            <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Detail</th>
+                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Harga / Unit</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Jumlah</th>
+                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Subtotal</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100">
+                        @foreach ($data_detail as $item)
+                            @php
+                                $produk = $item->produk;
+                                $unitPrice = $item->harga_satuan ?? ($produk->harga_jual ?? 0);
+                                $lineTotal = $item->total_harga ?? ($unitPrice * $item->jumlah);
+                                $availableStock = $produk->stock->sum('jumlah') ?? 0;
+                            @endphp
+                            <tr class="@if($availableStock <= 0) bg-red-50 @endif">
+                                <td class="px-4 py-4 whitespace-nowrap flex items-center gap-3">
+                                    <div class="w-14 h-14 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
+                                        @if($produk->gambar)
+                                            <img src="{{ asset('storage/'.$produk->gambar) }}" alt="{{ $produk->nama }}" class="w-full h-full object-cover">
+                                        @else
+                                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-gray-800">{{ $produk->nama }}</div>
+                                        <div class="text-xs text-gray-500 mt-0.5">Kode: #{{ $produk->id }} • Gudang asal: {{ $item->stock->gudang->nama ?? '—' }}</div>
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-4 hidden sm:table-cell">
+                                    <div class="text-sm text-gray-600">
+                                        Stok saat ini: <span class="font-medium text-gray-800">{{ $availableStock }}</span><br>
+                                        Keterangan: <span class="text-gray-500">{{ $item->transaksi->keterangan ?? '-' }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-4 text-right">
+                                    <div class="text-sm text-gray-600">Rp {{ number_format($unitPrice,0,',','.') }}</div>
+                                </td>
+
+                                <td class="px-4 py-4 text-center">
+                                    <div class="text-sm font-medium text-gray-800">{{ $item->jumlah }}</div>
+                                </td>
+
+                                <td class="px-4 py-4 text-right">
+                                    <div class="text-sm font-semibold text-blue-600">Rp {{ number_format($lineTotal,0,',','.') }}</div>
+                                </td>
+
+                                <td class="px-4 py-4 text-center">
+                                    @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed')
+                                        <form action="{{ route('admin-hapus',$item->id) }}" method="POST" onsubmit="return confirmHapusProduk(event, this)">
+                                            @csrf
+                                            <input type="hidden" name="id_tran" value="{{ $item->transaksi->id }}">
+                                            <button type="submit" class="inline-flex items-center px-2 py-1 text-sm rounded-md bg-red-50 text-red-600 hover:bg-red-100">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-sm text-gray-400">—</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Ringkasan / Total yang lebih rapi --}}
+            <div class="mt-6">
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-sm text-gray-500">Ringkasan Transaksi</h4>
+                            <p class="text-lg font-semibold text-gray-800 mt-1">{{ $data_transaksi->judul }}</p>
+                            <p class="text-sm text-gray-500 mt-1">Pembeli: {{ $data_transaksi->pembeli->name }}</p>
                         </div>
-                        @error('id_produk')
-                        <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
-                        @enderror
-                        <div class="flex justify-end mt-4">
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                Simpan Produk
-                            </button>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Baris Produk</p>
+                            <p class="text-xl font-bold text-gray-800">{{ $data_detail->count() }}</p>
                         </div>
-                    </form>
+                    </div>
+
+                    <div class="mt-4 border-t pt-4 flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Total Item</p>
+                            <p class="text-2xl font-semibold text-gray-900">{{ $data_detail->sum('jumlah') }}</p>
+                        </div>
+
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Subtotal</p>
+                            <p class="text-3xl font-bold text-blue-600">Rp {{ number_format($data_detail->sum('total_harga'), 0, ',', '.') }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Termasuk variasi gudang / harga satuan tiap baris</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        @endif
+         @endif
+
+        {{-- sedikit spacing sebelum form / modal berikutnya --}}
+        <div class="mt-6"></div>
     </div>
+
+    {{-- Modal/Form Tambah Produk (hidden by default) --}}
+    @if(Auth::user()->role_id == 1)
+        <div id="form-tambah-produk" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                <button type="button" onclick="document.getElementById('form-tambah-produk').classList.add('hidden')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <form action="{{ route('admin.produk', $data_transaksi->id) }}" method="post">
+                    @csrf
+                    <input type="hidden" name="id_tran" value="{{ $data_transaksi->id }}">
+                    <h4 class="font-bold mb-4">Tambah Produk ke Transaksi</h4>
+                    <div class="border rounded-md p-3 space-y-1 max-h-60 overflow-y-auto">
+                        @foreach ($dataproduk as $item)
+                            @if( $item->stock && $item->stock->sum('jumlah') > 0 )
+                                <div class="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer gap-3">
+                                    <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
+                                        class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
+                                    <span class="ml-2 select-none">{{ $item->nama }}</span>
+                                    <span class="ml-2">
+                                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                            Stok: {{ $item->total_stock  ?? 0 }}
+                                        </span>
+                                    </span>
+                                    <input type="number" min="0" name="jumlah[{{ $item->id }}]"
+                                        class="w-14 text-center border rounded ml-auto"
+                                        placeholder="0">
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                    @error('id_produk')
+                    <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
+                    @enderror
+                    <div class="flex justify-end mt-4">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Simpan Produk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
 
     <!-- Form Update Section -->
     @if(Auth::user()->role_id == 1)

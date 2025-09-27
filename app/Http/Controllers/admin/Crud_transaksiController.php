@@ -101,25 +101,27 @@ public function store(Request $request)
      */
 public function show($id)
     {
-        $data = transaksi::find($id);
-        if(Auth::user()->pabrik_id !== $data->id_pabrik ){
-            abort(404);
-        }
+   $data = transaksi::find($id);
+    if(Auth::user()->pabrik_id !== $data->id_pabrik ){
+        abort(404);
+    }
 
-        // ambil total stock per produk untuk pabrik saat ini (sum across semua gudang)
-        $dataproduk = produk::withSum(['stock as total_stock' => function($q){
-                $q->where('id_pabrik', Auth::user()->pabrik_id);
-            }], 'jumlah')
-            ->where('id_pabrik', Auth::user()->pabrik_id)
-            ->get();
-        return view('admin.crud_transaksi.show',[
-            'judul' => transaksi::find($id)->judul,
-            'data_detail' => Detail_transaksi::with(['transaksi','produk'])
+    // ambil total stock per produk untuk pabrik saat ini (sum across semua gudang)
+    $dataproduk = produk::withSum(['stock as total_stock' => function($q){
+            $q->where('id_pabrik', Auth::user()->pabrik_id);
+        }], 'jumlah')
+        ->where('id_pabrik', Auth::user()->pabrik_id)
+        ->get();
+
+    return view('admin.crud_transaksi.show',[
+        'judul' => $data->judul,
+        // eager-load stock.gudang supaya dapat menampilkan nama gudang asal
+        'data_detail' => Detail_transaksi::with(['transaksi','produk','stock.gudang'])
             ->where('id_transaksi', $id)
             ->get(),
-            'data_transaksi' => $data,
-            'dataproduk' => $dataproduk,
-        ]);
+        'data_transaksi' => $data,
+        'dataproduk' => $dataproduk,
+    ]);
     }
 
     /**
@@ -175,4 +177,3 @@ public function show($id)
         return redirect(route('crud_transaksi.index'))->with('berhasil','berhasil menghapus data');
     }
 }
-       
