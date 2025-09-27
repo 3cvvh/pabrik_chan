@@ -251,14 +251,9 @@ function confirmDelete(button) {
         }
     });
 }
-@if(session('hapus'))
-    Swal.fire({icon:'success',title:'Berhasil!',text:'{{ session('hapus') }}',timer:1500,showConfirmButton:false});
-@endif
-@if(session('edit'))
-    Swal.fire({icon:'success',title:'Berhasil!',text:'{{ session('edit') }}',timer:1500,showConfirmButton:false});
-@endif
 <x-alert></x-alert>
 </script>
+
 
 <script>
 (function () {

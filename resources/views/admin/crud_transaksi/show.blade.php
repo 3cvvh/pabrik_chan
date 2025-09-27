@@ -143,6 +143,11 @@
                                 <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
                                     class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
                                 <span class="ml-2 select-none">{{ $item->nama }}</span>
+                                <span class="ml-2">
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                        Stok: {{ $item->total_stock  ?? 0 }}
+                                    </span>
+                                </span>
                                 <input type="number" min="0" name="jumlah[{{ $item->id }}]"
                                     class="w-14 text-center border rounded ml-auto"
                                     placeholder="0">
@@ -227,6 +232,11 @@
                             <input type="checkbox" name="id_produk[]" value="{{ $item->id }}"
                                 class="w-4 h-4 border-gray-300 rounded text-blue-500 transition-colors">
                             <span class="ml-2 select-none">{{ $item->nama }}</span>
+                            <span class="ml-2">
+<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                        Stok: {{ $item->total_stock  ?? 0 }}
+                                    </span>
+                                </span>
                             <input type="number" min="0" name="jumlah[{{ $item->id }}]"
                                 class="w-14 text-center border rounded ml-auto"
                                 placeholder="0">

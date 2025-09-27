@@ -73,19 +73,35 @@
                         <!-- Gambar Input -->
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 500ms">
                             <label for="gambar" class="block text-sm md:text-base font-semibold text-gray-700">Gambar Produk</label>
-                            <div class="mt-1">
-                                <input type="file" name="gambar" id="gambar" accept="image/*" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-2 px-4 text-sm md:text-base border-gray-300 rounded-lg">
+                            <div class="mt-1 relative">
+                                <div class="flex items-center space-x-2">
+                                    <label class="w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue-50 transition-all duration-300">
+                                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        <span class="mt-2 text-sm leading-normal">Pilih Gambar</span>
+                                        <input type="file" name="gambar" id="gambar" accept="image/*" class="hidden">
+                                    </label>
+                                </div>
+
+                                <!-- Loading Indicator -->
+                                <div id="loading-indicator" class="hidden mt-4 flex justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                                </div>
+
+                                <!-- Image Preview Container with animation -->
+                                <div id="preview-container" class="mt-4 relative hidden">
+                                    <img id="preview-gambar" src="#" alt="Preview Gambar" class="rounded-lg shadow-lg max-h-64 mx-auto transition-all duration-300 ease-in-out"/>
+                                    <button type="button" id="remove-image" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             @error('gambar')
                             <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
                             @enderror
-                        </div>
-
-                        <!-- ID Pabrik Select -->
-                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
-                          @foreach ( $pabrik as $id )
-                            <input type="hidden" name="id_pabrik" value="{{ $id->id }}">
-                            @endforeach
                         </div>
 
                         <!-- Gudang Select -->
@@ -234,6 +250,41 @@ document.addEventListener('DOMContentLoaded', function(){
     const form = document.getElementById('create-form');
     if(form){
         form.addEventListener('submit', function(){ syncCurrencyInputs(); });
+    }
+
+    // Enhanced image preview functionality
+    const gambarInput = document.getElementById('gambar');
+    const previewContainer = document.getElementById('preview-container');
+    const previewImg = document.getElementById('preview-gambar');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const removeButton = document.getElementById('remove-image');
+
+    if(gambarInput && previewImg) {
+        gambarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                // Show loading
+                loadingIndicator.classList.remove('hidden');
+                previewContainer.classList.add('hidden');
+
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    setTimeout(() => { // Add small delay to show loading animation
+                        previewImg.src = ev.target.result;
+                        loadingIndicator.classList.add('hidden');
+                        previewContainer.classList.remove('hidden');
+                    }, 500);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Remove image functionality
+        removeButton.addEventListener('click', function() {
+            gambarInput.value = '';
+            previewContainer.classList.add('hidden');
+            previewImg.src = '#';
+        });
     }
 });
 </script>
