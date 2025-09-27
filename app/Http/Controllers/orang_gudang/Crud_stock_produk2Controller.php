@@ -19,7 +19,7 @@ class Crud_stock_produk2Controller extends Controller
      */
     public function index(Request $request)
     {
-        $stock = Stock_produk::with(['produk','gudang'])->where('id_pabrik', Auth::user()->pabrik_id);
+        $stock = Stock_produk::with(['produk','gudang'])->where('id_pabrik', Auth::user()->pabrik_id)->where('id_gudang', Auth::user()->gudang_id);
 
         // Filter teks pencarian: cari di nama produk, nama gudang, jumlah atau status
         if ($request->filled('search')) {
