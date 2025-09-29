@@ -49,7 +49,7 @@
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 600ms">
                             <label for="id_gudang" class="block text-sm md:text-base font-semibold text-gray-700">Gudang</label>
                             <div class="mt-1 relative rounded-md shadow-sm">
-                                <select name="gudang" id="id_gudang" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg">
+                                <select name="id_gudang" id="id_gudang" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg">
                                     <option value="">Pilih Gudang</option>
                                     @foreach ($gudang as $g)
                                         <option value="{{ $g->id }}" {{ old('id_gudang',$stock->id_gudang) == $g->id ? 'selected' : '' }}>{{ $g->nama }}</option>

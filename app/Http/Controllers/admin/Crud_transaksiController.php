@@ -93,7 +93,7 @@ public function store(Request $request)
 
 
     return redirect()->route('crud_transaksi.show', $transaksi->id)
-        ->with('success', 'Transaksi berhasil ditambahkan!');
+        ->with('berhasil', 'Transaksi berhasil ditambahkan!');
 }
 
     /**
