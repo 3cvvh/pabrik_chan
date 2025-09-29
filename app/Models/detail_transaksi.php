@@ -11,6 +11,10 @@ class Detail_transaksi extends Model
     /** @use HasFactory<\Database\Factories\DetailTransaksiFactory> */
     use HasFactory;
     protected $guarded = ['id'];
+    public function stock():BelongsTo
+    {
+        return $this->belongsTo(Stock_produk::class,'id_stock');
+    }
     public function produk():BelongsTo
     {
         return $this->belongsTo(produk::class,'id_produk');

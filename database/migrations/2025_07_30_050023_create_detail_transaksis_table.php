@@ -21,6 +21,8 @@ return new class extends Migration
             $table->bigInteger('harga_satuan');
             $table->integer('jumlah');
             $table->integer('total_harga');
+            $table->unsignedBigInteger("id_stock")->nullable();
+            $table->foreign('id_stock')->references('id')->on('stock_produks')->onDelete('set null');
             $table->timestamps();
         });
     }
