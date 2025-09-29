@@ -108,7 +108,24 @@ class CrudProdukController extends Controller
      */
     public function edit(produk $produk)
     {
-            return view('admin.crud_produk.edit', [
+        // pastikan produk milik pabrik user
+        if ($produk->id_pabrik != Auth::user()->pabrik_id) {
+            abort(404);
+        }
+
+        // cek gudang produk terkait
+        $gudang = Gudang::where('id', $produk->id_gudang)
+            ->where('id_pabrik', Auth::user()->pabrik_id)
+            ->first();
+
+        if ($gudang && (
+            (isset($gudang->is_active) && !$gudang->is_active) ||
+            (isset($gudang->status) && !in_array(strtolower(trim((string)$gudang->status)), ['aktif','active','1','true','on']))
+        )) {
+            return redirect()->route('produk.index')->with('gagal', 'Tidak dapat mengedit produk karena gudang terkait tidak aktif.');
+        }
+
+        return view('admin.crud_produk.edit', [
             'judul' => $produk->judul,
             'data' => $produk,
             'gudangs' => Auth::user()->pabrik->gudang,
@@ -128,6 +145,23 @@ class CrudProdukController extends Controller
             'harga_modal' => ['required'],
             'id_gudang' => 'required'
         ]);
+
+        // cek gudang tujuan sebelum update
+        $gudang = Gudang::where('id', $valid['id_gudang'])
+            ->where('id_pabrik', Auth::user()->pabrik_id)
+            ->first();
+
+        if (!$gudang) {
+            return redirect()->back()->with('gagal', 'Gudang tidak ditemukan untuk pabrik ini.');
+        }
+
+        if (
+            (isset($gudang->is_active) && !$gudang->is_active) ||
+            (isset($gudang->status) && !in_array(strtolower(trim((string)$gudang->status)), ['aktif','active','1','true','on']))
+        ) {
+            return redirect()->back()->with('gagal', 'Gudang tidak aktif. Tidak dapat memindahkan/menyimpan produk ke gudang ini.');
+        }
+
         if($request->file('gambar')){
             if($produk->gambar){
                 Storage::delete($produk->gambar);
