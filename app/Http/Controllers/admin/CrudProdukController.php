@@ -98,7 +98,7 @@ class CrudProdukController extends Controller
         return view('admin.crud_produk.show', [
             'judul' => $produk->judul,
             'produk' => $produk,
-            'stock' => Stock_produk::where('id_produk', '=',$produk->id)->where("id_gudang",Auth::getUser()->gudang_id)->get()
+            'stock' => Stock_produk::where('id_produk', '=',$produk->id)->get()
 
         ]);
     }
