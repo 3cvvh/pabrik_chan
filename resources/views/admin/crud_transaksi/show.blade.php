@@ -23,31 +23,58 @@
 
     <!-- Transaction Header -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="border-b border-gray-200 px-8 py-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-bold text-gray-800">{{ $data_transaksi->judul }}</h1>
-                <div class="flex items-center space-x-3">
-                    <span class="px-4 py-2 rounded-full text-sm font-semibold inline-flex items-center
-                        @if($data_transaksi->status == 'pending') bg-yellow-100 text-yellow-800
-                        @elseif($data_transaksi->status == 'completed') bg-green-100 text-green-800
-                        @else bg-gray-100 text-gray-800
-                        @endif">
-                        <span class="w-2 h-2 rounded-full mr-2
-                            @if($data_transaksi->status == 'pending') bg-yellow-400
-                            @elseif($data_transaksi->status == 'completed') bg-green-400
-                            @else bg-gray-400
-                            @endif"></span>
-                        {{ $data_transaksi->status }}
-                    </span>
+        <div class="border-b border-gray-200 px-4 sm:px-8 py-4 sm:py-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">{{ $data_transaksi->judul }}</h1>
+                <div class="flex items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    <div class="hidden sm:flex items-center gap-3">
+                        <span class="px-4 py-2 rounded-full text-sm font-semibold inline-flex items-center
+                            @if($data_transaksi->status == 'pending') bg-yellow-100 text-yellow-800
+                            @elseif($data_transaksi->status == 'completed') bg-green-100 text-green-800
+                            @else bg-gray-100 text-gray-800
+                            @endif">
+                            <span class="w-2 h-2 rounded-full mr-2
+                                @if($data_transaksi->status == 'pending') bg-yellow-400
+                                @elseif($data_transaksi->status == 'completed') bg-green-400
+                                @else bg-gray-400
+                                @endif"></span>
+                            {{ $data_transaksi->status }}
+                        </span>
 
-                    <button type="button"
-                        onclick="confirmGenerate('{{ Auth::user()->role_id == 1 ? route('admin.laporan', $data_transaksi->id) : route('owner.laporan',$data_transaksi->id) }}')"
-                        class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Generate Laporan
-                    </button>
+                        <button type="button"
+                            onclick="confirmGenerate('{{ Auth::user()->role_id == 1 ? route('admin.laporan', $data_transaksi->id) : route('owner.laporan',$data_transaksi->id) }}')"
+                            class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Generate Laporan
+                        </button>
+                    </div>
+
+                    {{-- Mobile buttons --}}
+                    <div class="flex flex-col sm:hidden w-full gap-2">
+                        <span class="px-3 py-2 rounded-lg text-sm font-semibold inline-flex items-center justify-center
+                            @if($data_transaksi->status == 'pending') bg-yellow-100 text-yellow-800
+                            @elseif($data_transaksi->status == 'completed') bg-green-100 text-green-800
+                            @else bg-gray-100 text-gray-800
+                            @endif">
+                            <span class="w-2 h-2 rounded-full mr-2
+                                @if($data_transaksi->status == 'pending') bg-yellow-400
+                                @elseif($data_transaksi->status == 'completed') bg-green-400
+                                @else bg-gray-400
+                                @endif"></span>
+                            {{ $data_transaksi->status }}
+                        </span>
+
+                        <button type="button"
+                            onclick="confirmGenerate('{{ Auth::user()->role_id == 1 ? route('admin.laporan', $data_transaksi->id) : route('owner.laporan',$data_transaksi->id) }}')"
+                            class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Generate Laporan
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,14 +140,18 @@
                 Detail Produk
             </h3>
 
-            @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed')
+            {{-- Tombol desktop --}}
+            @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed' && !$data_detail->isEmpty())
                 @php
                     $produk_stok_ada = $dataproduk->filter(function($item) {
                         return $item->stock && $item->stock->sum('jumlah') > 0;
                     })->count();
                 @endphp
                 @if($produk_stok_ada > 0)
-                    <button type="button" onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="button"
+                        onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')"
+                        class="hidden sm:flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
                         </svg>
@@ -129,6 +160,20 @@
                 @endif
             @endif
         </div>
+        {{-- Tombol mobile --}}
+        @if(Auth::user()->role_id == 1 && $data_transaksi->status != 'completed' && !$data_detail->isEmpty() && $produk_stok_ada > 0)
+            <div class="block sm:hidden mb-4">
+                <button type="button"
+                    onclick="document.getElementById('form-tambah-produk').classList.remove('hidden')"
+                    class="w-full flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                    </svg>
+                    Tambah Produk
+                </button>
+            </div>
+        @endif
 
         {{-- Jika tidak ada produk, tampilkan card kosong --}}
         @if($data_detail->isEmpty())
@@ -223,7 +268,9 @@
                                 <td class="px-4 py-4 whitespace-nowrap flex items-center gap-3">
                                     <div class="w-14 h-14 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
                                         @if($produk->gambar)
-                                            <img src="{{ asset('storage/'.$produk->gambar) }}" alt="{{ $produk->nama }}" class="w-full h-full object-cover">
+                                            <a href="javascript:void(0);" onclick="showImageModal('{{ asset('storage/'.$produk->gambar) }}', '{{ $produk->nama }}')">
+                                                <img src="{{ asset('storage/'.$produk->gambar) }}" alt="{{ $produk->nama }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-150">
+                                            </a>
                                         @else
                                             <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -389,6 +436,29 @@
     </div>
     @endif
 </div>
+
+{{-- Image Modal --}}
+<div id="image-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black bg-opacity-75 flex items-center justify-center p-4">
+    <div class="relative bg-white rounded-lg shadow-xl overflow-hidden w-[90vw] max-w-2xl mx-auto">
+        <div class="flex items-center justify-between p-3 border-b">
+            <h3 class="text-lg font-medium text-gray-900" id="modal-title"></h3>
+            <button type="button" onclick="closeImageModal()" class="text-gray-400 hover:text-gray-500">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="relative bg-gray-100">
+            <div class="flex items-center justify-center" style="height: calc(80vh - 8rem);">
+                <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain p-2">
+            </div>
+        </div>
+        <div class="p-3 bg-gray-50 text-center">
+            <p class="text-sm text-gray-500">Tekan tombol ESC atau klik tombol silang untuk menutup</p>
+        </div>
+    </div>
+</div>
+
 <script>
     @if(session('gagal'))
     Swal.fire({
@@ -477,5 +547,42 @@
             }
         });
     }
+
+    // Modal gambar produk
+    function showImageModal(src, title) {
+        const modal = document.getElementById('image-modal');
+        const image = document.getElementById('modal-image');
+        const titleEl = document.getElementById('modal-title');
+        
+        // Preload image
+        const img = new Image();
+        img.src = src;
+        img.onload = function() {
+            image.src = src;
+            titleEl.textContent = title;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+    }
+    function closeImageModal() {
+        document.getElementById('image-modal').classList.add('hidden');
+        document.getElementById('modal-image').src = '';
+        document.getElementById('modal-title').textContent = '';
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('image-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeImageModal();
+        }
+    });
+
+    // Close modal on escape key press
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeImageModal();
+        }
+    });
 </script>
 @endsection

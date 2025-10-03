@@ -103,7 +103,10 @@ class AdminController extends Controller
 
                 $needed -= $take;
             }
-
+            if($stock->gudang->status !== 'aktif'){
+                DB::rollBack();
+                return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','Gudang '.$stock->gudang->nama.' sedang non-aktif, tidak bisa menambah stok!');
+            }
             if ($needed > 0) {
                 DB::rollBack();
                 return redirect(route('crud_transaksi.show',$id_transaksi))->with('gagal','stok tidak mencukupi');
