@@ -22,7 +22,7 @@
 
         <!-- Search & Filter -->
         <div class="mb-6 p-6 bg-white rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 0.1s">
-            <form id="search-form" onsubmit="return false;" class="flex flex-wrap gap-4 items-end">
+            <form id="liveFilterForm" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari User</label>
                     <div class="relative">
@@ -41,7 +41,7 @@
                     <select id="roles_key" name="roles_key" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
                         <option value="">Semua Role</option>
                         @foreach ($role as $item)
-                            <option value="{{ strtolower($item->name) }}">{{ $item->name }}</option>
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -53,7 +53,7 @@
         </div>
 
         <!-- Table (Desktop) -->
-        <div class="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+        <div id="tableContainer" class="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -150,7 +150,9 @@
             @endforeach
         </div>
         <br>
+        <div id="paginationContainer" class="mt-6 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">
         {{ $data->links('pagination::tailwind') }}
+        </div>
     </div>
 </div>
 
@@ -192,123 +194,93 @@ function confirmDelete(button) {
 </script>
 
 <script>
-(function(){
-    const input = document.getElementById('search');
-    const roleSelect = document.getElementById('roles_key');
-    const tbody = document.getElementById('users-tbody');
-    const cards = document.getElementById('users-cards');
-    // const form = document.getElementById('search-form');
-    // const btnDesktop = document.getElementById('search-btn');
-    // const btnMobile = document.getElementById('search-btn-mobile');
-    const base = '{{ route("crud_user.index") }}';
-    let timer = null;
+(function () {
+    const form = document.getElementById('liveFilterForm');
+    const searchInput = document.getElementById('search');
+    const rolesSelect = document.getElementById('roles_key');
+    const tableContainer = document.getElementById('tableContainer');
+    const paginationContainer = document.getElementById('paginationContainer');
 
-    function render(users){
-        // Desktop (table)
-        tbody.innerHTML = users.length ? users.map((u,i)=>`
-            <tr class="hover:bg-gray-50 transition-all duration-200">
-                <td class="px-6 py-4 text-sm text-gray-600">${i+1}</td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                            <span class="text-indigo-700 font-medium text-sm">${(u.name||'').substr(0,2)}</span>
-                        </div>
-                        <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">${u.name||''}</div>
-                        </div>
-                    </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${u.email||''}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">${u.role_name||''}</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex space-x-2">
-                        <a href="${base}/${u.id}/edit" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </a>
-                        <form action="${base}/${u.id}" method="post" class="delete-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="_method" value="delete">
-                            <button type="button" onclick="confirmDelete(this)" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                                Hapus
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        `).join('')
-        : '<tr><td colspan="5" class="px-6 py-4 text-sm text-gray-500 text-center">Tidak ada hasil</td></tr>';
+    if (!form || !searchInput || !rolesSelect || !tableContainer || !paginationContainer) return;
 
-        // Mobile (cards)
-        cards.innerHTML = users.length ? users.map((u,i)=>`
-            <div class="user-card p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs text-gray-500">#${i+1}</span>
-                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">${u.role_name||''}</span>
-                </div>
-                <p class="text-base font-bold text-gray-800">${u.name||''}</p>
-                <p class="text-sm text-gray-500 mb-3">${u.email||''}</p>
-                <div class="flex justify-end space-x-2">
-                    <a href="${base}/${u.id}/edit"
-                       class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </svg>
-                        Edit
-                    </a>
-                    <form action="${base}/${u.id}" method="post">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="_method" value="delete">
-                        <button type="button" onclick="confirmDelete(this)"
-                                class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                            Hapus
-                        </button>
-                    </form>
-                </div>
-            </div>
-        `).join('')
-        : '<div class="p-4 text-center text-gray-500">Tidak ada hasil</div>';
+    function debounce(fn, delay = 300) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), delay);
+        };
     }
 
-    function doSearch(e) {
-        if (e) e.preventDefault();
-        const value = input.value;
-        const role = roleSelect ? roleSelect.value : '';
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            const params = [];
-            if (value) params.push('search=' + encodeURIComponent(value));
-            if (role && role !== '0') params.push('roles_key=' + encodeURIComponent(role));
-            fetch(base + (params.length ? '?' + params.join('&') : ''), {
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(res => res.json())
-            .then(users => {
-                render(users);
+    function buildUrl(page) {
+        const params = new URLSearchParams();
+        const s = searchInput.value.trim();
+        const r = rolesSelect.value;
+        if (s.length) params.set('search', s);
+        if (r && r !== '0') params.set('roles_key', r);
+        if (page) params.set('page', page);
+        const base = window.location.pathname;
+        const qs = params.toString();
+        return qs ? `${base}?${qs}` : base;
+    }
+
+    async function fetchAndReplace(url, push = true) {
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const text = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            const newTable = doc.getElementById('tableContainer');
+            const newPagination = doc.getElementById('paginationContainer');
+            if (newTable) tableContainer.innerHTML = newTable.innerHTML;
+            if (newPagination) paginationContainer.innerHTML = newPagination.innerHTML;
+            if (push) history.pushState(null, '', url);
+            rebindAll();
+        } catch (err) {
+            console.error('Live fetch error', err);
+        }
+    }
+
+    const performSearch = debounce(() => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    }, 350);
+
+    searchInput.addEventListener('input', performSearch);
+    rolesSelect.addEventListener('change', () => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+
+    window.addEventListener('popstate', function () {
+        fetchAndReplace(window.location.pathname + window.location.search, false);
+        const qs = new URLSearchParams(window.location.search);
+        searchInput.value = qs.get('search') || '';
+        rolesSelect.value = qs.get('roles_key') || '0';
+    });
+
+    function rebindAll() {
+        // Pagination links
+        paginationContainer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+                e.preventDefault();
+                fetchAndReplace(href);
             });
-        }, 300);
+        });
+        // Delete buttons
+        tableContainer.querySelectorAll('button[onclick^="confirmDelete"]').forEach(btn => {
+            btn.onclick = function () { confirmDelete(this); };
+        });
     }
 
-    input.addEventListener('input', doSearch);
-    roleSelect.addEventListener('change', doSearch);
-    // Tidak perlu event pada tombol/form submit
-    // if (form) {
-    //     form.addEventListener('submit', doSearch);
-    // }
-    // if (btnDesktop) {
-    //     btnDesktop.addEventListener('click', doSearch);
-    // }
-    // if (btnMobile) {
-    //     btnMobile.addEventListener('click', doSearch);
-    // }
+    // Initial bind
+    rebindAll();
 })();
 </script>
 @endsection
