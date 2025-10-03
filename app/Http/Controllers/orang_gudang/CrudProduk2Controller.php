@@ -81,7 +81,7 @@ class CrudProduk2Controller extends Controller
     return view('admin.crud_produk.show', [
         'judul' => $produk->nama,
         'produk' => $produk,
-        'stock' => Stock_produk::where('id_produk', '=', $produk->id)->get()
+        'stock' => Stock_produk::where('id_produk', '=', $produk->id)->where("id_gudang",Auth::user()->gudang_id)->get()
     ]);
 }
     public function edit($id)
