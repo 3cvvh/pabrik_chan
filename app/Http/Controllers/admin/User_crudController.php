@@ -92,7 +92,13 @@ class User_crudController extends Controller
             'role_id' => 'required|exists:roles,id',
             'password' => 'required|string|min:8|confirmed',
         ]);
-
+         if($request->role_id == 2 && $request->gudang_id == null){
+            $request->validate([
+                'gudang_id' => 'required',
+            ],[
+                'gudang_id.required' => 'Gudang harus diisi jika role adalah orang Gudang'
+            ]);
+        }
         User::create([
             'name'      => $request->name,
             'email'     => $request->email,
