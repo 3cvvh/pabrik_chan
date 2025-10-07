@@ -1,4 +1,4 @@
-@extends('layout.main') 
+@extends('layout.main')
 @section('content')
 <x-navbar></x-navbar>
 
@@ -306,6 +306,23 @@
 
     rebindPaginationLinks();
 })();
+<x-alert></x-alert>
+function confirmDelete(button) {
+    Swal.fire({
+        title: 'Apakah anda yakin?',
+        text: "Data yang dihapus tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            button.closest('form').submit();
+        }
+    });
+}
 </script>
 
 <style>

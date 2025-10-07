@@ -15,7 +15,7 @@ class Orang_gudangController extends Controller
     return view('orang_gudang.dashboard',[
         'judul' => 'org_gudang|dashboard',
         'org_gudang' => User::where('gudang_id', Auth::user()->gudang_id)->count(),
-        'total_stok' => Stock_produk::where('id_gudang', Auth::user()->gudang_id)->where('id_pabrik', Auth::user()->pabrik_id)->count(),
+        'total_stok' => Stock_produk::where('id_gudang', Auth::user()->gudang_id)->where('id_pabrik', Auth::user()->pabrik_id)->get(),
         'total_produk' => Produk::where('id_pabrik', Auth::user()->pabrik_id)->where('id_gudang', Auth::user()->gudang_id)->count(),
         'stok_produk' => Stock_produk::where('id_gudang', Auth::user()->gudang_id)->where('id_pabrik', Auth::user()->pabrik_id)->with('produk')->get()
 

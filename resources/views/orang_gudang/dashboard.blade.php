@@ -1,5 +1,9 @@
 @extends('layout.main')
 @section('content')
+<?php $data = 0 ?>
+@foreach ($total_stok as $total )
+<?php $data +=  $total->jumlah ?>
+@endforeach
 <x-navbar></x-navbar>
 <div class="container mx-auto px-4 py-8">
     <div class="mb-8 text-center">
@@ -22,7 +26,7 @@
         </div>
         <div class="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center border border-blue-100">
             <h2 class="text-gray-500 font-semibold mb-1">Total Stok Produk</h2>
-            <p class="text-2xl font-bold text-blue-700">{{ $total_stok }}</p>
+            <p class="text-2xl font-bold text-blue-700">{{ $data }}</p>
         </div>
     </div>
 

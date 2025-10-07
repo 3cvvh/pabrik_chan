@@ -30,6 +30,30 @@
             <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Owner</h1>
             <p class="text-gray-600">Selamat datang di halaman dashboard.</p>
         </div>
+
+        <!-- FILTER TANGGAL -->
+        <div class="mb-6">
+            <form method="GET" action="" class="flex flex-col md:flex-row items-start md:items-end gap-4">
+                <div>
+                    <label for="tanggal_mulai" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
+                    <input type="date" id="tanggal_mulai" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 focus:border-blue-400">
+                </div>
+                <div>
+                    <label for="tanggal_selesai" class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
+                    <input type="date" id="tanggal_selesai" name="tanggal_selesai" value="{{ request('tanggal_selesai') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 focus:border-blue-400">
+                </div>
+                <div class="pt-6">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Filter</button>
+                </div>
+                @if(request('tanggal_mulai') || request('tanggal_selesai'))
+                    <div class="pt-6">
+                        <a href="{{ url()->current() }}" class="px-3 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300">Reset</a>
+                    </div>
+                @endif
+            </form>
+        </div>
+        <!-- END FILTER TANGGAL -->
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
                 <div class="text-blue-500 text-4xl mb-2">
@@ -97,6 +121,32 @@
                             </div>
                         </div>
                     @endif
+
+                    {{-- NEW: Keuntungan per Gudang --}}
+                    <div class="mt-6">
+                        <h3 class="text-md font-medium text-gray-700">Keuntungan per Gudang</h3>
+                        <div class="mt-3 space-y-2 max-h-56 overflow-y-auto pr-2">
+                            @if(!empty($gudangNets) && $gudangNets->count() > 0)
+                                @foreach($gudangNets as $g)
+                                    <div class="flex justify-between items-center bg-gray-50 rounded p-3 border">
+                                        <div class="text-gray-700">{{ $g->nama }}</div>
+                                        <div class="text-sm font-semibold text-gray-800">{{ $formatIDRShort($g->net ?? 0) }}</div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="text-sm text-gray-500">Belum ada keuntungan per gudang tercatat.</div>
+                            @endif
+                        </div>
+
+                        @if(!empty($gudangNets) && $gudangNets->count() > 0)
+                            <div class="mt-4 bg-white rounded p-4 border">
+                                <h4 class="text-sm font-medium text-gray-700 mb-2">Grafik Keuntungan per Gudang</h4>
+                                <div class="w-full overflow-x-auto">
+                                    <canvas id="warehouseChart" style="max-height:300px;"></canvas>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,55 +155,101 @@
     </div>
 </div>
 
-{{-- ADDED: Chart.js and rendering script (only when product data exists) --}}
-@if(!empty($productNets) && $productNets->count() > 0)
+{{-- ADDED: Chart.js and rendering script (only when product or gudang data exists) --}}
+@if((!empty($productNets) && $productNets->count() > 0) || (!empty($gudangNets) && $gudangNets->count() > 0))
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script>
         (function(){
-            const labels = {!! json_encode($productNets->pluck('nama')) !!};
-            const dataValues = {!! json_encode($productNets->pluck('net')) !!};
+            const formatIDRCurrency = (v) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v);
+
+            // PRODUCT DATA (may be undefined)
+            const productLabels = {!! json_encode(!empty($productNets) ? $productNets->pluck('nama') : []) !!};
+            const productValues = {!! json_encode(!empty($productNets) ? $productNets->pluck('net') : []) !!};
+
+            // GUDANG DATA (may be undefined)
+            const warehouseLabels = {!! json_encode(!empty($gudangNets) ? $gudangNets->pluck('nama') : []) !!};
+            const warehouseValues = {!! json_encode(!empty($gudangNets) ? $gudangNets->pluck('net') : []) !!};
 
             document.addEventListener('DOMContentLoaded', function () {
-                const canvas = document.getElementById('profitChart');
-                if (!canvas) return;
-
-                const ctx = canvas.getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Keuntungan (IDR)',
-                            data: dataValues,
-                            backgroundColor: 'rgba(16,185,129,0.6)',
-                            borderColor: 'rgba(16,185,129,1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                ticks: {
-                                    callback: function(value) {
-                                        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
-                                    }
-                                }
-                            }
+                // Product chart
+                const profitCanvas = document.getElementById('profitChart');
+                if (profitCanvas && productLabels.length > 0) {
+                    const ctx = profitCanvas.getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: productLabels,
+                            datasets: [{
+                                label: 'Keuntungan (IDR)',
+                                data: productValues,
+                                backgroundColor: 'rgba(59,130,246,0.6)',
+                                borderColor: 'rgba(59,130,246,1)',
+                                borderWidth: 1
+                            }]
                         },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const v = context.parsed.y ?? context.parsed;
-                                        return 'Keuntungan: ' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v);
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: function(value) { return formatIDRCurrency(value); }
                                     }
                                 }
                             },
-                            legend: { display: false }
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const v = context.parsed.y ?? context.parsed;
+                                            return 'Keuntungan: ' + formatIDRCurrency(v);
+                                        }
+                                    }
+                                },
+                                legend: { display: false }
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
+                // Warehouse chart
+                const warehouseCanvas = document.getElementById('warehouseChart');
+                if (warehouseCanvas && warehouseLabels.length > 0) {
+                    const ctx2 = warehouseCanvas.getContext('2d');
+                    new Chart(ctx2, {
+                        type: 'bar',
+                        data: {
+                            labels: warehouseLabels,
+                            datasets: [{
+                                label: 'Keuntungan per Gudang (IDR)',
+                                data: warehouseValues,
+                                backgroundColor: 'rgba(16,185,129,0.6)',
+                                borderColor: 'rgba(16,185,129,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: function(value) { return formatIDRCurrency(value); }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const v = context.parsed.y ?? context.parsed;
+                                            return 'Keuntungan: ' + formatIDRCurrency(v);
+                                        }
+                                    }
+                                },
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }
             });
         })();
     </script>

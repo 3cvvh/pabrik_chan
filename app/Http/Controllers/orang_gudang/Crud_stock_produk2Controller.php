@@ -72,7 +72,7 @@ class Crud_stock_produk2Controller extends Controller
      */
     public function store(Request $request)
     {
-        $stock_ada = Stock_produk::where('id_produk',$request->id_produk)->get();
+        $stock_ada = Stock_produk::where('id_produk',$request->id_produk)->where("id_gudang",Auth::user()->gudang_id)->get();
         $valid = $request->validate([
             'jumlah' => ['required'],
             'keterangan' => ['nullable'],
@@ -89,14 +89,13 @@ class Crud_stock_produk2Controller extends Controller
         }else{
             $valid['status'] = 'habis';
         }
-        foreach($stock_ada as $stock){
-            if($stock->id_gudang == $request->id_gudang){
-                $gudang = Gudang::find($request->id_gudang)->nama;
-                return redirect()->route('crud_stocks.index')->with('warning','stock di ' . $gudang . ' sudah ada' );
-            }
-        }
+
+        if($stock_ada->count() > 0){
+            return redirect()->route("crud_stocks.index")->with("gagal","stock sudah ada");
+        }else{
         Stock_produk::create($valid);
         return redirect()->route('crud_stocks.index')->with('berhasil','berhasil menambahkan stok');
+        }
     }
 
     /**

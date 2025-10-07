@@ -32,18 +32,52 @@ class OwnerController extends Controller
             'judul' => 'owner|generate laporan'
         ]);
     }
-    public function dashboard(){
-       $pabrikId = Auth::user()->pabrik_id;
+    public function dashboard(Request $request){
+        $pabrikId = Auth::user()->pabrik_id;
+
+        // Ambil filter tanggal dari request
+        $tanggalMulai = $request->input('tanggal_mulai');
+        $tanggalSelesai = $request->input('tanggal_selesai');
 
         // pendapatan bersih per produk (hanya transaksi yang selesai)
-$productNets = DB::table('detail_transaksis')
-    ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
-    ->join('produks', 'detail_transaksis.id_produk', '=', 'produks.id')
-    ->where('transaksis.id_pabrik', $pabrikId)
-    ->where('transaksis.status', 'completed')
-    ->groupBy('produks.id', 'produks.nama')
-    ->select('produks.id', 'produks.nama', DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'))
-    ->get();
+        $productNetsQuery = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->join('produks', 'detail_transaksis.id_produk', '=', 'produks.id')
+            ->where('transaksis.id_pabrik', $pabrikId)
+            ->where('transaksis.status', 'completed');
+
+        // Filter tanggal jika ada
+        if ($tanggalMulai) {
+            $productNetsQuery->whereDate('transaksis.created_at', '>=', $tanggalMulai);
+        }
+        if ($tanggalSelesai) {
+            $productNetsQuery->whereDate('transaksis.created_at', '<=', $tanggalSelesai);
+        }
+
+        $productNets = $productNetsQuery
+            ->groupBy('produks.id', 'produks.nama')
+            ->select('produks.id', 'produks.nama', DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'))
+            ->get();
+
+        // keuntungan bersih per gudang
+        $gudangNetsQuery = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->join('produks', 'detail_transaksis.id_produk', '=', 'produks.id')
+            ->join('gudangs', 'produks.id_gudang', '=', 'gudangs.id')
+            ->where('transaksis.id_pabrik', $pabrikId)
+            ->where('transaksis.status', 'completed');
+
+        if ($tanggalMulai) {
+            $gudangNetsQuery->whereDate('transaksis.created_at', '>=', $tanggalMulai);
+        }
+        if ($tanggalSelesai) {
+            $gudangNetsQuery->whereDate('transaksis.created_at', '<=', $tanggalSelesai);
+        }
+
+        $gudangNets = $gudangNetsQuery
+            ->groupBy('gudangs.id', 'gudangs.nama')
+            ->select('gudangs.id', 'gudangs.nama', DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'))
+            ->get();
 
         $totalNet = $productNets->sum('net');
 
@@ -54,6 +88,7 @@ $productNets = DB::table('detail_transaksis')
             'orangGudang' => count(User::where('pabrik_id', $pabrikId)->where('role_id','=',2)->get()),
             'productNets' => $productNets,
             'totalNet' => $totalNet,
+            'gudangNets' => $gudangNets,
         ]);
 }
 public function laporanbos(){
