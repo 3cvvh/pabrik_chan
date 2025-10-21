@@ -18,7 +18,7 @@
 
         <!-- Dua kartu interaktif: Ajukan Bergabung & Buat Pabrik -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
-            <a href=""
+            <a href="{{ route('guest.request_pabrik') }}"
                class="group block bg-white rounded-xl p-6 shadow-md border border-transparent hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-green-200"
                aria-label="Ajukan Bergabung ke Pabrik">
                 <div class="flex items-start gap-4">

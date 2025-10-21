@@ -85,6 +85,8 @@ Route::middleware(['org_gudang/admin'])->group(function(){
 Route::middleware(['not_paid'])->group(function(){
     Route::get('/guest/welcome',[GuestController::class,'index'])->name('guest.index');
     Route::get('/guest/form_pabrik',[GuestController::class,'form_pabrik'])->name('guest.form_pabrik');
+    Route::get('/guest/request_pabrik',[GuestController::class,'request'])->name('guest.request_pabrik');
+    Route::post('/guest/form_pabrik/store/{user:id}',[GuestController::class, 'store_pabrik'])->name('guest.storePabrik');
 });
 //logout
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');

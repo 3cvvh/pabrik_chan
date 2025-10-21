@@ -4,7 +4,7 @@
 	<h1 class="text-2xl font-semibold mb-6">Form Pembuatan Pabrik</h1>
 
 	<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-		<form id="pabrikForm" action="" method="POST" novalidate class="md:col-span-2 bg-white p-6 rounded-lg shadow-sm border">
+		<form id="pabrikForm" action="{{ route('guest.storePabrik',Auth::user()->id) }}" method="POST" novalidate class="md:col-span-2 bg-white p-6 rounded-lg shadow-sm border">
 			@csrf
 			<div class="space-y-4">
 				<div>
@@ -35,15 +35,14 @@
 				</div>
 
 				<div class="flex items-center gap-3 mt-2">
-					<button type="submit" id="submitBtn"
+					<button type="submit"
 						class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-indigo-700 disabled:opacity-60">
 						Buat Pabrik
 					</button>
-					<a href="{{ route('guest.index') }}" class="text-indigo-600 text-sm hover:underline">Kembali</a>
+		</form>
+<a href="{{ route('guest.index') }}" class="text-indigo-600 text-sm hover:underline">Kembali</a>
 				</div>
 			</div>
-		</form>
-
 		<aside class="preview bg-gray-50 p-6 rounded-lg border">
 			<h2 class="text-lg font-medium mb-3">Preview</h2>
 			<div class="space-y-3 text-sm text-gray-700">
@@ -109,45 +108,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		toast._t = setTimeout(()=> {
 			toast.classList.add('translate-y-8','opacity-0','pointer-events-none');
 		}, time);
-	}
-
-	form.addEventListener('submit', function(ev){
-		ev.preventDefault();
-		if (!nama.value.trim() || !alamat.value.trim()) {
-			showToast('Nama dan alamat wajib diisi.', 'error');
-			return;
-		}
-		const phoneOk = tel.value.trim() === '' || /^\+?\d{7,15}$/.test(tel.value.trim());
-		if (!phoneOk) {
-			showToast('Format nomor telepon tidak valid.', 'error');
-			return;
-		}
-
-		if (!confirm('Kirim data pabrik sekarang?')) return;
-
-		submitBtn.disabled = true;
-		const formData = new FormData(form);
-		const url = form.getAttribute('action') || window.location.href;
-
-		fetch(url, {
-			method: 'POST',
-			body: formData,
-			headers: { 'X-Requested-With': 'XMLHttpRequest' }
-		}).then(response => {
-			submitBtn.disabled = false;
-			if (response.ok) {
-				return response.json().catch(()=>({ success:true }));
-			}
-			throw new Error('Terjadi kesalahan pada server.');
-		}).then(data => {
-			showToast('Data berhasil disimpan.', 'success');
-			form.reset();
-			updateAll();
-		}).catch(err => {
-			submitBtn.disabled = false;
-			showToast('Gagal mengirim: ' + err.message, 'error', 5000);
-		});
-	});
+	};
 });
 </script>
 @endsection

@@ -16,9 +16,9 @@ class Guest
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::user()->IsPaid or Auth::user()->pabrik_id == null){
+        if(Auth::user()->pabrik_id == null){
         return $next($request);
         }
-        return back();
+        abort(403,'Unauthorized');
     }
 }
