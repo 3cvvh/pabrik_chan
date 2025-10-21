@@ -18,6 +18,9 @@ class Beatrice
     public function handle(Request $request, Closure $next): Response
     {
         if(Auth::check()){
+            if(Auth::user()->pabrik_id == null){
+                return redirect()->route('guest.index');
+            }
             if(Auth::user()->role_id == 4){
                 return redirect()->route('super.index');
             }elseif(Auth::user()->role_id == 1){

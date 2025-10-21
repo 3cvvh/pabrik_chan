@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'orang_gudang' => \App\Http\Middleware\orang_gudang::class,
             'beatricekawaii' => \App\Http\Middleware\beatriceKAWAIIII::class,
             'org_gudang/admin' => \App\Http\Middleware\Admin\org_gudang::class,
+            'not_paid' => \App\Http\Middleware\Guest::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

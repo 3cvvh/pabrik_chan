@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -26,6 +27,10 @@ class User extends Authenticatable
     public function pabrik():BelongsTo
     {
         return $this->belongsTo(pabrik::class,'pabrik_id');
+    }
+    public function Payment():HasMany
+    {
+        return $this->hasMany(Payment::class,'user_id');
     }
    protected $guarded = ['id'];
 

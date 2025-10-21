@@ -18,6 +18,8 @@ use App\Http\Controllers\admin\crud_transaksiController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\orang_gudang\CrudProduk2Controller;
 use App\Http\Controllers\super_admin\super_beatriceController;
+use App\Http\Controllers\GuestController;
+use Illuminate\Container\Attributes\Auth;
 
 //daftar route Jika user belum login
 Route::middleware(['beatrice'])->group(function(){
@@ -27,6 +29,8 @@ Route::middleware(['beatrice'])->group(function(){
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
+    Route::get('/register',[AuthController::class,'sign'])->name('register');
+    Route::post('/register',[AuthController::class,'signlogic'])->name('register.store');
 });
 //daftar route jika user sudah login sebagai admin
 Route::middleware(['admin'])->group(function () {
@@ -73,8 +77,14 @@ Route::middleware(['beatricekawaii'])->group(function () {
     Route::resource('/dashboard/super_admin/crud_users',users_crudController::class)->except('show');
     Route::get('/dashboard/super_admin',[super_beatriceController::class, 'index'])->name('super.index');
 });
+//org_gudang dan admin
 Route::middleware(['org_gudang/admin'])->group(function(){
     Route::resource('/dashboard/admin/produk',crudProdukController::class);
+});
+//khusus akun guest(yang belum di konfirmasi)
+Route::middleware(['not_paid'])->group(function(){
+    Route::get('/guest/welcome',[GuestController::class,'index'])->name('guest.index');
+    Route::get('/guest/form_pabrik',[GuestController::class,'form_pabrik'])->name('guest.form_pabrik');
 });
 //logout
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');

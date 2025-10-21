@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use mysqli;
 
 class AuthController extends Controller
 {
@@ -20,6 +21,10 @@ class AuthController extends Controller
         ]);
         $remember = $request->has('remember') ? true : false;
         if(Auth::attempt($datavalid,$remember)){
+            if(Auth::getUser()->pabrik_id == null){
+                $request->session()->regenerate();
+                return redirect()->intended(route('guest.index'));
+            }
             if(Auth::getUser()->role_id == 1){
                 $request->session()->regenerate();
                 return redirect()->intended(route('admin.index'));
@@ -47,5 +52,24 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect(route('login'))->with('out', 'Berhasil logout!');
+    }
+    public function sign(){
+        return view('auth.register',[
+            "judul" => 'register|page',
+        ]);
+    }
+    public function signlogic(Request $request){
+        $request->validate([
+            'nama' => 'required|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+    $newUser = new \App\Models\User;
+    $newUser->name = $request->nama;
+    $newUser->email = $request->email;
+    $newUser->password = bcrypt($request->password);
+    $newUser->role_id = 1;
+    $newUser->save();
+    return redirect(route('login'))->with('berhasil', 'Registrasi berhasil! Silakan login.');
     }
 }
