@@ -59,6 +59,8 @@
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama Transaksi</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pembeli</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Pengiriman</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Pembayaran</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
@@ -79,6 +81,8 @@
                                 <td class="px-6 py-4">
                                     <span class="px-3 py-1 text-xs font-medium rounded-full {{ $statusClass }}">{{ ucfirst($transaksi->status) }}</span>
                                 </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $transaksi->tanggal_pengiriman ?? '-' }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $transaksi->tanggal_pembayaran ?? '-' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
                                         <a class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"

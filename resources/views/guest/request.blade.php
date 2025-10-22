@@ -27,8 +27,9 @@
 					<p class="text-sm text-gray-500 mt-1 line-clamp-2">{{ $pabrik->alamat }}</p>
 
 					<div class="mt-4">
-						<form class="requestForm" data-id="{{ $pabrik->id ?? $index }}" action="" method="POST">
+						<form class="requestForm"  action="{{ route('guest.store_req') }}" method="POST">
 							@csrf
+							<input type="hidden" name="pabrik_id" value="{{ $pabrik->id }}">
 							<button type="submit"
 								class="requestBtn inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
 								Ajukan Permohonan Bergabung
@@ -50,77 +51,5 @@
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-	const toast = document.getElementById('toast');
-	const toastInner = document.getElementById('toastInner');
 
-	function showToast(msg, type='info', time=3000){
-		toastInner.textContent = msg;
-		toast.classList.remove('translate-y-8','opacity-0','pointer-events-none');
-		toastInner.className = 'max-w-xs px-4 py-2 rounded-md text-white text-sm ' + (type==='success'?'bg-green-600':type==='error'?'bg-red-600':'bg-gray-800');
-		clearTimeout(toast._t);
-		toast._t = setTimeout(()=> toast.classList.add('translate-y-8','opacity-0','pointer-events-none'), time);
-	}
-
-	document.querySelectorAll('.requestForm').forEach(form => {
-		form.addEventListener('submit', function(e){
-			e.preventDefault();
-			const btn = form.querySelector('.requestBtn');
-			const nameEl = form.closest('div').querySelector('h2');
-			const targetName = nameEl ? nameEl.textContent.trim() : 'pabrik';
-
-			// gunakan SweetAlert2 untuk konfirmasi
-			Swal.fire({
-				title: 'Konfirmasi',
-				text: 'peringatan anda hanya bisa mengajukan permohonan 1 kali seumur hidup',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Ya, ajukan',
-				cancelButtonText: 'Batal'
-			}).then(result => {
-				if (!result.isConfirmed) {
-					// dibatalkan oleh user
-					return;
-				}
-
-				// user mengonfirmasi -> lanjutkan submit via fetch
-				btn.disabled = true;
-				const url = form.getAttribute('action') || window.location.href;
-				const fd = new FormData(form);
-
-				fetch(url, {
-					method: 'POST',
-					body: fd,
-					headers: { 'X-Requested-With': 'XMLHttpRequest' }
-				}).then(res => {
-					btn.disabled = false;
-					if (res.ok) return res.json().catch(()=>({ success:true }));
-					throw new Error('Server error');
-				}).then(data => {
-					showToast('Permohonan berhasil dikirim.', 'success', 4000);
-				}).catch(err => {
-					btn.disabled = false;
-					showToast('Gagal mengirim: ' + err.message, 'error', 5000);
-				});
-			});
-		});
-	});
-
-	// Tambah handler untuk tombol kembali tanpa merusak script lama
-	const backBtn = document.getElementById('backBtn');
-	if (backBtn) {
-		backBtn.addEventListener('click', function(){
-			// Jika ada riwayat navigasi, gunakan history.back()
-			if (window.history && window.history.length > 1) {
-				window.history.back();
-				return;
-			}
-			// Fallback ke route jika tidak ada riwayat yang dapat kembali
-			const fallback = this.dataset.fallback || '/';
-			window.location.href = fallback;
-		});
-	}
-});
-</script>
 @endsection

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Request as ModelsRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use mysqli;
 
@@ -15,10 +17,15 @@ class AuthController extends Controller
         ]);
     }
     public function store(Request $request){
+       $userse =  User::where('email',$request->email)->first();
+       $ada = $userse ? ModelsRequest::where('user_id', $userse->id ?? 0)->first() : null;
         $datavalid = $request->validate([
             'email' => 'required',
             'password' => 'required'
         ]);
+            if(isset($ada) && $ada->status == 'pending'){
+                return redirect()->route('login')->with('gagal','Akun anda sedang dalam proses verifikasi oleh admin');
+            }
         $remember = $request->has('remember') ? true : false;
         if(Auth::attempt($datavalid,$remember)){
             if(Auth::getUser()->pabrik_id == null){

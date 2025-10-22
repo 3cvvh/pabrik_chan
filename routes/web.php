@@ -20,6 +20,7 @@ use App\Http\Controllers\orang_gudang\CrudProduk2Controller;
 use App\Http\Controllers\super_admin\super_beatriceController;
 use App\Http\Controllers\GuestController;
 use Illuminate\Container\Attributes\Auth;
+use App\Http\Controllers\Admin\VerifikasiController;
 
 //daftar route Jika user belum login
 Route::middleware(['beatrice'])->group(function(){
@@ -49,6 +50,9 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scannerProcess'])->name('admin.produk.scanner.process');
     Route::get('/dashboard/admin/produk/{produk}/download-qr', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownload');
     Route::get('/dashboard/admin/produk/{produk}/qr-view', [crudProdukController::class, 'qrView'])->name('produk.qrView');
+    Route::get('verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
+	Route::post('verifikasi/{id}/approve', [VerifikasiController::class, 'approve'])->name('admin.verifikasi.approve');
+	Route::post('verifikasi/{id}/reject', [VerifikasiController::class, 'reject'])->name('admin.verifikasi.reject');  
 
 });
 //daftar route jika user sudah login sebagai orang gudang
@@ -87,6 +91,8 @@ Route::middleware(['not_paid'])->group(function(){
     Route::get('/guest/form_pabrik',[GuestController::class,'form_pabrik'])->name('guest.form_pabrik');
     Route::get('/guest/request_pabrik',[GuestController::class,'request'])->name('guest.request_pabrik');
     Route::post('/guest/form_pabrik/store/{user:id}',[GuestController::class, 'store_pabrik'])->name('guest.storePabrik');
+    Route::post('/guest/request/store',[GuestController::class,'store_req'])->name('guest.store_req');
 });
 //logout
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
+

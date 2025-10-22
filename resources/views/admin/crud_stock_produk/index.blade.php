@@ -102,7 +102,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $stock_produk->jumlah}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $stock_produk->produk->nama}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $stock_produk->gudang->nama}}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ $stock_produk->status}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                     {{ $stock_produk->jumlah == 0 ? 'habis' : $stock_produk->status }}
+                                </td>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
@@ -151,7 +153,9 @@
                     <p class="text-base font-bold text-gray-800">Jumlah: {{ $stock_produk->jumlah }}</p>
                     <p class="text-sm text-gray-600">Produk: {{ $stock_produk->produk->nama }}</p>
                     <p class="text-sm text-gray-600">Gudang: {{ $stock_produk->gudang->nama }}</p>
-                    <p class="text-base font-bold text-gray-800">Status: {{ $stock_produk->status }}</p>
+                    <p class="text-base font-bold text-gray-800">
+                          Status: {{ $stock_produk->jumlah == 0 ? 'habis' : $stock_produk->status }}
+                    </p>
         
                     <!-- Tombol Aksi -->
                     <div class="mt-3 flex justify-end gap-2">

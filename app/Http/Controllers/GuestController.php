@@ -29,9 +29,10 @@ class GuestController extends Controller
         $request->validate([
             'nama_pabrik' => ['required'],
             'alamat_pabrik' => 'required',
-            'nomor_telepon' => 'required',
+            'nomor_telepon' => ['required','min:10'],
         ]);
-        $new = new pabrikss;
+ 
+       $new = new pabrikss;
         $new->name = $request->nama_pabrik;
         $new->alamat = $request->alamat_pabrik;
         $new->no_telepon = $request->nomor_telepon;
@@ -42,5 +43,21 @@ class GuestController extends Controller
         Auth::login($update_user);
         $request->session()->regenerate();
         return redirect()->route('admin.index');
+    }
+    public function store_req(Request $request){
+        $request->validate([
+            'pabrik_id' => 'required',
+            
+
+        ]);
+        $user_id = Auth::getUser()->id;
+        
+        $new= new \App\Models\Request;
+        $new->user_id = $user_id;
+        $new->pabrik_id = $request->pabrik_id;
+        $new->save();
+        Auth::logout();
+        return redirect()->route('login')->with('berhasil','Permohonan anda telah dikirim, silahkan tunggu konfirmasi dari admin');
+
     }
 }
