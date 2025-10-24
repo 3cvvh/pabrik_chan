@@ -99,7 +99,6 @@ class Crud_gudangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $gudang= gudang::find($id);
         $validated = $request->validate([
             'id_pabrik' => 'required',
             'nama' => 'required|string|max:255',

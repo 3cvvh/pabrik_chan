@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class VerifikasiController extends Controller
@@ -16,8 +17,16 @@ class VerifikasiController extends Controller
 			->select('requests.*', 'users.name as user_name', 'users.email as user_email', 'pabriks.name as pabrik_name')
 			->orderBy('requests.created_at', 'desc')
 			->get();
-        $judul = 'aqil ganteng';
-		return view('admin.verifikasi.index', compact('requests','judul'));
+        $role = DB::table('roles')
+            ->select('id', 'name')
+            ->where('id', '!=', '4')
+            ->get();
+        $gudangs = DB::table('gudangs')
+            ->select('id', 'nama')
+            ->where('id_pabrik', Auth::getUser()->pabrik_id)
+            ->get();
+            $judul = 'halaman|penerimaan';
+		return view('admin.verifikasi.index', compact('judul','requests', 'role', 'gudangs'));
 	}
 
 	// Approve: tandai request dan set role user jadi admin

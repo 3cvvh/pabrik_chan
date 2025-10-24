@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('Users')->onDelete('cascade');
             $table->foreignId('pabrik_id')->constrained('Pabriks')->onDelete('cascade');
             $table->string('status')->default('pending');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

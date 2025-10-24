@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use mysqli;
 
+use function Symfony\Component\Clock\now;
+
 class AuthController extends Controller
 {
     public function login(){
@@ -76,6 +78,8 @@ class AuthController extends Controller
     $newUser->email = $request->email;
     $newUser->password = bcrypt($request->password);
     $newUser->role_id = 1;
+    $newUser->created_at = now();
+    $newUser->updated_at = now();
     $newUser->save();
     return redirect(route('login'))->with('berhasil', 'Registrasi berhasil! Silakan login.');
     }

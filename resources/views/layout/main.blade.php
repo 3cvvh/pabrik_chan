@@ -7,8 +7,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/logopabrik.png') }}">
+    @stack('head')
 </head>
 <body>
     @yield('content')
+    @stack('scripts')
 </body>
 </html>

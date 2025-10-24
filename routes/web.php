@@ -21,6 +21,7 @@ use App\Http\Controllers\super_admin\super_beatriceController;
 use App\Http\Controllers\GuestController;
 use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\Admin\VerifikasiController;
+use App\Http\Controllers\admin\RequestController;
 
 //daftar route Jika user belum login
 Route::middleware(['beatrice'])->group(function(){
@@ -51,8 +52,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin/produk/{produk}/download-qr', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownload');
     Route::get('/dashboard/admin/produk/{produk}/qr-view', [crudProdukController::class, 'qrView'])->name('produk.qrView');
     Route::get('verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
-	Route::post('verifikasi/{id}/approve', [VerifikasiController::class, 'approve'])->name('admin.verifikasi.approve');
-	Route::post('verifikasi/{id}/reject', [VerifikasiController::class, 'reject'])->name('admin.verifikasi.reject');  
+    Route::resource('/dashboard/admin/Request',RequestController::class)->except(['index']);
 
 });
 //daftar route jika user sudah login sebagai orang gudang
