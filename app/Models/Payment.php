@@ -12,8 +12,8 @@ class Payment extends Model
     /** @use HasFactory<\Database\Factories\PaymentFactory> */
     protected $guarded = ['id'];
     use HasFactory;
-    public function User():BelongsTo
+    public function Pabrik():BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(Pabrik::class,'pabrik_id');
     }
 }

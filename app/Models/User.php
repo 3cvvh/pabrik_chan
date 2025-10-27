@@ -28,10 +28,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(pabrik::class,'pabrik_id');
     }
-    public function Payment():HasMany
-    {
-        return $this->hasMany(Payment::class,'user_id');
-    }
    protected $guarded = ['id'];
 
     /**

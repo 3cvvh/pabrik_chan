@@ -54,4 +54,7 @@
         </div>
     </div>
 </div>
+<script>
+    <x-alert></x-alert>
+</script>
 @endsection

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('no_telepon')->nullable();
             $table->string('gambar')->nullable();
+            $table->boolean('Ispaid')->default(false);
             $table->timestamps();
         });
     }

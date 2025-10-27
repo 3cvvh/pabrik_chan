@@ -1,6 +1,7 @@
 @extends('layout.main')
 @section('content')
 <x-navbar></x-navbar>
+{{  Auth::getUser()->pabrik->Ispaid }}
 @php
     // Formatter singkat untuk IDR: 2rb, 2,5rb, 2jt, dst.
     $formatIDRShort = function($n) {
@@ -252,6 +253,10 @@
                 }
             });
         })();
+
     </script>
 @endif
+<script>
+     <x-alert></x-alert>
+</script>
 @endsection

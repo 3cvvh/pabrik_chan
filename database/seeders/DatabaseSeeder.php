@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
         pabrik::create([
             'name' => 'jelekong corp',
             'alamat' => 'kacamatan ciparay',
-            'no_telepon' => '01293103910'
+            'no_telepon' => '01293103910',
+            'Ispaid' => true,
         ]);
         pabrik::create([
             'name' => 'ciparay corp',

@@ -37,20 +37,20 @@ Route::middleware(['beatrice'])->group(function(){
 //daftar route jika user sudah login sebagai admin
 Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
-    Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
-    Route::resource('/dashboard/admin/crud_transaksi', Crud_transaksiController::class);
-    Route::resource('/dashboard/admin/crud_user', user_crudController::class);
-    Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show');
-    Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
-    Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);
-    Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal');
-    Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk');
-    Route::post('/dashboard/admin/hapus/{Detail_transaksi:id}',[adminController::class,'hapus_produk'])->name('admin-hapus');
-    Route::get('/dashboard/admin/generate_report/{transaksi:id}',[AdminController::class, 'generateReport'])->name('admin.laporan');
-    Route::get('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scanner'])->name('admin.produk.scanner');
-    Route::post('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scannerProcess'])->name('admin.produk.scanner.process');
-    Route::get('/dashboard/admin/produk/{produk}/download-qr', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownload');
-    Route::get('/dashboard/admin/produk/{produk}/qr-view', [crudProdukController::class, 'qrView'])->name('produk.qrView');
+    Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show')->middleware(["not_paid"]);
+    Route::resource('/dashboard/admin/crud_transaksi', Crud_transaksiController::class)->middleware(['not_paid']);
+    Route::resource('/dashboard/admin/crud_user', user_crudController::class)->middleware(['not_paid']);
+    Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show')->middleware(['not_paid']);
+    Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show')->middleware(['not_paid']);
+    Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class)->middleware(['not_paid']);
+    Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal')->middleware(['not_paid']);
+    Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk')->middleware(['not_paid']);
+    Route::post('/dashboard/admin/hapus/{Detail_transaksi:id}',[adminController::class,'hapus_produk'])->name('admin-hapus')->middleware(['not_paid']);
+    Route::get('/dashboard/admin/generate_report/{transaksi:id}',[AdminController::class, 'generateReport'])->name('admin.laporan')->middleware(['not_paid']);
+    Route::get('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scanner'])->name('admin.produk.scanner')->middleware(['not_paid']);
+    Route::post('/dashboard/admin/crud_produk/scanner', [crudProdukController::class, 'scannerProcess'])->name('admin.produk.scanner.process')->middleware(['not_paid']);
+    Route::get('/dashboard/admin/produk/{produk}/download-qr', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownload')->middleware(['not_paid']);
+    Route::get('/dashboard/admin/produk/{produk}/qr-view', [crudProdukController::class, 'qrView'])->name('produk.qrView')->middleware(['not_paid']);
     Route::get('verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
     Route::resource('/dashboard/admin/Request',RequestController::class)->except(['index']);
 
@@ -58,22 +58,22 @@ Route::middleware(['admin'])->group(function () {
 //daftar route jika user sudah login sebagai orang gudang
 Route::middleware(['orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
-    Route::get('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scanner'])->name('orang_gudang.produk.scanner');
-    Route::post('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scannerProcess'])->name('orang_gudang.produk.scanner.process');
-    Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
-    Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update']);
-    Route::get('/dashboard/org_gudang/produk/{produk}/download-qrs', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownloads');
-    Route::get('/dashboard/org_gudang/produk/{produk}/qr-views', [crudProdukController::class, 'qrView'])->name('produk.qrViews');
+    Route::get('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scanner'])->name('orang_gudang.produk.scanner')->middleware(['not_paid']);
+    Route::post('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scannerProcess'])->name('orang_gudang.produk.scanner.process')->middleware(['not_paid']);
+    Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class)->middleware(['not_paid']);
+    Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update'])->middleware(["not_paid"]);
+    Route::get('/dashboard/org_gudang/produk/{produk}/download-qrs', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownloads')->middleware(['not_paid']);
+    Route::get('/dashboard/org_gudang/produk/{produk}/qr-views', [crudProdukController::class, 'qrView'])->name('produk.qrViews')->middleware(['not_paid']);
 
 });
 //daftar route jika user sudah login sebagai owner
 Route::middleware(['owner'])->group(function () {
-    Route::get('/dashboard/owner',[ownerController::class,'index'])->name('owner.index');
-    Route::get('/dashboard/owner/generatelaporan', [ownerController::class, 'generateLaporan'])->name('owner.generatelaporan');
-    Route::get('/dashboard/owner/generate/{transaksi:id}',[AdminController::class, 'generateReport'])->name('owner.laporan');
-    Route::resource('/dashboard/owner/transaksi',crud_transaksiController::class)->except(['create','store','destroy','edit','update']);
+    Route::get('/dashboard/owner',[ownerController::class,'index'])->name('owner.index')->middleware(['not_paid']);
+    Route::get('/dashboard/owner/generatelaporan', [ownerController::class, 'generateLaporan'])->name('owner.generatelaporan')->middleware(['not_paid']);
+    Route::get('/dashboard/owner/generate/{transaksi:id}',[AdminController::class, 'generateReport'])->name('owner.laporan')->middleware(['not_paid']);
+    Route::resource('/dashboard/owner/transaksi',crud_transaksiController::class)->except(['create','store','destroy','edit','update'])->middleware(['not_paid']);
     Route::get('/dashboard/owner/dawgboard',[OwnerController::class, 'dashboard'])->name('owner.dash');
-    Route::get('/dashboard/owner/laporanbos',[OwnerController::class, 'laporanbos'])->name('owner.laporanbos');
+    Route::get('/dashboard/owner/laporanbos',[OwnerController::class, 'laporanbos'])->name('owner.laporanbos')->middleware(['not_paid']);
 });
 //daftar route jika user sudah login sebagai super admin
 Route::middleware(['beatricekawaii'])->group(function () {
@@ -83,10 +83,10 @@ Route::middleware(['beatricekawaii'])->group(function () {
 });
 //org_gudang dan admin
 Route::middleware(['org_gudang/admin'])->group(function(){
-    Route::resource('/dashboard/admin/produk',crudProdukController::class);
+    Route::resource('/dashboard/admin/produk',crudProdukController::class)->middleware(["not_paid"]);
 });
 //khusus akun guest(yang belum di konfirmasi)
-Route::middleware(['not_paid'])->group(function(){
+Route::middleware(['guest'])->group(function(){
     Route::get('/guest/welcome',[GuestController::class,'index'])->name('guest.index');
     Route::get('/guest/form_pabrik',[GuestController::class,'form_pabrik'])->name('guest.form_pabrik');
     Route::get('/guest/request_pabrik',[GuestController::class,'request'])->name('guest.request_pabrik');
