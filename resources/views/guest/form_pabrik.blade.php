@@ -23,6 +23,14 @@
                         <span id="alamat_count">0</span>
                         <span>/ 200</span>
                     </div>
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-blue-700 mb-1">Email</label>
+                    <input name="email" id="email" type="email" rows="3" maxlength="200" required placeholder="Masukkan alamat lengkap"
+                        class="mt-1 block w-full rounded-lg border-blue-200 shadow focus:border-blue-500 focus:ring-blue-500 text-base px-4 py-2 transition-all duration-200"></input>
+                    <div class="flex justify-between text-xs text-gray-400 mt-1">
+                        <span id="alamat_count">0</span>
+                        <span>/ 200</span>
+                    </div>
                 </div>
                 <div>
                     <label for="nomor_telepon" class="block text-sm font-semibold text-blue-700 mb-1">No. Telepon</label>

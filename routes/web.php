@@ -22,6 +22,7 @@ use App\Http\Controllers\GuestController;
 use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\admin\RequestController;
+use App\Http\Controllers\PaymentController;
 
 //daftar route Jika user belum login
 Route::middleware(['beatrice'])->group(function(){
@@ -53,6 +54,8 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin/produk/{produk}/qr-view', [crudProdukController::class, 'qrView'])->name('produk.qrView')->middleware(['not_paid']);
     Route::get('verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
     Route::resource('/dashboard/admin/Request',RequestController::class)->except(['index']);
+    Route::resource('/dashboard/admin/payment',PaymentController::class);
+    Route::get('/dashboard/admin/payment/success',[GuestController::class, 'succes_payment'])->name('berhasil.payment');
 
 });
 //daftar route jika user sudah login sebagai orang gudang
@@ -95,4 +98,5 @@ Route::middleware(['guest'])->group(function(){
 });
 //logout
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
+Route::post('payment/callback',[PaymentController::class, 'handleCallback'])->name('payment.callback');
 

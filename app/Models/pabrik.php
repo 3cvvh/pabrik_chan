@@ -39,6 +39,10 @@ class Pabrik extends Model
     }
     public function payment():HasMany
     {
-        return $this->hasMany(Pabrik::class,'pabrik_id');
+        return $this->hasMany(Payment::class,'pabrik_id');
+    }
+    public function request():HasMany
+    {
+        return $this->hasMany(Request::class,'pabrik_id');
     }
 }

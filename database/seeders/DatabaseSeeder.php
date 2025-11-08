@@ -28,11 +28,13 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'kacamatan ciparay',
             'no_telepon' => '01293103910',
             'Ispaid' => true,
+            'email' => "anjay"
         ]);
         pabrik::create([
             'name' => 'ciparay corp',
             'alamat' => 'kacamatan ciparay',
-            'no_telepon' => '01293103231'
+            'no_telepon' => '01293103231',
+            'email' => "example@gmail.com"
         ]);
             pembeli::factory()->create([
             'name' => 'aqil',

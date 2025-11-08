@@ -56,4 +56,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(gudang::class,'gudang_id');
     }
+    public function request():HasMany
+    {
+        return $this->hasMany(Request::class,'user_id');
+    }
 }

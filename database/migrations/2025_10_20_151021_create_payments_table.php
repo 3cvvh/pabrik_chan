@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pabrik_id')->constrained('pabriks')->onDelete('cascade');
             $table->integer('amount')->default(0);
-            $table->string('prof_img')->nullable();
+            $table->string("invoiceNumber");
+            $table->string('snap_token')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
         });

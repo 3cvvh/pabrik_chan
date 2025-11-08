@@ -4,7 +4,15 @@
 <div class="bg-gray-100 min-h-screen py-8">
     <div class="max-w-7xl mx-auto px-4">
         <h1 class="text-3xl font-bold mb-6 text-gray-800">Dashboard Admin</h1>
-        
+        @if (!Auth::user()->pabrik->Ispaid )
+        <div class="mb-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+            <p class="font-semibold">Peringatan:</p>
+            <p>Anda belum melakukan pembayaran untuk pabrik Anda. Silakan lakukan pembayaran segera agar dapat mengakses semua fitur.</p>
+            <a href="{{ route('payment.index') }}" class="inline-block mt-2 px-4 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600 transition">
+                Lakukan Pembayaran
+            </a>
+        </div>
+        @else
         <!-- Stats Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow p-6">
@@ -73,7 +81,7 @@
         </div>
     </div>
 </div>
-
+ @endif
 <!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

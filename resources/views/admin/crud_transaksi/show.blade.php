@@ -177,6 +177,7 @@
 
         {{-- Jika tidak ada produk, tampilkan card kosong --}}
         @if($data_detail->isEmpty())
+        @if (Auth::user()->role_id == 1)
             <div class="col-span-3 flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg shadow-inner">
                 <div class="mb-4">
                     <svg class="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 48 48">
@@ -227,8 +228,11 @@
                                     </div>
                                 @endif
                             @endforeach
+                             @endif
                         @endif
                     </div>
+                    @if (Auth::user()->role_id == 1)
+
 
                     <div class="flex justify-center mt-6">
                         <button type="button"
@@ -242,6 +246,7 @@
                     </div>
                 </form>
             </div>
+               @endif
         @else
             {{-- Tabel produk --}}
             <div class="bg-white rounded-lg shadow-md overflow-x-auto">
@@ -553,7 +558,7 @@
         const modal = document.getElementById('image-modal');
         const image = document.getElementById('modal-image');
         const titleEl = document.getElementById('modal-title');
-        
+
         // Preload image
         const img = new Image();
         img.src = src;
