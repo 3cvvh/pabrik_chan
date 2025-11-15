@@ -3,6 +3,14 @@
 <div class="max-w-5xl mx-auto px-4 py-10">
     <h1 class="text-3xl font-extrabold text-blue-700 mb-8 text-center tracking-tight">Form Pembuatan Pabrik</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @if ($errors->any())
+            @foreach ($error->all() as $errorMsg )
+                <div class="md:col-span-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">Error!</strong>
+                    <span class="block sm:inline">{{ $errorMsg }}</span>
+                </div>
+            @endforeach
+        @endif
         <form id="pabrikForm" action="{{ route('guest.storePabrik',Auth::user()->id) }}" method="POST" novalidate class="md:col-span-2 bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
             @csrf
             <div class="space-y-6">

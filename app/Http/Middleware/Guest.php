@@ -16,7 +16,7 @@ class Guest
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->pabrik_id == null){
+        if(Auth::user()->pabrik_id == null && Auth::user()->role_id != 4){
         return $next($request);
         }
         abort(403,'Unauthorized');

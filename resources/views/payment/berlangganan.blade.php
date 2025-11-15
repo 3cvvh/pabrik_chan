@@ -67,7 +67,7 @@
           },
           // Optional
           onError: function(result){
-
+            window.location.href = "{{ route('gagal.payment') }}";
           }
         });
       };

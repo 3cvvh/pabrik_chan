@@ -77,6 +77,7 @@ class User_crudController extends Controller
             'pabrik_id' => 'required|exists:pabriks,id',
             'role_id' => 'required|exists:roles,id',
             'password' => 'required|string|min:8|confirmed',
+            'phone' => 'required'
         ]);
          if($request->role_id == 2 && $request->gudang_id == null){
             $request->validate([
@@ -91,6 +92,7 @@ class User_crudController extends Controller
             'password'  => bcrypt($request->password), // hash password!
             'alamat'    => $request->alamat,
             'pabrik_id' => $request->pabrik_id,
+            'phone'     => $request->phone,
             'role_id'   => $request->role_id,
         ]);
         if($request->gudang_id){
@@ -144,6 +146,7 @@ class User_crudController extends Controller
             'pabrik_id' => 'required|exists:pabriks,id',
             'role_id' => 'required|exists:roles,id',
             'password' => 'nullable|string|min:8|confirmed',
+            'phone' => 'required',
         ]);
         // Update password jika diisi
         if ($request->filled('password')) {

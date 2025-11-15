@@ -31,6 +31,7 @@ class GuestController extends Controller
             'nama_pabrik' => ['required'],
             'alamat_pabrik' => 'required',
             'nomor_telepon' => ['required','min:10'],
+            'email' => ['required','email','unique:pabriks,email'],
         ]);
 
        $new = new pabrikss;
@@ -72,5 +73,9 @@ class GuestController extends Controller
     public function succes_payment(){
         $judul = "payment|success";
         return view('payment.berhasil',compact('judul'));
+    }
+    public function gagal_payment(){
+        $judul = "payment|failed";
+        return view('payment.gagal',compact('judul'));
     }
 }

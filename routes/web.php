@@ -23,6 +23,7 @@ use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\admin\RequestController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
 
 //daftar route Jika user belum login
 Route::middleware(['beatrice'])->group(function(){
@@ -34,6 +35,7 @@ Route::middleware(['beatrice'])->group(function(){
     Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
     Route::get('/register',[AuthController::class,'sign'])->name('register');
     Route::post('/register',[AuthController::class,'signlogic'])->name('register.store');
+    Route::get('/payment/gagal',[GuestController::class, 'gagal_payment'])->name('gagal.payment');
 });
 //daftar route jika user sudah login sebagai admin
 Route::middleware(['admin'])->group(function () {
@@ -99,4 +101,6 @@ Route::middleware(['guest'])->group(function(){
 //logout
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
 Route::post('payment/callback',[PaymentController::class, 'handleCallback'])->name('payment.callback');
+Route::resource('/profile/user', ProfileController::class)->only(['index', 'update']);
+Route::post('/profile/user/{user:id}', [ProfileController::class, 'changepass'])->name('profile.changePassword');
 

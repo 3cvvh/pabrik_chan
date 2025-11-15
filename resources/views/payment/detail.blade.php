@@ -9,21 +9,29 @@
                 </svg>
             </div>
             <h1 class="text-3xl font-bold text-gray-900 mb-4">Pembayaran Berhasil!</h1>
-            <p class="text-gray-600 mb-8">Terima kasih atas pembelian Anda. Pesanan Anda akan segera diproses.</p>
+            <p class="text-gray-600 mb-8">Terima kasih telah berlangganan. Selamat menikmati akses premium selama 30 hari.</p>
 
             <div class="border-t border-gray-200 pt-4 mt-4">
-                <div class="flex justify-between mb-2">
-                    <span class="text-gray-600">Order ID</span>
-                    <span class="font-semibold">{{ $order_id ?? '#ORD123456' }}</span>
+                <div class="flex justify-between mb-3">
+                    <span class="text-gray-600">ID Pesanan</span>
+                    <span class="font-semibold">{{ $data->invoiceNumber ?? '#ORD123456' }}</span>
                 </div>
-                <div class="flex justify-between mb-2">
+                <div class="flex justify-between mb-3">
                     <span class="text-gray-600">Total Pembayaran</span>
-                    <span class="font-semibold">{{ $total ?? 'Rp 500.000' }}</span>
+                    <span class="font-semibold text-lg text-green-600">Rp {{ number_format($data->amount ?? 0, 0, ',', '.') }}</span>
+                </div>
+                <div class="flex justify-between mb-3">
+                    <span class="text-gray-600">Status Premium</span>
+                    <span class="font-semibold text-green-600">Aktif 30 Hari</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Berlaku Hingga</span>
+                    <span class="font-semibold">{{ now()->addDays(30)->format('d M Y') }}</span>
                 </div>
             </div>
 
             <div class="mt-8">
-                <a href="{{ route('admin.index') }}" class="bg-green-500 hover:bg-green-600 text-black font-semibold px-6 py-3 rounded-lg transition-colors duration-300">
+                <a href="{{ route('admin.index') }}" class="bg-green-500 hover:bg-green-600 text-black font-semibold px-6 py-3 rounded-lg transition-colors duration-300 inline-block">
                     Kembali ke Beranda
                 </a>
             </div>
@@ -36,13 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const card = document.getElementById('successCard');
     const checkIcon = document.querySelector('.check-icon');
 
-    // Animate card appearance
     setTimeout(() => {
         card.classList.remove('opacity-0');
         card.classList.add('opacity-100', 'translate-y-0');
     }, 100);
 
-    // Animate check icon
     checkIcon.style.strokeDasharray = '100';
     checkIcon.style.strokeDashoffset = '100';
     checkIcon.style.animation = 'drawCheck 1s ease-in-out forwards';

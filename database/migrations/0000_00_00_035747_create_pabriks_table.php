@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('gambar')->nullable();
             $table->boolean('Ispaid')->default(false);
+            $table->datetime('expire')->nullable();
+            $table->integer('sisa_waktu')->default(0);
             $table->timestamps();
         });
     }

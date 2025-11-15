@@ -7,6 +7,7 @@
   <title>@yield('title', '404 - Page Not Found')</title>
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/logopabrik.png') }}">
    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" ></script>
 </head>
 <body class="relative min-h-screen flex items-center justify-center
              bg-gradient-to-b from-blue-200 via-blue-50 to-gray-100

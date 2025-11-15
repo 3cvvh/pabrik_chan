@@ -12,17 +12,21 @@
     {{-- Navbar --}}
     <nav class="fixed top-0 left-0 right-0 bg-blue-500 border-t-2 border-black px-6 py-3 flex items-center justify-between shadow-lg z-50">
         <!-- Welcome -->
-        <div class="text-white font-bold text-xl tracking-wide drop-shadow">
-            Welcome
-            @if (Auth::user()->role_id === 1)
-                Admin
-            @elseif (Auth::user()->role_id === 2)
-                Orang gudang
-            @elseif (Auth::user()->role_id === 3)
-                Owner
-            @else
-                Super admin
-            @endif
+        <div class="flex items-center gap-4">
+            @php $user = Auth::user(); @endphp
+            <a href="{{ route('user.index') }}" class="flex items-center justify-center w-12 h-12 rounded-full overflow-hidden shadow-lg transition-shadow duration-200">
+                @if(!empty($user->profile_picture_path))
+                    <img src="{{ asset('storage/' . $user->profile_picture_path) }}" alt="{{ $user->name }}" class="w-12 h-12 object-cover">
+                @else
+                    <div class="w-12 h-12 bg-white flex items-center justify-center text-blue-900 font-bold text-lg">
+                        {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                    </div>
+                @endif
+            </a>
+            <div class="text-white font-bold text-xl tracking-wide drop-shadow">
+                Welcome {{ Auth::user()->name }}
+            </div>
+
         </div>
 
         <!-- Desktop Menu -->
@@ -142,11 +146,23 @@
 
     {{-- Mobile Sidebar --}}
     <div id="mobile-menu" class="fixed inset-0 hidden z-40 sm:hidden">
-    <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div id="sidebar"
-         class="absolute top-0 left-0 w-3/4 max-w-xs bg-blue-600 h-full p-6 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out">
-        <button id="close-btn" class="text-white text-2xl self-end"><i class="fas fa-times"></i></button>
-        <div class="mt-8 flex flex-col gap-4">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div id="sidebar"
+             class="absolute top-0 left-0 w-3/4 max-w-xs bg-blue-600 h-full p-6 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <button id="close-btn" class="text-white text-2xl self-end"><i class="fas fa-times"></i></button>
+            <div class="mt-8 flex flex-col gap-4">
+                @php $user = Auth::user(); @endphp
+                <!-- Mobile profile header -->
+                <div class="flex items-center gap-3 px-1 mb-2">
+                    @if(!empty($user->profile_picture_path))
+                        <img src="{{ asset('storage/' . $user->profile_picture_path) }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-full object-cover shadow">
+                    @else
+                        <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center text-blue-900 font-bold text-xl shadow">
+                            {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
+                    <div class="text-white font-semibold truncate">{{ $user->name }}</div>
+                </div>
 
                 {{-- === Super Admin === --}}
                 @if(Auth::user()->role_id == 4)

@@ -11,6 +11,7 @@
             <form action="/dashboard/super_admin/crud_pabrik" method="post" class="space-y-6" enctype="multipart/form-data" id="create-form">
                 @csrf
                 <div>
+                    <input type="hidden" value="knjt">
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Pabrik</label>
                     <input type="text" name="name" id="name"
                         class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 text-sm"

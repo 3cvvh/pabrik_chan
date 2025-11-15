@@ -67,11 +67,13 @@ class Crud_pabrikController extends Controller
             'name' => ['required','max:80'],
             'alamat' => ['required'],
             'no_telepon' => ['required','min:9'] ,
+            'email' => 'required',
             'gambar' =>['image']
         ]);
         if($request->file('gambar')){
             $datavalid['gambar'] = $request->file('gambar')->store('pabriks-img');
         }
+
         pabrik::create($datavalid);
         return redirect('/dashboard/super_admin/crud_pabrik')->with('berhasil','berhasil menambahkan data');
     }

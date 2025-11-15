@@ -32,6 +32,7 @@ class PaymentController extends Controller
         if (!$pabrik_pay) {
             // Jika belum ada payment, buat baru
             $pabrik_pay = Payment::create([
+                'invoiceNumber' => 'PBRK-' . time() . '-' . Auth::user()->pabrik->id,
                 'pabrik_id' => Auth::user()->pabrik->id,
                 'amount' => 94000,
                 'status' => 'pending'
@@ -65,9 +66,13 @@ class PaymentController extends Controller
             'transaction_details' => $transaction_details,
             'customer_details' => $customer_details
         );
-
-
+  $judul = "payment|page";
+        if(!empty($pabrik_pay->snap_token)){
+            $snapToken = $pabrik_pay->snap_token;
+            return view("payment.berlangganan", compact("judul", "snapToken"));
+        }
         try {
+
             $snapToken = Snap::getSnapToken($transaction);
             // Simpan snap token ke payment record di table payments
             $pabrik_pay->snap_token = $snapToken;
@@ -76,7 +81,7 @@ class PaymentController extends Controller
             dd($e->getMessage());
         }
     }
-    $judul = "payment|page";
+
     return view("payment.berlangganan", compact("judul", "snapToken"));
 }
 
@@ -101,8 +106,13 @@ class PaymentController extends Controller
      */
     public function show()
     {
+        $data = Auth::user()->pabrik->payment->first();
+        if($data->status == "gagal") {
+            abort(404,'authenticated');
+        }
+
         $judul = "payment|page";
-        return view("payment.detail",compact('judul'));
+        return view("payment.detail",compact('judul','data'));
     }
 
     /**
@@ -158,7 +168,7 @@ if ($transaksi === 'capture') {
         } elseif ($transaksi === 'settlement') {
             $this->changeStatus($order,"sukses",$notif);
         } elseif ($transaksi === 'pending') {
-            $this->changeStatus($order,"pending",$notif);
+            $this->changeStatus($order,"gagal",$notif);
         }
 return response()->json(['success' => true],200);
     }
@@ -166,11 +176,15 @@ protected function changeStatus ( $order, string $status, $notif){
  $order->status = $status;
  if($status == 'gagal'){
     $order->snap_token = null;
+    $order->updated_at = now();
+    $order->id = "pbrik-" . time() . "-" . $order->pabrik_id . uniqid();
  }
         $order->save();
 
         if ($status === 'sukses' && $order->pabrik) {
             $pabrik = $order->pabrik;
+            $pabrik->expire = now()->addDays(30);
+            $pabrik->sisa_waktu = 30; // Set sisa waktu ke 30 hari
             $pabrik->ispaid = true;
             $pabrik->save();
         }

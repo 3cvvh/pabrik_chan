@@ -68,7 +68,8 @@ class DatabaseSeeder extends Seeder
             'role_id' => 3,
             'password' => Hash::make('password'),
             'email' => 'ayane9012@gmail.com',
-            'alamat' => 'jelekong chan'
+            'alamat' => 'jelekong chan',
+            'phone' => 12312,
         ]);
         User::factory()->create([
             'name' => 'rasya',
@@ -77,7 +78,8 @@ class DatabaseSeeder extends Seeder
             'gudang_id' => 1,
             'password' => Hash::make('password'),
             'email' => 'rasya@gmail.com',
-            'alamat' => 'jelekong chan'
+            'alamat' => 'jelekong chan',
+            'phone' => 0120312
         ]);
         User::factory()->create([
             'name' => 'tasnim',
@@ -85,7 +87,8 @@ class DatabaseSeeder extends Seeder
             'role_id' => 1,
             'password' => Hash::make('password'),
             'email' => 'tasnim@gmail.com',
-            'alamat' => 'jelekong chan'
+            'alamat' => 'jelekong chan',
+            'phone' => 020201203
         ]);
         User::factory()->create([
             'name' => 'beti',
@@ -93,7 +96,8 @@ class DatabaseSeeder extends Seeder
             'role_id' => 1,
             'password' => Hash::make('password'),
             'email' => 'beatrice@gmail.com',
-            'alamat' => 'jelekong chan'
+            'alamat' => 'jelekong chan',
+            'phone' => 0201023
         ]);
         User::factory()->create([
             'name' => 'Killua',
@@ -101,6 +105,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email' => 'killua@gmail.com',
             'alamat' => 'Shiranai',
+            'phone' => 023123
         ]);
         produk::factory()->create([
             'nama' => 'deterjen',

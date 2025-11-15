@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Pabrik extends Model
+class pabrik extends Model
 {
     /** @use HasFactory<\Database\Factories\PabrikFactory> */
     use HasFactory;
     protected $guarded = ['id'];
+    protected $casts = [
+        'expire' => 'datetime',
+    ];
 
     public function stock():HasMany
     {
@@ -44,5 +47,24 @@ class Pabrik extends Model
     public function request():HasMany
     {
         return $this->hasMany(Request::class,'pabrik_id');
+    }
+    public function checkPrem(){
+        if(!$this->Ispaid){
+            return false;
+        }
+        if($this->expire && $this->sisa_waktu <= 0)
+            {
+                $this->Ispaid = false;
+                $this->save();
+                return false;
+            }
+        return true;
+    }
+    public function getremainDays(){
+        if(!$this->expire){
+            return 0;
+        }
+        $remain = $this->expire->diffInDays(now());
+        return max(0,$remain);
     }
 }
