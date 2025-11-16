@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('profile_picture_path')->nullable();
-            $table->bigInteger("phone");
+            $table->bigInteger("phone")->nullable();
             $table->unsignedBigInteger('gudang_id')->nullable();
             $table->foreign('gudang_id')->references('id')->on('gudangs');
             $table->unsignedBigInteger('pabrik_id')->nullable();

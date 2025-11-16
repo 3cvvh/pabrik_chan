@@ -63,7 +63,6 @@ class Crud_stock_produkController extends Controller
         return view('admin.crud_stock_produk.create', [
             'judul' => 'formtambah|stok',
             'produk' => Produk::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
-            'gudang' => Gudang::where('id_pabrik', Auth::getUser()->pabrik_id)->get(),
         ]);
     }
 
@@ -80,18 +79,16 @@ class Crud_stock_produkController extends Controller
             'jumlah' => ['required','integer','min:0'],
             'keterangan' => ['nullable','string'],
             'id_produk' => ['required','integer'],
-            'id_gudang' => ['required','integer'],
             'tanggal_masuk' => 'required|date'
         ],[
             'jumlah.required' => 'Jumlah belum diisi!',
             'id_produk.required' => 'Produk belum dipilih!',
-            'id_gudang.required' => 'Gudang belum dipilih!'
         ]);
 
+        $produk = Produk::find($valid["id_produk"]);
+        $gudang = $produk->gudang;
+        $valid["id_gudang"] = $gudang->id;
         // pastikan gudang ada dan milik pabrik user
-        $gudang = Gudang::where('id', $valid['id_gudang'])
-            ->where('id_pabrik', Auth::user()->pabrik_id)
-            ->first();
 
         if (!$gudang) {
             return redirect()->route('Stock_produk.index')->with('gagal','Gudang tidak ditemukan untuk pabrik ini!');
