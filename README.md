@@ -1,30 +1,6 @@
 # 🏭 Factorynize — Sistem Manajemen Data Pabrik
 <!-- replaced centered image block with a GitHub-safe table: gif (left) | logo + "Factorynize" (right, side-by-side) -->
-<table>
-  <tr>
-    <td valign="middle" align="right">
-      <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExendldWp5djZyb3Vtd2YzbXFzMjFtZDF5cDZjNzNla2QwcHlnZ2hmbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YnkMcHgNIMW4Yfmjxr/giphy.gif"
-           alt="Factorynize animation" width="180" />
-    </td>
-    <td valign="middle" align="left" style="padding-left:12px;">
-      <!-- nested table ensures logo and text stay side-by-side on GitHub -->
-      <table>
-        <tr>
-          <td valign="middle" align="left">
-            <img src="public/img/logopabrik.png" alt="Factorynize Logo" width="140" />
-          </td>
-          <td valign="middle" align="left" style="padding-left:8px;">
-            <strong>Factorynize</strong>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<h3 align="center">
-  <strong>Solusi Manajemen Pabrik Terintegrasi</strong><br>
-  <em>Kelola produk, stok, transaksi dengan mudah dan efisien</em>
-</h3>
+<p align="center"> <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExendldWp5djZyb3Vtd2YzbXFzMjFtZDF5cDZjNzNla2QwcHlnZ2hmbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YnkMcHgNIMW4Yfmjxr/giphy.gif" width="220" alt="Factory GIF"/> </p> <p align="center"> <img src="public/img/logopabrik.png" width="160" alt="Factorynize Logo"/> </p> <h3 align="center"> <strong>Solusi Manajemen Pabrik Terintegrasi</strong><br> <em>Kelola produk, stok, dan transaksi dengan cepat dan efisien</em> </h3>
 **Factorynize** adalah aplikasi web modern berbasis Laravel yang dirancang untuk memudahkan admin dan owner pabrik dalam mengelola data produk, gudang, stok, dan transaksi secara real-time. Dengan interface yang user-friendly dan fitur-fitur powerful, aplikasi ini meningkatkan efisiensi operasional pabrik Anda.
 
 ---
