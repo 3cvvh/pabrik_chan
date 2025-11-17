@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect(route('login'))->with('logout', 'Berhasil logout!');
+        return redirect(route('login'))->with('berhasil', 'Berhasil logout!');
     }
     public function sign(){
         return view('auth.register',[

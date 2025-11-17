@@ -126,16 +126,6 @@
                 <i class="fa fa-home w-5 h-5 mr-1"></i>dashboard
             </a>
             @endif
-
-            {{-- Logout --}}
-            <form action="{{ route('logout') }}" method="post" class="ml-2 sm:ml-4">
-                @csrf
-                <button type="button"
-                        onclick="confirmLogout(this)"
-                        class="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all duration-200">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </button>
-            </form>
         </div>
 
         <!-- Hamburger Button Mobile -->
@@ -254,13 +244,6 @@
                 <i class="fa fa-home w-5 h-5 mr-1"></i>dashboard
             </a>
                 @endif
-
-                {{-- Logout Mobile --}}
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="button" onclick="confirmLogout(this)" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300 ease-in-out w-auto self-start flex items-center">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
-                </form>
             </div>
         </div>
     </div>
@@ -272,22 +255,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmLogout(btn) {
-            Swal.fire({
-                title: 'Apakah anda yakin?',
-                text: "Anda akan keluar dari sistem",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Logout!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    btn.closest('form').submit();
-                }
-            });
-        }
 
         // Hamburger toggle
         document.addEventListener("DOMContentLoaded", () => {
