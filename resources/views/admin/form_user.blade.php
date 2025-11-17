@@ -42,7 +42,7 @@
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 200ms">
                             <label for="phone" class="block text-sm md:text-base font-semibold text-gray-700">no telepon</label>
                             <div class="mt-1 relative rounded-md shadow-sm">
-                                <input type="number" name="number" id="number" value="{{ old('phone', $user->phone ?? '') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" required />
+                                <input type="number" name="phone" id="number" value="{{ old('phone', $user->phone ?? '') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg" required />
                             </div>
                         </div>
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 300ms">

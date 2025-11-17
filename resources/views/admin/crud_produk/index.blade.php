@@ -46,7 +46,7 @@
                 </button>
             </a>
             @if(Auth::user()->role_id == 1)
-            <a href="{{ route('crud_stocks.create') }}">
+            <a href="{{ route('produk.create') }}">
                 <button class="w-full px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>

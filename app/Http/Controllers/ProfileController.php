@@ -97,10 +97,14 @@ class ProfileController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak sesuai',
             'password.min' => 'Password minimal 8 karakter',
         ]);
+
         if(!Hash::check($request->current_password, $user->password)){
-            return back()->with('gagal','Password saat ini tidak sesuai');
+            return redirect()->route('user.index')->with('gagal','Password saat ini tidak sesuai');
         }
-        $user->password = bcrypt($request->new_password);
+        if(Hash::check($request->password,$user->password)){
+            return redirect()->route('user.index')->with('gagal','password tidak boleh sama dengan password sebelumnya');
+        }
+        $user->password = $request->password;
         $user->save();
         return redirect()->route('user.index')->with('berhasil','berhasil mengupdate password');
 

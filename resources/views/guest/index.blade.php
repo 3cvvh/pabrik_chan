@@ -26,8 +26,7 @@
             Jelajahi situs pabrik kami dan mulai perjalanan Anda!
         </p>
 
-        <!-- Dua kartu interaktif: Ajukan Bergabung & Buat Pabrik -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-6">
+        {{-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-6">
             <a href="{{ route('guest.request_pabrik') }}"
                class="group block bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 shadow-lg border border-blue-100 hover:shadow-2xl hover:scale-105 transform transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-200"
                aria-label="Ajukan Bergabung ke Pabrik">
@@ -47,7 +46,7 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            </a> --}}
 
             <a href="{{ route('guest.form_pabrik') }}"
                class="group block bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 shadow-lg border border-blue-100 hover:shadow-2xl hover:scale-105 transform transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-200"
