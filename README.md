@@ -1,15 +1,26 @@
 # 🏭 Factorynize — Sistem Manajemen Data Pabrik
-<div style="display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;margin:1rem 0;">
-  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExendldWp5djZyb3Vtd2YzbXFzMjFtZDF5cDZjNzNla2QwcHlnZ2hmbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YnkMcHgNIMW4Yfmjxr/giphy.gif"
-       alt="Factorynize animation"
-       style="width:180px;height:auto;display:block;">
-  <div style="display:flex;align-items:center;gap:0.75rem;">
-    <img src="public/img/logopabrik.png" alt="Factorynize Logo" style="width:140px;height:auto;display:block;">
-    <div style="text-align:left;line-height:1;">
-      <div style="font-weight:700;font-size:1.25rem;">Factorynize</div>
-    </div>
-  </div>
-</div>
+<!-- replaced centered image block with a GitHub-safe table: gif (left) | logo + "Factorynize" (right, side-by-side) -->
+<table>
+  <tr>
+    <td valign="middle" align="right">
+      <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExendldWp5djZyb3Vtd2YzbXFzMjFtZDF5cDZjNzNla2QwcHlnZ2hmbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YnkMcHgNIMW4Yfmjxr/giphy.gif"
+           alt="Factorynize animation" width="180" />
+    </td>
+    <td valign="middle" align="left" style="padding-left:12px;">
+      <!-- nested table ensures logo and text stay side-by-side on GitHub -->
+      <table>
+        <tr>
+          <td valign="middle" align="left">
+            <img src="public/img/logopabrik.png" alt="Factorynize Logo" width="140" />
+          </td>
+          <td valign="middle" align="left" style="padding-left:8px;">
+            <strong>Factorynize</strong>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 <h3 align="center">
   <strong>Solusi Manajemen Pabrik Terintegrasi</strong><br>
   <em>Kelola produk, stok, transaksi dengan mudah dan efisien</em>
