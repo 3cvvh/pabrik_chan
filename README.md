@@ -1,61 +1,69 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏭 Factorynize — Sistem Manajemen Data Pabrik
+<div style="display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;margin:1rem 0;">
+  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExendldWp5djZyb3Vtd2YzbXFzMjFtZDF5cDZjNzNla2QwcHlnZ2hmbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YnkMcHgNIMW4Yfmjxr/giphy.gif"
+       alt="Factorynize animation"
+       style="width:180px;height:auto;display:block;">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <img src="public/img/logopabrik.png" alt="Factorynize Logo" style="width:140px;height:auto;display:block;">
+    <div style="text-align:left;line-height:1;">
+      <div style="font-weight:700;font-size:1.25rem;">Factorynize</div>
+    </div>
+  </div>
+</div>
+<h3 align="center">
+  <strong>Solusi Manajemen Pabrik Terintegrasi</strong><br>
+  <em>Kelola produk, stok, transaksi dengan mudah dan efisien</em>
+</h3>
+**Factorynize** adalah aplikasi web modern berbasis Laravel yang dirancang untuk memudahkan admin dan owner pabrik dalam mengelola data produk, gudang, stok, dan transaksi secara real-time. Dengan interface yang user-friendly dan fitur-fitur powerful, aplikasi ini meningkatkan efisiensi operasional pabrik Anda.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
+## ✨ Fitur Utama
+- 📦 **Manajemen Produk** — Kelola inventori produk dengan gambar dan detail lengkap
+- 🏢 **Multi-Gudang** — Pantau stok per gudang dengan mudah
+- 💰 **Transaksi Terintegrasi** — Buat dan kelola transaksi penjualan secara real-time
+- 🔄 **Penyesuaian Stok Otomatis** — Kurangi stok berdasarkan transaksi dengan akurat
+- 👤 **Role-Based Access** — Admin dan Owner memiliki akses yang berbeda dan aman
+- 📊 **Laporan Profesional** — Generate laporan transaksi dalam format PDF atau halaman
+- 🖼️ **Preview Gambar** — Modal pratinjau untuk melihat gambar produk dengan jelas
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Komponen | Teknologi |
+|----------|-----------|
+| **Backend** | PHP 8.x, Laravel Framework |
+| **Database** | MySQL / MariaDB |
+| **Frontend** | Blade Templates, TailwindCSS, SweetAlert2 |
+| **Storage** | Local (public/storage) untuk gambar produk |
+| **Build Tool** | Vite |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📸 Preview Fitur
+- **Halaman Detail Transaksi** — Ringkasan, daftar produk, stok gudang asal, dan modal pratinjau gambar
+- **Manajemen Stok** — Aksi untuk menambah produk, mengurangi jumlah, menghapus item
+- **Laporan** — Generate dan ekspor laporan dalam berbagai format
+- **Dashboard** — Visualisasi data real-time untuk admin dan owner
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 👥 Anggota Kelompok
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+| Nama | Role | Tanggung Jawab |
+|------|------|---|
+| **Lazuli** | Project Manager| Manage Task |
+| **3cvvh** | Backend Developer | Feature Implementation |
+| **Neexiq** | Frontend Developer | Integration UI|
+| **ellestari** | System Analyst| requirement gathering |
+| **Shabrinanurr** | UI/UX Designer| Desain UI Interface |
+| **papalu77** | Quality Assurance | Testing & Bug Fixing |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 💬 Support & Feedback
 
-## Laravel Sponsors
+Butuh bantuan? Ada pertanyaan atau bug report?
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- 📧 Buat [Issue](https://github.com/3cvvh/pabrik_chan/issues) di repository
+- 🔀 Kirim PR dengan deskripsi langkah reproduksi dan log error
+- 💡 Share saran untuk improvement di Discussions
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Made with ❤️ by the Factorynize Team**
