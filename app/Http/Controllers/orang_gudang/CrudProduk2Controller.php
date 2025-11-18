@@ -138,33 +138,28 @@ class CrudProduk2Controller extends Controller
     {
         $barcode = $request->barcode;
 
-    // Misal barcode = ID produk
-    $produk = \App\Models\Produk::where('id', $barcode)->first();
-
-    if ($produk) {
-        return response()->json([
-            'status' => 'berhasil',
-            'data' => [
-                'id' => $produk->id,
-
-            ]
-        ]);
-    } else {
-        return response()->json([
-            'status' => 'gagal',
-            'message' => 'Produk tidak ditemukan'
-        ]);
-    }
-
-        $kodeProduk = $request->input('kode'); // nilai dari QR code
-        $produk = produk::where('id', $kodeProduk)->first();
-
-        if (!$produk) {
-            return redirect()->back()->with('gagal', 'Produk tidak ditemukan!');
+        // Jika QR berisi URL, extract ID dari URL
+        if (strpos($barcode, 'produk') !== false) {
+            preg_match('/\/(\d+)$/', $barcode, $matches);
+            $barcode = $matches[1] ?? $barcode;
         }
 
-        // Redirect ke halaman detail produk
-        return redirect()->route('crud_produk.show', $produk->id);
+        $produk = \App\Models\Produk::where('id', $barcode)
+            ->where('id_pabrik', Auth::user()->pabrik_id)
+            ->where('id_gudang', Auth::user()->gudang_id)
+            ->first();
+
+        if ($produk) {
+            return response()->json([
+                'status' => 'success',
+                'data' => ['id' => $produk->id]
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Produk tidak ditemukan'
+            ], 404);
+        }
     }
 
     public function qrDownload(produk $produk)
@@ -176,4 +171,5 @@ class CrudProduk2Controller extends Controller
         ]);
     }
 }
+
 

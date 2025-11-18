@@ -32,9 +32,13 @@ class GuestController extends Controller
             'alamat_pabrik' => 'required',
             'nomor_telepon' => ['required','min:10'],
             'email' => ['required','email','unique:pabriks,email'],
+            'gambar_pabrik' => 'image'
         ]);
 
        $new = new pabrikss;
+       if($request->file('gambar_pabrik')){
+        $new->gambar = $request->file('gambar_pabrik')->store('pabriks-img');
+       }
         $new->name = $request->nama_pabrik;
         $new->alamat = $request->alamat_pabrik;
     $new->email = $request->email;

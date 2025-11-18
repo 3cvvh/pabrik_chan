@@ -141,6 +141,6 @@
         }
     });
 
-    <x-alert></x-alert>
+
 </script>
 @endsection

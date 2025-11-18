@@ -11,7 +11,7 @@
                 </div>
             @endforeach
         @endif
-        <form id="pabrikForm" action="{{ route('guest.storePabrik',Auth::user()->id) }}" method="POST" novalidate class="md:col-span-2 bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+        <form id="pabrikForm" action="{{ route('guest.storePabrik',Auth::user()->id) }}" method="POST" novalidate class="md:col-span-2 bg-white p-8 rounded-2xl shadow-xl border border-blue-100" enctype="multipart/form-data">
             @csrf
             <div class="space-y-6">
                 <div>
@@ -31,12 +31,13 @@
                         <span id="alamat_count">0</span>
                         <span>/ 200</span>
                     </div>
+                </div>
                 <div>
                     <label for="email" class="block text-sm font-semibold text-blue-700 mb-1">Email</label>
-                    <input name="email" id="email" type="email" rows="3" maxlength="200" required placeholder="Masukkan alamat lengkap"
-                        class="mt-1 block w-full rounded-lg border-blue-200 shadow focus:border-blue-500 focus:ring-blue-500 text-base px-4 py-2 transition-all duration-200"></input>
+                    <input name="email" id="email" type="email" maxlength="200" required placeholder="Masukkan email pabrik"
+                        class="mt-1 block w-full rounded-lg border-blue-200 shadow focus:border-blue-500 focus:ring-blue-500 text-base px-4 py-2 transition-all duration-200">
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
-                        <span id="alamat_count">0</span>
+                        <span id="email_count">0</span>
                         <span>/ 200</span>
                     </div>
                 </div>
@@ -45,6 +46,12 @@
                     <input type="tel" name="nomor_telepon" id="nomor_telepon" placeholder="+628xxxxxxxx" pattern="^\+?\d{7,15}$"
                         class="mt-1 block w-full rounded-lg border-blue-200 shadow focus:border-blue-500 focus:ring-blue-500 text-base px-4 py-2 transition-all duration-200">
                     <p class="text-xs text-gray-400 mt-1">Hanya angka, boleh diawali + · 7–15 digit</p>
+                </div>
+                <div>
+                    <label for="gambar_pabrik" class="block text-sm font-semibold text-blue-700 mb-1">Logo Pabrik</label>
+                    <input type="file" name="gambar_pabrik" id="gambar_pabrik" accept="image/*"
+                        class="mt-1 block w-full rounded-lg border-blue-200 shadow focus:border-blue-500 focus:ring-blue-500 text-base px-4 py-2 transition-all duration-200">
+                    <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG, GIF · Ukuran maksimal: 5MB</p>
                 </div>
                 <div class="flex items-center gap-4 mt-4">
                     <button type="submit"
@@ -61,10 +68,17 @@
         </form>
         <aside class="preview bg-blue-50 p-8 rounded-2xl border border-blue-100 shadow flex flex-col items-center">
             <h2 class="text-lg font-bold text-blue-700 mb-4">Preview</h2>
+            <div id="previewGambar" class="w-full mb-6 flex justify-center">
+                <img id="previewImg" src="" alt="Preview Gambar" class="hidden max-w-full h-auto rounded-lg border-2 border-blue-300 shadow-md" style="max-height: 250px;">
+                <div id="placeholderImg" class="w-full h-48 flex items-center justify-center bg-gray-200 rounded-lg border-2 border-dashed border-gray-400">
+                    <span class="text-gray-500 text-sm">Belum ada gambar</span>
+                </div>
+            </div>
             <div class="flex flex-col items-start w-full space-y-2 text-base text-gray-700">
                 <p><span class="font-semibold text-blue-700">Nama:</span> <span id="previewNama">-</span></p>
                 <p><span class="font-semibold text-blue-700">Alamat:</span> <span id="previewAlamat">-</span></p>
                 <p><span class="font-semibold text-blue-700">Telepon:</span> <span id="previewTel">-</span></p>
+                <p><span class="font-semibold text-blue-700">Email:</span> <span id="previewEmail">-</span></p>
             </div>
         </aside>
     </div>
@@ -80,12 +94,17 @@ document.addEventListener('DOMContentLoaded', function(){
     const form = document.getElementById('pabrikForm');
     const nama = document.getElementById('nama_pabrik');
     const alamat = document.getElementById('alamat_pabrik');
+    const email = document.getElementById('email');
     const tel = document.getElementById('nomor_telepon');
+    const gambar = document.getElementById('gambar_pabrik');
     const namaCount = document.getElementById('nama_count');
     const alamatCount = document.getElementById('alamat_count');
     const previewNama = document.getElementById('previewNama');
     const previewAlamat = document.getElementById('previewAlamat');
     const previewTel = document.getElementById('previewTel');
+    const previewEmail = document.getElementById('previewEmail');
+    const previewImg = document.getElementById('previewImg');
+    const placeholderImg = document.getElementById('placeholderImg');
     const toast = document.getElementById('toast');
     const toastInner = document.getElementById('toastInner');
 
@@ -95,9 +114,10 @@ document.addEventListener('DOMContentLoaded', function(){
         previewNama.textContent = nama.value || '-';
         previewAlamat.textContent = alamat.value || '-';
         previewTel.textContent = tel.value || '-';
+        previewEmail.textContent = email.value || '-';
     }
 
-    [nama, alamat, tel].forEach(el => el.addEventListener('input', function(){
+    [nama, alamat, tel, email].forEach(el => el.addEventListener('input', function(){
         if (this === tel) {
             let v = this.value;
             v = v.replace(/[^\d+]/g,'');
@@ -106,6 +126,42 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         updateAll();
     }));
+
+    gambar.addEventListener('change', function(){
+        const file = this.files[0];
+        const maxSize = 5 * 1024 * 1024;
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+        if (file) {
+            if (!validTypes.includes(file.type)) {
+                showToast('Format file tidak didukung. Gunakan JPG, PNG, GIF, atau WebP', 'error');
+                this.value = '';
+                previewImg.classList.add('hidden');
+                placeholderImg.classList.remove('hidden');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                showToast('Ukuran file terlalu besar. Maksimal 5MB', 'error');
+                this.value = '';
+                previewImg.classList.add('hidden');
+                placeholderImg.classList.remove('hidden');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewImg.classList.remove('hidden');
+                placeholderImg.classList.add('hidden');
+                showToast('Gambar berhasil dimuat', 'success');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImg.classList.add('hidden');
+            placeholderImg.classList.remove('hidden');
+        }
+    });
 
     updateAll();
 

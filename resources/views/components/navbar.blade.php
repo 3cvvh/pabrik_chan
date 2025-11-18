@@ -12,17 +12,21 @@
     {{-- Navbar --}}
     <nav class="fixed top-0 left-0 right-0 bg-blue-500 border-t-2 border-black px-6 py-3 flex items-center justify-between shadow-lg z-50">
         <!-- Welcome -->
-        <div class="text-white font-bold text-xl tracking-wide drop-shadow">
-            Welcome
-            @if (Auth::user()->role_id === 1)
-                Admin
-            @elseif (Auth::user()->role_id === 2)
-                Orang gudang
-            @elseif (Auth::user()->role_id === 3)
-                Owner
-            @else
-                Super admin
-            @endif
+        <div class="flex items-center gap-4">
+            @php $user = Auth::user(); @endphp
+            <a href="{{ route('user.index') }}" class="flex items-center justify-center w-12 h-12 rounded-full overflow-hidden shadow-lg transition-shadow duration-200">
+                @if(!empty($user->profile_picture_path))
+                    <img src="{{ asset('storage/' . $user->profile_picture_path) }}" alt="{{ $user->name }}" class="w-12 h-12 object-cover">
+                @else
+                    <div class="w-12 h-12 bg-white flex items-center justify-center text-blue-900 font-bold text-lg">
+                        {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                    </div>
+                @endif
+            </a>
+            <div class="text-white font-bold text-xl tracking-wide drop-shadow">
+                Welcome {{ Auth::user()->name }}
+            </div>
+
         </div>
 
         <!-- Desktop Menu -->
@@ -53,6 +57,11 @@
                    {{ request()->is('dashboard/admin') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                 </a>
+                {{-- <a href="{{ route('verifikasi.index') }}"
+                   class="flex items-center px-4 py-2 rounded-lg transition duration-200
+                   {{ request()->is('verifikasi*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
+                   <i class="fas fa-user mr-2"></i>Verified
+                </a> --}}
                 <a href="/dashboard/admin/crud_user"
                    class="flex items-center px-4 py-2 rounded-lg transition duration-200
                    {{ request()->is('dashboard/admin/crud_user*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
@@ -127,11 +136,23 @@
 
     {{-- Mobile Sidebar --}}
     <div id="mobile-menu" class="fixed inset-0 hidden z-40 sm:hidden">
-    <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div id="sidebar"
-         class="absolute top-0 left-0 w-3/4 max-w-xs bg-blue-600 h-full p-6 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out">
-        <button id="close-btn" class="text-white text-2xl self-end"><i class="fas fa-times"></i></button>
-        <div class="mt-8 flex flex-col gap-4">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div id="sidebar"
+             class="absolute top-0 left-0 w-3/4 max-w-xs bg-blue-600 h-full p-6 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <button id="close-btn" class="text-white text-2xl self-end"><i class="fas fa-times"></i></button>
+            <div class="mt-8 flex flex-col gap-4">
+                @php $user = Auth::user(); @endphp
+                <!-- Mobile profile header -->
+                <div class="flex items-center gap-3 px-1 mb-2">
+                    @if(!empty($user->profile_picture_path))
+                        <img src="{{ asset('storage/' . $user->profile_picture_path) }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-full object-cover shadow">
+                    @else
+                        <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center text-blue-900 font-bold text-xl shadow">
+                            {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
+                    <div class="text-white font-semibold truncate">{{ $user->name }}</div>
+                </div>
 
                 {{-- === Super Admin === --}}
                 @if(Auth::user()->role_id == 4)
@@ -223,6 +244,13 @@
                 <i class="fa fa-home w-5 h-5 mr-1"></i>dashboard
             </a>
                 @endif
+
+                {{-- Logout Mobile --}}
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="button" onclick="confirmLogout(this)" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300 ease-in-out w-auto self-start flex items-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
+                </form>
             </div>
         </div>
     </div>
@@ -234,6 +262,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function confirmLogout(btn) {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "Anda akan keluar dari sistem",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Logout!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btn.closest('form').submit();
+                }
+            });
+        }
+
         // Hamburger toggle
         document.addEventListener("DOMContentLoaded", () => {
             const menuBtn = document.getElementById('menu-btn');

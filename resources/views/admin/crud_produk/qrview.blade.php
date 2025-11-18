@@ -3,16 +3,17 @@
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg md:max-w-2xl p-6 md:p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-6 animate-fadeIn">
-        
+
         <!-- Judul -->
         <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 text-center">
             QR Code Produk: <span class="text-indigo-600">{{ $produk->nama }}</span>
+            <p><a href="{{ route('produk.show',$produk->id) }}">click</a></p>
         </h2>
 
         <!-- QR besar -->
         <div class="w-full flex justify-center">
             <div class="p-2 bg-gray-50 rounded-xl shadow-inner">
-                {!! QrCode::size(250)->generate(route('produk.show', $produk->id)) !!}
+                {!! QrCode::format('svg')->size(300)->generate(route('produk.show', $produk->id)) !!}
             </div>
         </div>
 
