@@ -1,7 +1,6 @@
 @extends('layout.main')
 @section('content')
 <x-navbar></x-navbar>
-{{  Auth::getUser()->pabrik->Ispaid }}
 @php
     // Formatter singkat untuk IDR: 2rb, 2,5rb, 2jt, dst.
     $formatIDRShort = function($n) {
@@ -33,6 +32,7 @@
         </div>
 
         <!-- FILTER TANGGAL -->
+        @if (Auth::user()->pabrik->Ispaid == true)
         <div class="mb-6">
             <form method="GET" action="" class="flex flex-col md:flex-row items-start md:items-end gap-4">
                 <div>
@@ -152,6 +152,12 @@
             </div>
         </div>
         <!-- END NEW -->
+        @else
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 rounded-lg max-w-3xl mx-auto mt-10">
+        <h2 class="text-2xl font-bold mb-2">Peringatan Pembayaran</h2>
+        <p class="mb-4">Pabrik belum bisa megunakan semua fitur karna belum berlangganan</p>
+    </div>
+        @endif
 
     </div>
 </div>

@@ -10,7 +10,7 @@
         <h1 class="text-3xl font-bold text-blue-700 mb-2">Dashboard Orang Gudang</h1>
         <p class="text-gray-600">Welcome to the Orang Gudang dashboard. Here you can manage your inventory and view reports.</p>
     </div>
-
+    @if(Auth::user()->pabrik->Ispaid == true)
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         <div class="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center border border-blue-100">
             <h2 class="text-gray-500 font-semibold mb-1">Gudang</h2>
@@ -54,6 +54,12 @@
         </div>
     </div>
 </div>
+@else
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 rounded-lg max-w-3xl mx-auto mt-10">
+        <h2 class="text-2xl font-bold mb-2">Peringatan Pembayaran</h2>
+        <p class="mb-4">Pabrik belum bisa megunakan semua fitur karna belum berlangganan</p>
+    </div>
+ @endif
 <script>
     <x-alert></x-alert>
 </script>
