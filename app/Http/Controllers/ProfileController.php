@@ -60,6 +60,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $benar = false;
          $request->validate([
             'name' => 'required',
             'phone' => 'required',
@@ -67,6 +68,12 @@ class ProfileController extends Controller
             'email' => 'required',
             'alamat' => 'required',
         ]);
+        if ($request->remove_avatar == 1){
+            if($user->profile_picture_path != null){
+                    Storage::disk("public")->delete($user->profile_picture_path);
+                   $benar = true;
+            }
+        }
         if($request->hasFile('gambar')){
             if($user->profile_picture_path){
                 Storage::disk("public")->delete($user->profile_picture_path);
@@ -76,6 +83,9 @@ class ProfileController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->password = $request->password == true ? bcrypt($request->password) : $user->password;
+        if($benar == true){
+            $user->profile_picture_path = null;
+        }
         $user->email = $request->email;
         $user->alamat = $request->alamat;
         $user->save();
@@ -85,9 +95,9 @@ class ProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $id )
     {
-        //
+
     }
     public function changepass(Request $request,User $user){
         $request->validate([

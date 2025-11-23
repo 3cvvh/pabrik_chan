@@ -57,6 +57,11 @@
                    {{ request()->is('dashboard/admin') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                 </a>
+                <a href="{{ route('profile.pabrik',) }}"
+                   class="flex items-center px-4 py-2 rounded-lg transition duration-200
+                   {{ request()->is('dashboard/admin/pabrik*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">
+                   <i class="fas fa-industry mr-2"></i>Pabrik
+                </a>
                 {{-- <a href="{{ route('verifikasi.index') }}"
                    class="flex items-center px-4 py-2 rounded-lg transition duration-200
                    {{ request()->is('verifikasi*') ? 'bg-white text-blue-900 shadow border border-black' : 'text-white hover:bg-blue-600' }}">

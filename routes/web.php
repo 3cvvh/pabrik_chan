@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\admin\adminController;
+use App\Http\Controllers\admin\AdminController as AdminAdminController;
 use App\Http\Controllers\owner\ownerController;
 use App\Http\Controllers\admin\crud_gudangController;
 use App\Http\Controllers\admin\user_crudController;
@@ -58,6 +59,8 @@ Route::middleware(['admin'])->group(function () {
     Route::resource('/dashboard/admin/Request',RequestController::class)->except(['index']);
     Route::resource('/dashboard/admin/payment',PaymentController::class);
     Route::get('/dashboard/admin/payment/success',[GuestController::class, 'succes_payment'])->name('berhasil.payment');
+    Route::get('/dashboard/admin/pabrik',[AdminAdminController::class,'profile_pabrik'])->name('profile.pabrik');
+    Route::put('dashboard/admin/edit/{pabrik:id}',[AdminController::class, 'Update'])->name('update.pabrik');
 
 });
 //daftar route jika user sudah login sebagai orang gudang

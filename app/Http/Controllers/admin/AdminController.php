@@ -11,12 +11,37 @@ use App\Models\Detail_transaksi;
 use Illuminate\Cache\RedisTagSet;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePabrikRequest;
 use App\Models\Pembeli;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdminController extends Controller
 {
+    public function Update(pabrik $pabrik,UpdatePabrikRequest $request): RedirectResponse
+    {
+        $request->validated();
+        $pabrik->name = $request->name;
+        $pabrik->alamat = $request->alamat;
+        $pabrik->no_telepon = $request->no_telepon;
+        $pabrik->email = $request->email;
+        if($request->file('gambar')){
+            if($pabrik->gambar){
+                Storage::delete($pabrik->gambar);
+            }
+            $pabrik->gambar = $request->file('gambar')->store('pabriks-img');
+        }
+        $pabrik->save();
+        return Redirect::route('profile.pabrik')->with('berhasil','Data pabrik berhasil di update');
+    }
+    public function profile_pabrik(){
+        $judul = 'data_pabrik';
+        return view('admin.pabrik.index',compact('judul'));
+    }
+
     public function index()
     {
         $pabrik_id = Auth::user()->pabrik_id;

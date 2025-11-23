@@ -220,8 +220,8 @@
             @endif
         </div>
         <br>
-        <div id="paginate" class="mt-4 flex justify-center animate-fade-in-up" style="animation-delay: 0.3s">
-            {{ $data->links() }}
+        <div>
+            {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
 </div>

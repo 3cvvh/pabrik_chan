@@ -169,7 +169,7 @@
         </div>
 
         <!-- Pagination -->
-        <div id="paginationContainer">
+        <div>
             {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
@@ -210,9 +210,8 @@ function confirmDelete(button) {
     const searchInput = document.getElementById('search');
     const rolesSelect = document.getElementById('roles_key');
     const tableContainer = document.getElementById('tableContainer');
-    const paginationContainer = document.getElementById('paginationContainer');
 
-    if (!form || !searchInput || !rolesSelect || !tableContainer || !paginationContainer) return;
+    if (!form || !searchInput || !rolesSelect || !tableContainer ) return;
 
     function debounce(fn, delay = 300) {
         let t;

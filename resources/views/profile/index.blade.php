@@ -141,10 +141,12 @@
             <div class="flex items-start gap-6">
                 <!-- Avatar preview column: image on top, buttons below -->
                 <div class="flex flex-col items-center gap-3">
-                    <img id="editAvatarPreview" src="{{ $editAvatarSrc }}" alt="Avatar Preview" class="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover ring-2 ring-cyan-200 border border-cyan-100 shadow cursor-pointer" title="Click to view">
+                    <img id="editAvatarPreview" src="{{ $avatarSrc }}" alt="Avatar Preview" class="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover ring-2 ring-cyan-200 border border-cyan-100 shadow cursor-pointer" title="Click to view">
                     <div class="flex flex-col items-center gap-2">
                         <input type="hidden" name="remove_avatar" id="removeAvatarInput" value="0">
+                        @if(Auth::getUser()->profile_picture_path != null)
                         <button type="button" id="removeAvatarBtn" class="px-3 py-1 text-xs bg-red-50 text-red-600 border border-red-100 rounded hover:bg-red-100">Remove photo</button>
+                        @endif
                         <button type="button" id="undoRemoveAvatarBtn" class="px-3 py-1 text-xs bg-cyan-50 text-cyan-700 border border-cyan-100 rounded hidden">Undo</button>
                         <span id="willRemoveNote" class="text-xs text-red-600 hidden">Photo will be removed when you save.</span>
                     </div>
@@ -286,7 +288,7 @@
                 // revoke temp url if exists
                 if(tempAvatarURL){ try{ URL.revokeObjectURL(tempAvatarURL);}catch(e){} tempAvatarURL = null; }
                 // set preview to placeholder
-                if(editAvatarPreview) editAvatarPreview.src = placeholderAvatar;
+                if(editAvatarPreview) editAvatarPreview.src = 'https://placehold.co/256x256/avatar.png';
                 if(undoRemoveAvatarBtn) undoRemoveAvatarBtn.classList.remove('hidden');
                 if(willRemoveNote) willRemoveNote.classList.remove('hidden');
             });
