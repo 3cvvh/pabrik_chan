@@ -12,7 +12,9 @@
                 Lakukan Pembayaran
             </a>
         </div>
-        @else
+        @endif
+        
+        @if (Auth::user()->pabrik->Ispaid)
         <!-- Stats Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow p-6">
@@ -65,7 +67,7 @@
         </div>
 
         <!-- Additional Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="text-gray-500 mb-2">Total Stock</div>
                 <div class="text-2xl font-bold">{{ $total_stock }}</div>
@@ -79,9 +81,24 @@
                 <div class="text-2xl font-bold">{{ $gudang }}</div>
             </div>
         </div>
+        @endif
     </div>
 </div>
- @endif
+
+@if (!Auth::user()->pabrik->Ispaid)
+<footer class="bg-gradient-to-r from-green-600 to-emerald-500 text-black py-8 mt-12 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-2xl font-bold mb-4">Butuh Bantuan?</h2>
+        <p class="mb-6">Jika Anda memerlukan bantuan atau memiliki pertanyaan mengenai pembayaran, silakan hubungi kami melalui WhatsApp.</p>
+        <div>
+            <a href="https://web.whatsapp.com/" class="px-6 py-2 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition">
+                {{ $whatsapp }}
+            </a>
+        </div>
+    </div>
+</footer>
+@endif
+
 <!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

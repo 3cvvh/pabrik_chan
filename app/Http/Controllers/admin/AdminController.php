@@ -52,7 +52,8 @@ class AdminController extends Controller
             'gudang' => count(Auth::user()->pabrik->gudang),
             'pembeli' => count(Pembeli::where('id_pabrik','=',$pabrik_id)->get()),
             'total_stock' => Stock_produk::where('id_gudang', $pabrik_id )->sum('jumlah'),
-            'transaksi' => Transaksi::where('id_pabrik', $pabrik_id)->count()
+            'transaksi' => Transaksi::where('id_pabrik', $pabrik_id)->count(),
+            'whatsapp' => '085320342423'
         ]);
     }
     public function tanggal(Request $request, Transaksi $transaksi)
