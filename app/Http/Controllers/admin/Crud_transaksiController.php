@@ -18,12 +18,20 @@ use Illuminate\Support\Facades\DB as FacadesDB;
 
 class Crud_transaksiController extends Controller
 {
+public function __construct()
+{
+    // terapkan middleware 'not_paid' hanya pada method-method yang butuh
+
+    // atau: terapkan ke semua kecuali index & show
+    $this->middleware('not_paid')->except(['index','show']);
+}
+
+
     /**
      * Display a listing of the resource.
      */
   public function index(Request $request)
 {
-    // gunakan nama param yang sesuai dengan view/js: 'search' dan 'roles_key'
     $query = transaksi::with('pembeli')
         ->where('id', '!=', Auth::id())
         ->where('id_pabrik', Auth::user()->pabrik_id);
@@ -41,8 +49,22 @@ class Crud_transaksiController extends Controller
         $q->where('id_pembeli', $pembeliId);
     });
 
-    // paginate dan append query params yang benar
-    $data = $query->latest()->paginate(3)->appends($request->only(['search', 'roles_key']));
+    // filter by status menggunakan 'Status' (sesuai view parameter)
+    $query->when($request->get('Status'), function($q, $stat){
+        $q->where('status', $stat);
+    });
+
+    // filter by date range
+    $query->when($request->get('date_from'), function ($q, $dateFrom) {
+        $q->whereDate('tanggal_pengiriman', '>=', $dateFrom);
+    });
+
+    $query->when($request->get('date_to'), function ($q, $dateTo) {
+        $q->whereDate('tanggal_pengiriman', '<=', $dateTo);
+    });
+
+    // paginate dan append semua query params yang benar
+    $data = $query->latest()->paginate(3)->appends($request->only(['search', 'roles_key', 'Status', 'date_from', 'date_to']));
 
     return view('admin.crud_transaksi.index', [
         'judul' => 'transaksi|page',
@@ -71,7 +93,6 @@ public function store(Request $request)
 
     // Validasi request
     $request->validate([
-        'judul' => 'required',
         'id_pembeli' => 'required',
         'keterangan' => 'nullable',
     ],[
@@ -83,7 +104,6 @@ public function store(Request $request)
 
             // buat transaksi
             $transaksi = transaksi::create([
-                'judul' => $request->judul,
                 'id_pembeli' => $request->id_pembeli,
                 'id_pabrik' => Auth::user()->pabrik_id,
                 'status_pengiriman' => 'belum_dikirim',
@@ -148,19 +168,16 @@ public function show($id)
     {
         $transaksi = transaksi::find($id);
           $request->validate([
-        'judul' => 'required',
         'id_pembeli' => 'required',
         'keterangan' => 'nullable',
     ],[
         'id_produk.required' => 'produk tidak dipilih',
         'id_pembeli.required' => 'pembeli tidak dipilih',
-        'judul.required' => 'tolong nama transaksi diisi',
         'jumlah.required' => 'jumlah produk harap di isi',
         'jumlah.*.required' => 'jumlah produk harap di isi',
         'jumlah.*.numeric' => 'jumlah produk harus berupa angka',
         'jumlah.*.min' => 'jumlah produk minimal 1'
     ]);
-    $transaksi->judul = $request->judul;
     $transaksi->id_pembeli = $request->id_pembeli;
     $transaksi->keterangan = $request->keterangan;
     $transaksi->save();

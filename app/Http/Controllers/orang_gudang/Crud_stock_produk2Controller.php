@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class Crud_stock_produk2Controller extends Controller
 {
+    public function __construct()
+    {
+       $this->middleware('not_paid')->except(['index']);
+    }
     /**
      * Display a listing of the resource.
      */

@@ -101,10 +101,13 @@
                 <div class="mt-4">
                     <h3 class="text-md font-medium text-gray-700">Pendapatan per Produk</h3>
                     <div class="mt-3 space-y-2 max-h-56 overflow-y-auto pr-2">
-                        @if(!empty($productNets) && $productNets->count() > 0)
+                         @if(!empty($productNets) && $productNets->count() > 0)
                             @foreach($productNets as $p)
                                 <div class="flex justify-between items-center bg-gray-50 rounded p-3 border">
-                                    <div class="text-gray-700">{{ $p->nama }}</div>
+                                    <div class="text-gray-700">
+                                        {{ $p->nama }}
+                                        <span class="text-sm text-gray-500">({{ $p->total_terjual }} terjual)</span>
+                                    </div>
                                     <div class="text-sm font-semibold text-gray-800">{{ $formatIDRShort($p->net ?? 0) }}</div>
                                 </div>
                             @endforeach
@@ -127,10 +130,13 @@
                     <div class="mt-6">
                         <h3 class="text-md font-medium text-gray-700">Keuntungan per Gudang</h3>
                         <div class="mt-3 space-y-2 max-h-56 overflow-y-auto pr-2">
-                            @if(!empty($gudangNets) && $gudangNets->count() > 0)
+                        @if(!empty($gudangNets) && $gudangNets->count() > 0)
                                 @foreach($gudangNets as $g)
                                     <div class="flex justify-between items-center bg-gray-50 rounded p-3 border">
-                                        <div class="text-gray-700">{{ $g->nama }}</div>
+                                        <div class="text-gray-700">
+                                            {{ $g->nama }}
+                                            <span class="text-sm text-gray-500">({{ $g->total_terjual }} terjual)</span>
+                                        </div>
                                         <div class="text-sm font-semibold text-gray-800">{{ $formatIDRShort($g->net ?? 0) }}</div>
                                     </div>
                                 @endforeach

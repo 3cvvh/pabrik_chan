@@ -44,6 +44,26 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="w-64">
+                    <label for="Status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select name="Status" id="Status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                        <option value="0">Semua Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Success</option>
+                    </select>
+                </div>
+                <div class="w-64">
+                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
+                    <input type="date" name="date_from" id="date_from"
+                        value="{{ request('date_from') }}"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
+                </div>
+                <div class="w-64">
+                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
+                    <input type="date" name="date_to" id="date_to"
+                        value="{{ request('date_to') }}"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200">
+                </div>
             </form>
         </div>
 
@@ -56,7 +76,6 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama Transaksi</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pembeli</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Pengiriman</th>
@@ -76,7 +95,6 @@
                             @endphp
                             <tr class="hover:bg-gray-50 transition-all duration-200">
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $transaksi->judul }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $transaksi->pembeli->name }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-3 py-1 text-xs font-medium rounded-full {{ $statusClass }}">{{ ucfirst($transaksi->status) }}</span>
@@ -133,8 +151,7 @@
                             {{ ucfirst($transaksi->status) }}
                         </span>
                     </div>
-                    <p class="text-base font-bold text-gray-800">{{ $transaksi->judul }}</p>
-                    <p class="text-sm text-gray-500">{{ $transaksi->pembeli->name }}</p>
+                    <p class="text-base font-bold text-gray-800">{{ $transaksi->pembeli->name }}</p>
                     <div class="flex justify-end space-x-2">
                         <a href="{{ route('crud_transaksi.show',$transaksi->id) }}"
                            class="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105">
@@ -169,7 +186,7 @@
         </div>
 
         <!-- Pagination -->
-        <div>
+        <div id="paginationContainer">
             {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
@@ -209,9 +226,11 @@ function confirmDelete(button) {
     const form = document.getElementById('liveFilterForm');
     const searchInput = document.getElementById('search');
     const rolesSelect = document.getElementById('roles_key');
+    const statusSelect = document.getElementById('Status');
     const tableContainer = document.getElementById('tableContainer');
+    const paginationContainer = document.getElementById('paginationContainer');
 
-    if (!form || !searchInput || !rolesSelect || !tableContainer ) return;
+    if (!form || !searchInput || !rolesSelect || !statusSelect || !tableContainer || !paginationContainer) return;
 
     function debounce(fn, delay = 300) {
         let t;
@@ -225,8 +244,14 @@ function confirmDelete(button) {
         const params = new URLSearchParams();
         const s = searchInput.value.trim();
         const r = rolesSelect.value;
+        const sta = statusSelect.value;
+        const df = document.getElementById('date_from').value;
+        const dt = document.getElementById('date_to').value;
         if (s.length) params.set('search', s);
         if (r && r !== '0') params.set('roles_key', r);
+        if (sta && sta !== '0') params.set('Status', sta);
+        if (df) params.set('date_from', df);
+        if (dt) params.set('date_to', dt);
         if (page) params.set('page', page);
         const base = window.location.pathname;
         const qs = params.toString();
@@ -260,6 +285,18 @@ function confirmDelete(button) {
         const url = buildUrl();
         fetchAndReplace(url);
     });
+    statusSelect.addEventListener('change', () => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+    document.getElementById('date_from').addEventListener('change', () => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
+    document.getElementById('date_to').addEventListener('change', () => {
+        const url = buildUrl();
+        fetchAndReplace(url);
+    });
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         const url = buildUrl();
@@ -271,6 +308,9 @@ function confirmDelete(button) {
         const qs = new URLSearchParams(window.location.search);
         searchInput.value = qs.get('search') || '';
         rolesSelect.value = qs.get('roles_key') || '0';
+        statusSelect.value = qs.get('Status') || '0';
+        document.getElementById('date_from').value = qs.get('date_from') || '';
+        document.getElementById('date_to').value = qs.get('date_to') || '';
     });
 
     function rebindAll() {

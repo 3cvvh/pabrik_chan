@@ -13,6 +13,10 @@ class Produk extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    public function jenis():BelongsTo
+    {
+        return $this->belongsTo(Jenisproduk::class,'id_jenis');
+    }
     public function gudang():BelongsTo
     {
         return $this->belongsTo(gudang::class,'id_gudang');

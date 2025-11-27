@@ -72,6 +72,21 @@
                         </svg>
                     </div>
                 </div>
+
+                <!-- Filter Jenis Produk -->
+                <div class="w-48">
+                    <label for="filter-jenis" class="block text-sm font-medium text-gray-700 mb-1">Jenis</label>
+                    <select name="jenis" id="filter-jenis" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-400 focus:border-indigo-400">
+                        <option value="">{{ __('Semua jenis') }}</option>
+                        @if(isset($jenisproduks) && $jenisproduks->count())
+                            @foreach($jenisproduks as $jp)
+                                <option value="{{ $jp->id }}" {{ (string)request()->get('jenis') === (string)$jp->id ? 'selected' : '' }}>
+                                    {{ $jp->nama_jenis }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
             </form>
         </div>
 
@@ -83,6 +98,7 @@
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">No</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Nama</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Jenis Produk</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Pabrik</th>
                             <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Gambar</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Harga Jual</th>
@@ -96,6 +112,11 @@
                         <tr class="hover:bg-gray-50 transition-all duration-200">
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $data->firstItem() + $index }}</td>
                             <td class="px-6 py-4 max-w-xs truncate text-sm font-medium text-gray-800" title="{{ $produk->nama }}">{{ $produk->nama }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    {{ ucfirst($produk->jenis->nama_jenis ?? '-') }}
+                                </span>
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $produk->pabrik->name }}</td>
                             <td class="px-4 py-4">
                                 @if($produk->gambar)
@@ -172,6 +193,11 @@
                     <span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">{{ $produk->pabrik->name ?? '-' }}</span>
                 </div>
                 <p class="text-base font-bold text-gray-800">{{ $produk->nama }}</p>
+                <div class="mb-2">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {{ ucfirst($produk->jenis->nama_jenis ?? '-') }}
+                    </span>
+                </div>
                 @if($produk->gambar)
                 <img src="{{ asset('storage/' . $produk->gambar) }}" alt="{{ $produk->nama }}"
                     class="w-full h-32 object-cover rounded-md my-2">
@@ -220,7 +246,7 @@
             @endif
         </div>
         <br>
-        <div>
+        <div id="paginate">
             {{ $data->links('pagination::tailwind') }}
         </div>
     </div>
@@ -259,6 +285,7 @@ function confirmDelete(button) {
 (function () {
     const form = document.getElementById('search-form');
     const searchInput = document.getElementById('search');
+    const jenisSelect = document.getElementById('filter-jenis');
     const tableContainer = document.getElementById('table-awal');
     const cardsContainer = document.getElementById('cardsContainer');
     const paginationContainer = document.getElementById('paginate');
@@ -279,6 +306,8 @@ function confirmDelete(button) {
         const params = new URLSearchParams();
         const s = searchInput.value.trim();
         if (s.length) params.set('search', s);
+        const j = (jenisSelect && jenisSelect.value) ? jenisSelect.value : '';
+        if (j) params.set('jenis', j);
         if (page) params.set('page', page);
         const base = window.location.pathname;
         const qs = params.toString();
@@ -321,6 +350,9 @@ function confirmDelete(button) {
     }, 350);
 
     searchInput.addEventListener('input', performSearch);
+    if (jenisSelect) {
+        jenisSelect.addEventListener('change', performSearch);
+    }
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -332,6 +364,9 @@ function confirmDelete(button) {
         fetchAndReplace(window.location.pathname + window.location.search, false);
         const qs = new URLSearchParams(window.location.search);
         searchInput.value = qs.get('search') || '';
+        if (jenisSelect) {
+            jenisSelect.value = qs.get('jenis') || '';
+        }
     });
 
     function rebindPaginationLinks() {
@@ -349,8 +384,15 @@ function confirmDelete(button) {
             });
         });
         // Rebind delete button
-        document.querySelectorAll('button[onclick^="confirmDelete"]').forEach(btn => {
-            btn.onclick = function() { confirmDelete(this); };
+        const deleteButtons = document.querySelectorAll('button[onclick="confirmDelete(this)"]');
+        deleteButtons.forEach(button => {
+            button.replaceWith(button.cloneNode(true));
+        });
+        const newDeleteButtons = document.querySelectorAll('button[onclick="confirmDelete(this)"]');
+        newDeleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                confirmDelete(this);
+            });
         });
     }
 

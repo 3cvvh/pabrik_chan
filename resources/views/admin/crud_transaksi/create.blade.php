@@ -21,17 +21,6 @@
                     @endif
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2"
-                            style="animation-delay: 100ms">
-                            <label class="block text-sm md:text-base font-semibold text-gray-700">Nama Transaksi</label>
-                            <div class="mt-1 relative rounded-md shadow-sm">
-                                <input type="text" value="{{ old('judul',$transaksi->judul ?? '' ) }}" name="judul"
-                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 px-4 text-sm md:text-base border-gray-300 rounded-lg">
-                            </div>
-                            @error('judul')
-                            <span class="text-red-500 text-sm mt-1 animate-fade-in">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="transform transition-all duration-300 animate-fadeIn col-span-1 md:col-span-2"
                             style="animation-delay: 200ms">
                             <label class="block text-sm md:text-base font-semibold text-gray-700">Pembeli</label>
                             <select name="id_pembeli"

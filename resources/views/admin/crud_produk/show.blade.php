@@ -54,17 +54,39 @@
             <!-- Detail Produk -->
             <div class="lg:col-span-6 flex flex-col justify-between space-y-6">
                 <div class="space-y-6">
-                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">{{ $produk->nama }}</h1>
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">{{ $produk->nama }}</h1>
+                            <div class="mt-3 flex items-center gap-2">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                                    {{ ucfirst($produk->jenis_produk ?? ($produk->jenis->nama_jenis ?? '-')) }}
+                                </span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm font-medium">
+                                    {{ $produk->pabrik->name ?? '-' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-end gap-3">
+                            <div class="bg-white p-2 rounded-lg shadow-sm">
+                                {!! QrCode::size(90)->generate(route('produk.show', $produk->id)) !!}
+                            </div>
+                            <button id="copyLink" data-url="{{ route('produk.show', $produk->id) }}" type="button"
+                                class="text-sm px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                Salin Link
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- Harga -->
                     <div class="space-y-2">
                         <div class="flex items-center gap-2">
                             <span class="text-sm font-medium text-gray-500">Harga Jual:</span>
-                            <span class="text-2xl font-bold text-rose-600">Rp {{ number_format($produk->harga_jual,0,',','.') }}</span>
+                            <span class="text-2xl font-bold text-rose-600">Rp {{ number_format($produk->harga_jual ?? ($produk->harga ?? 0),0,',','.') }}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-sm font-medium text-gray-500">Harga Modal:</span>
-                            <span class="text-xl font-semibold text-gray-700">Rp {{ number_format($produk->harga_modal,0,',','.') }}</span>
+                            <span class="text-xl font-semibold text-gray-700">Rp {{ number_format($produk->harga_modal ?? 0,0,',','.') }}</span>
                         </div>
                     </div>
 
@@ -151,11 +173,33 @@
 				const src = btn.getAttribute('data-src');
 				document.getElementById('mainImage').src = src;
 
-				document.querySelectorAll('.thumbnail')
-					.forEach(t => t.classList.remove('ring-2','ring-indigo-500'));
-				btn.classList.add('ring-2','ring-indigo-500');
+				// toggle visual highlight
+				document.querySelectorAll('.thumbnail').forEach(t => {
+					t.classList.remove('ring-2','ring-indigo-500','opacity-90');
+				});
+				btn.classList.add('ring-2','ring-indigo-500','opacity-90');
 			});
 		});
+
+		// Copy link functionality
+		const copyBtn = document.getElementById('copyLink');
+		if (copyBtn) {
+			copyBtn.addEventListener('click', async function () {
+				const url = this.dataset.url;
+				if (!navigator.clipboard) {
+					alert('Fitur salin tidak tersedia di browser ini.');
+					return;
+				}
+				try {
+					await navigator.clipboard.writeText(url);
+					// sederhana: beritahu pengguna
+					this.textContent = 'Tersalin!';
+					setTimeout(() => this.textContent = 'Salin Link', 1500);
+				} catch (e) {
+					alert('Gagal menyalin link.');
+				}
+			});
+		}
 	});
 </script>
 

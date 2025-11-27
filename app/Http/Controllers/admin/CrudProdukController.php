@@ -8,6 +8,7 @@ use App\Models\Stock_produk;
 use App\Models\Gudang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Jenisproduk;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pabrik as ModelsPabrik;
 use App\Models\Produk as ModelsProduk;
@@ -22,14 +23,34 @@ class CrudProdukController extends Controller
      */
     public function index(Request $request)
     {
-        $query = produk::with('pabrik')->where('id_pabrik', '=', Auth::user()->pabrik_id);
+        // eager-load jenis juga, batasi ke pabrik user
+        $query = produk::with(['pabrik','jenis'])->where('id_pabrik', Auth::user()->pabrik_id);
+
+        // Search: bungkus dalam closure agar tetap terikat dengan filter id_pabrik
         if ($request->filled('search')) {
             $search = trim($request->search);
-            $query->where('nama', 'like', '%' . $search . '%');
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $search . '%')
+                  ->orWhere('harga_jual', 'like', '%' . $search . '%')
+                  ->orWhere('harga_modal', 'like', '%' . $search . '%');
+            });
         }
-        return view('admin.crud_produk.index',[
+
+        // Terima parameter 'jenis' (dari view) atau 'jenis_produk' (fallback)
+        $jenisFilter = $request->get('jenis', $request->get('jenis_produk', null));
+        if ($jenisFilter) {
+            $query->whereHas('jenis', function($q) use ($jenisFilter) {
+                // asumsi primary key di tabel jenis bernama 'id'
+                $q->where('id', $jenisFilter);
+            });
+        }
+
+        $jenis = Jenisproduk::all();
+        return view('admin.crud_produk.index', [
             'judul' => 'crud|produk',
-            'data' =>  $query->latest()->paginate(3),
+            'jenisproduks' => $jenis,
+            'data' => $query->latest()->paginate(3),
         ]);
     }
 
@@ -41,7 +62,8 @@ class CrudProdukController extends Controller
         return view('admin.crud_produk.form_tambah_produk',[
             'judul' => 'form tambah|produk',
             'pabrik' => pabrik::where('id',Auth::user()->pabrik_id)->get(),
-            'gudangs' => Auth::user()->pabrik->gudang
+            'gudangs' => Auth::user()->pabrik->gudang,
+            'jenisproduks' => \App\Models\Jenisproduk::all(),
         ]);
     }
 
@@ -56,7 +78,8 @@ class CrudProdukController extends Controller
             'gambar' => ['image','nullable'],
             'harga_jual' => ['required'],
             'harga_modal' => ['required'],
-            'id_gudang' => 'required'
+            'id_gudang' => 'required',
+            'id_jenis' => 'required',
         ]);
         $gudang = Gudang::where('id', $valid['id_gudang'])
             ->where('id_pabrik', Auth::user()->pabrik_id)
@@ -96,10 +119,10 @@ class CrudProdukController extends Controller
             abort(404);
         }
         return view('admin.crud_produk.show', [
-            'judul' => $produk->judul,
+            // fallback ke nama jika properti judul tidak tersedia
+            'judul' => $produk->judul ?? $produk->nama,
             'produk' => $produk,
-            'stock' => Stock_produk::where('id_produk', '=',$produk->id)->get()
-
+            'stock' => Stock_produk::where('id_produk', $produk->id)->get()
         ]);
     }
 
@@ -129,6 +152,7 @@ class CrudProdukController extends Controller
             'judul' => $produk->judul,
             'data' => $produk,
             'gudangs' => Auth::user()->pabrik->gudang,
+            'jenisproduks' => \App\Models\Jenisproduk::all(),
         ]);
     }
 
@@ -143,7 +167,8 @@ class CrudProdukController extends Controller
             'gambar' => ['nullable','image'],
             'harga_jual' => ['required'],
             'harga_modal' => ['required'],
-            'id_gudang' => 'required'
+            'id_gudang' => 'required',
+            'id_jenis' => 'required',
         ]);
 
         // cek gudang tujuan sebelum update

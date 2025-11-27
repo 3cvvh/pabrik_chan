@@ -26,6 +26,29 @@
                             @enderror
                         </div>
 
+                        <!-- Jenis Produk Select (diperbaiki: wrapper, name, selected, error) -->
+                        <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 150ms">
+                            <label for="jenis_produk" class="block text-sm md:text-base font-semibold text-gray-700">Jenis Produk</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <select name="id_jenis" id="jenis_produk" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-3 pl-3 pr-10 text-sm md:text-base border-gray-300 rounded-lg appearance-none">
+                                    <option value="">{{ __('Pilih jenis produk...') }}</option>
+                                    @foreach($jenisproduks as $jp)
+                                        <option value="{{ $jp->id }}" {{ (string)old('id_jenis', $data->id_jenis ?? '') === (string)$jp->id ? 'selected' : '' }}>
+                                            {{ $jp->nama_jenis }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('id_jenis')
+                                <p class="mt-2 text-sm md:text-base text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Harga Input (diganti menjadi harga_jual dan harga_modal yang lebih mudah diisi) -->
                         <div class="transform transition-all duration-300 animate-fadeIn" style="animation-delay: 200ms">
                             <label class="block text-sm md:text-base font-semibold text-gray-700">Harga Jual</label>
@@ -109,7 +132,8 @@
                                     <option value="">{{ __('Pilih gudang...') }}</option>
                                     @if(isset($gudangs) && $gudangs->count())
                                         @foreach($gudangs as $g)
-                                            <option value="{{ $g->id }}" {{ old('id_gudang',$data->gudang->id) === $g->id ? 'selected' : '' }}>
+-                                            <option value="{{ $g->id }}" {{ old('id_gudang',$data->gudang->id) === $g->id ? 'selected' : '' }}>
++                                            <option value="{{ $g->id }}" {{ (string)old('id_gudang', $data->gudang->id ?? '') === (string)$g->id ? 'selected' : '' }}>
                                                 {{ $g->nama }}
                                             </option>
                                         @endforeach

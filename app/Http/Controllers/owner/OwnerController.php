@@ -32,6 +32,7 @@ class OwnerController extends Controller
             'judul' => 'owner|generate laporan'
         ]);
     }
+
     public function dashboard(Request $request){
         $pabrikId = Auth::user()->pabrik_id;
 
@@ -56,7 +57,9 @@ class OwnerController extends Controller
 
         $productNets = $productNetsQuery
             ->groupBy('produks.id', 'produks.nama')
-            ->select('produks.id', 'produks.nama', DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'))
+            ->select('produks.id', 'produks.nama',
+                DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'),
+                DB::raw('COALESCE(SUM(detail_transaksis.jumlah),0) as total_terjual'))
             ->get();
 
         // keuntungan bersih per gudang
@@ -76,7 +79,9 @@ class OwnerController extends Controller
 
         $gudangNets = $gudangNetsQuery
             ->groupBy('gudangs.id', 'gudangs.nama')
-            ->select('gudangs.id', 'gudangs.nama', DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'))
+            ->select('gudangs.id', 'gudangs.nama',
+                DB::raw('COALESCE(SUM((detail_transaksis.harga_satuan - produks.harga_modal) * detail_transaksis.jumlah),0) as net'),
+                DB::raw('COALESCE(SUM(detail_transaksis.jumlah),0) as total_terjual'))
             ->get();
 
         $totalNet = $productNets->sum('net');
@@ -91,11 +96,16 @@ class OwnerController extends Controller
             'gudangNets' => $gudangNets,
         ]);
 }
-public function laporanbos(){
-    return view('owner.laporanbos',[
-        'judul' => 'owner|laporanbos',
-        'pembelis' => Pembeli::where('id_pabrik',Auth::user()->pabrik_id)->get(),
-        'data' => Transaksi::where('id_pabrik',Auth::user()->pabrik_id)->get(),
-    ]);
+public function laporanbos($id){
+$query = Transaksi::where('id_pabrik',Auth::user()->pabrik->id);
+if($id == 1){
+ $query->where('status','pending');
+}elseif($id == 2)
+{
+    $query->where('status','completed');
+}
+$data = $query->get();
+$judul = 'laporan';
+    return view('owner.laporanbos',compact('data','judul'));
 }
 }

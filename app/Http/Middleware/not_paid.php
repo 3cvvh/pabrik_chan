@@ -8,6 +8,8 @@ use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth as Auths;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Not_paid as MailNotPaid;
 
 use function Symfony\Component\Clock\now;
 
@@ -24,6 +26,7 @@ class not_paid
                 Auths::getUser()->pabrik->expire = null;
                 Auths::getUser()->pabrik->Ispaid = false;
                 Auths::getUser()->pabrik->sisa_waktu = 0;
+                Mail::to(Auths::getUser()->pabrik->email)->send(new \App\Mail\Not_paid(Auths::getUser()->pabrik));
                 Payment::destroy(Auths::getUser()->pabrik->payment->first()->id);
                 Auths::getUser()->pabrik->save();
             }

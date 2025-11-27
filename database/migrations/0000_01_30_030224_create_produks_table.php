@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->text('deskripsi')->nullable();
             $table->unsignedBigInteger('id_gudang');
+            $table->foreignId('id_jenis')->constrained('jenisproduks')->onDelete('cascade');
             $table->foreign('id_gudang')->references('id')->on('gudangs')->onDelete('cascade');
             $table->unsignedBigInteger('id_pabrik');
             $table->foreign('id_pabrik')->references('id')->on('pabriks')->onDelete('cascade');

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Gudang;
+use App\Models\Jenisproduk;
 use App\Models\role;
 use App\Models\User;
 use App\Models\pabrik;
@@ -107,8 +108,16 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Shiranai',
             'phone' => 023123
         ]);
+        Jenisproduk::create([
+            'nama_jenis' => 'Makanan',
+        ]);
+        Jenisproduk::create([
+            'nama_jenis' => 'Barang Elektronik',
+        ]);
+
         produk::factory()->create([
             'nama' => 'deterjen',
+            'id_jenis' => 1,
             'deskripsi' => 'deterjen yang sangat wangi',
             'harga_modal' => 5000,
             'harga_jual' => 7000,
@@ -117,6 +126,7 @@ class DatabaseSeeder extends Seeder
         ]);
         produk::factory()->create([
             'nama' => 'tasnim',
+            'id_jenis' => 1,
             'deskripsi' => 'tasnim yang sangat wangi',
             'harga_modal' => 8000,
             'harga_jual' => 12000,

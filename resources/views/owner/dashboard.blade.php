@@ -28,9 +28,17 @@
                 <h2 class="text-3xl font-extrabold text-gray-800 mb-1">Halaman Dashboard Owner</h2>
                 <p class="text-base text-gray-500">History Data Transaksi Barang</p>
             </div>
-            <a href="{{ route('owner.laporanbos') }}" target="_blank"
+            <a href="{{ route('owner.laporanbos',0) }}" target="_blank"
                class="px-6 py-2 font-semibold text-white bg-blue-500 rounded-lg shadow hover:bg-blue-600 transition">
                Generate Semua Laporan
+            </a>
+            <a href="{{ route('owner.laporanbos',1) }}" target="_blank"
+               class="px-6 py-2 font-semibold text-white bg-yellow-500 rounded-lg shadow hover:bg-blue-600 transition">
+               Generate Laporan pending
+            </a>
+            <a href="{{ route('owner.laporanbos',2) }}" target="_blank"
+               class="px-6 py-2 font-semibold text-white bg-green-500 rounded-lg shadow hover:bg-blue-600 transition">
+               Generate Laporan completed
             </a>
         </div>
 
@@ -51,7 +59,6 @@
                 <thead>
                     <tr class="bg-gradient-to-r from-blue-500 to-blue-400 text-black">
                         <th class="py-3 px-4 text-left font-semibold">No</th>
-                        <th class="py-3 px-4 text-left font-semibold">Nama Transaksi</th>
                         <th class="py-3 px-4 text-left font-semibold">Customer</th>
                         <th class="py-3 px-4 text-left font-semibold">Status Order</th>
                         <th class="py-3 px-4 text-left font-semibold">Aksi</th>
@@ -61,7 +68,6 @@
                     @forelse ($transaksi as $index => $item)
                         <tr class="border-b hover:bg-blue-50 transition">
                             <td class="py-3 px-4">{{ $index + 1 }}</td>
-                            <td class="py-3 px-4 font-medium">{{ $item->judul }}</td>
                             <td class="py-3 px-4">{{ $item->pembeli->name }}</td>
                             <td class="py-3 px-4">
                                 <span class="px-4 py-1 text-xs font-bold border border-gray-200 rounded-full shadow-sm

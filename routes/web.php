@@ -41,12 +41,11 @@ Route::middleware(['beatrice'])->group(function(){
 //daftar route jika user sudah login sebagai admin
 Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard/admin',[adminController::class,'index'])->name('admin.index');
-    Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show')->middleware(["not_paid"]);
-    Route::resource('/dashboard/admin/crud_transaksi', Crud_transaksiController::class)->middleware(['not_paid']);
-    Route::resource('/dashboard/admin/crud_user', user_crudController::class)->middleware(['not_paid']);
-    Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show')->middleware(['not_paid']);
-    Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show')->middleware(['not_paid']);
-    Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class)->middleware(['not_paid']);
+    Route::resource('/dashboard/admin/crud_user', user_crudController::class)->except('show');
+    Route::resource('/dashboard/admin/crud_transaksi', Crud_transaksiController::class);
+    Route::resource('/dashboard/admin/crud_pembeli', crud_pembeliController::class)->except('show');
+    Route::resource('/dashboard/admin/crud_gudang', crud_gudangController::class)->except('show');
+    Route::resource('/dahboard/admin/Stock_produk', Crud_stock_produkController::class);
     Route::post('/dashboard/admin/tanggal/{transaksi:id}',[AdminController::class, 'tanggal'])->name('admin.tanggal')->middleware(['not_paid']);
     Route::post('dashboard/admin/produk/{Detail_transaksi:id}',[AdminController::class, 'produk'])->name('admin.produk')->middleware(['not_paid']);
     Route::post('/dashboard/admin/hapus/{Detail_transaksi:id}',[adminController::class,'hapus_produk'])->name('admin-hapus')->middleware(['not_paid']);
@@ -68,8 +67,8 @@ Route::middleware(['orang_gudang'])->group(function () {
     Route::get('/dashboard/org_gudang',[orang_gudangController::class,'index'])->name('orang_gudang.index');
     Route::get('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scanner'])->name('orang_gudang.produk.scanner')->middleware(['not_paid']);
     Route::post('/dashboard/org_gudang/produk/scanner', [CrudProduk2Controller::class, 'scannerProcess'])->name('orang_gudang.produk.scanner.process')->middleware(['not_paid']);
-    Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class)->middleware(['not_paid']);
-    Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update'])->middleware(["not_paid"]);
+    Route::resource('/dashboard/org_gudang/crud_stocks',Crud_stock_produk2Controller::class);
+    Route::resource('/dashboard/org_gudang/crud_produk',CrudProduk2Controller::class)->except(['create','store','destroy','edit','update']);
     Route::get('/dashboard/org_gudang/produk/{produk}/download-qrs', [crudProdukController::class, 'qrDownload'])->name('produk.qrDownloads')->middleware(['not_paid']);
     Route::get('/dashboard/org_gudang/produk/{produk}/qr-views', [crudProdukController::class, 'qrView'])->name('produk.qrViews')->middleware(['not_paid']);
 
@@ -81,7 +80,7 @@ Route::middleware(['owner'])->group(function () {
     Route::get('/dashboard/owner/generate/{transaksi:id}',[AdminController::class, 'generateReport'])->name('owner.laporan')->middleware(['not_paid']);
     Route::resource('/dashboard/owner/transaksi',crud_transaksiController::class)->except(['create','store','destroy','edit','update'])->middleware(['not_paid']);
     Route::get('/dashboard/owner/dawgboard',[OwnerController::class, 'dashboard'])->name('owner.dash');
-    Route::get('/dashboard/owner/laporanbos',[OwnerController::class, 'laporanbos'])->name('owner.laporanbos')->middleware(['not_paid']);
+    Route::get('/dashboard/owner/laporanbos/{id}',[OwnerController::class, 'laporanbos'])->name('owner.laporanbos')->middleware(['not_paid']);
 });
 //daftar route jika user sudah login sebagai super admin
 Route::middleware(['beatricekawaii'])->group(function () {

@@ -42,11 +42,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ( $stok_produk as $index => $item )
+                    @foreach ($stok_produk as $index => $item)
                     <tr class="hover:bg-blue-50">
-                        <td class="py-3 px-4 border-b text-center">{{ $index+1 }}</td>
-                        <td class="py-3 px-4 border-b text-center">{{ $item->produk->nama }}</td>
-                        <td class="py-3 px-4 border-b text-center">{{ $item->jumlah }}</td>
+                        <td class="py-3 px-4 border-b text-center">{{ $index + 1 }}</td>
+                        <td class="py-3 px-4 border-b text-center">{{ $item->nama }}</td>
+                        <td class="py-3 px-4 border-b text-center">
+                            @php
+                                $total = $item->stock->sum('jumlah');
+                            @endphp
+                            {{ $total }}</td>
                     </tr>
                     @endforeach
                 </tbody>

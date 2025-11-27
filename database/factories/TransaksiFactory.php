@@ -17,7 +17,6 @@ class TransaksiFactory extends Factory
     public function definition(): array
     {
         return [
-            'judul' => fake()->word(),
             'id_pabrik' => 1,
             'id_pembeli' => 1,
         ];

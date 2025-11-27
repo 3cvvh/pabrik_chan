@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 
 class Crud_stock_produkController extends Controller
 {
+    public function __construct()
+    {
+     $this->middleware('not_paid')->except(['index']);
+    }
     /**
      * Display a listing of the resource.
      */

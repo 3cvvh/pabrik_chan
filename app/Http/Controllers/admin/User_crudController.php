@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 
 class User_crudController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['not_paid'])->except(['index']);
+    }
 
     /**
      * Display a listing of the resource.
